@@ -18,6 +18,7 @@ import { UpsertPlayerUseCase } from "@player/application/usecases/UpsertPlayerUs
 import type { IPlayerRepository } from "@player/domain/repositories/IPlayerRepository";
 import { MongoPlayerRepository } from "@player/infrastructure/repositories/MongoPlayerRepository";
 import { GetCompanyStatsUseCase } from "@stats/application/usecases/GetCompanyStatsUseCase";
+import { GetCompletedGamesByPlayerIdUseCase } from "@stats/application/usecases/GetCompletedGamesByPlayerIdUseCase";
 import { GetGameCompletionStatsUseCase } from "@stats/application/usecases/GetGameCompletionStatsUseCase";
 import { GetPlayerStatsUseCase } from "@stats/application/usecases/GetPlayerStatsUseCase";
 
@@ -30,6 +31,7 @@ let findCombinationMatchesUseCase: FindCombinationMatchesUseCase | null = null;
 let getPlayerStatsUseCase: GetPlayerStatsUseCase | null = null;
 let getGameCompletionStatsUseCase: GetGameCompletionStatsUseCase | null = null;
 let getCompanyStatsUseCase: GetCompanyStatsUseCase | null = null;
+let getCompletedGamesByPlayerIdUseCase: GetCompletedGamesByPlayerIdUseCase | null = null;
 let getGamesUseCase: GetGamesUseCase | null = null;
 let getGameByIdUseCase: GetGameByIdUseCase | null = null;
 let createGameUseCase: CreateGameUseCase | null = null;
@@ -112,6 +114,16 @@ export function getGetCompanyStatsUseCase(): GetCompanyStatsUseCase {
         getCompanyStatsUseCase = new GetCompanyStatsUseCase(getGameRepository());
     }
     return getCompanyStatsUseCase;
+}
+
+export function getGetCompletedGamesByPlayerIdUseCase(): GetCompletedGamesByPlayerIdUseCase {
+    if (!getCompletedGamesByPlayerIdUseCase) {
+        getCompletedGamesByPlayerIdUseCase = new GetCompletedGamesByPlayerIdUseCase(
+            getGameRepository(),
+            getCompletionRepository(),
+        );
+    }
+    return getCompletedGamesByPlayerIdUseCase;
 }
 
 // Game UseCases

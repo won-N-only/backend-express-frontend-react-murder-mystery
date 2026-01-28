@@ -7,4 +7,5 @@ export interface IGameCompletionRepository {
     findByGameId(gameId: string): Promise<GameCompletion[]>;
     findByGameIdAndPlayerIds(gameId: string, playerIds: string[]): Promise<GameCompletion[]>;
     findByGameIdsAndPlayerIds(gameIds: string[], playerIds: string[]): Promise<GameCompletion[]>;
+    findByPlayerId(playerId: string): Promise<GameCompletion[]>;
 }
