@@ -19,12 +19,17 @@ export class GetGameCompletionStatsUseCase {
     ) { }
 
     async execute(): Promise<GameCompletionStat[]> {
-        const playersCount = (await this.playerRepository.findAll()).length;
-        if (playersCount === 0) return [];
+        // 플레이어와 게임을 병렬로 조회
+        const [players, games] = await Promise.all([
+            this.playerRepository.findAll(),
+            this.gameRepository.findAll(),
+        ]);
 
-        const games = await this.gameRepository.findAll();
+        const playersCount = players.length;
+        if (playersCount === 0 || games.length === 0) return [];
+
         const gameIds = games.map((g) => g.id!.toString());
-        const playerIds = (await this.playerRepository.findAll()).map((p) => p.id!.toString());
+        const playerIds = players.map((p) => p.id!.toString());
 
         // 모든 게임에 대한 완료 상태 조회
         const completions = await this.completionRepository.findByGameIdsAndPlayerIds(gameIds, playerIds);
