@@ -79,6 +79,15 @@ export class MongoGameCompletionRepository implements IGameCompletionRepository 
         return completions.map(this.toDomain);
     }
 
+    async findByPlayerId(playerId: string): Promise<GameCompletion[]> {
+        const db = await MongoDatabase.getDb();
+        const completions = await db
+            .collection(MongoGameCompletionRepository.COLLECTION_NAME)
+            .find({ playerId: new ObjectId(playerId) })
+            .toArray();
+        return completions.map(this.toDomain);
+    }
+
     private toDomain(document: any): GameCompletion {
         // 기존 데이터 호환: X(0), PLANNED(2), ERROR(3)는 모두 NOT_DONE(0)으로 처리
         let status = document.status as CompletionStatus;
