@@ -64,19 +64,21 @@ export default function GameDetailPage() {
 
             <section className="rounded-2xl bg-white/80 shadow p-6 space-y-4">
                 <h2 className="font-semibold">참가자별 완료 상태</h2>
-                <div className="space-y-2">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                     {players.map((p) => {
                         const status = completionMap.get(p._id) ?? CompletionStatus.NOT_DONE;
                         return (
                             <div
                                 key={p._id}
-                                className="flex items-center justify-between rounded-lg border bg-white/80 px-3 py-2"
+                                className="flex flex-col gap-2 rounded-lg border bg-white/80 p-3 hover:shadow-md transition-shadow"
                             >
-                                <span className="text-sm font-medium">{p.name}</span>
-                                <CompletionStatusButtons
-                                    currentStatus={status}
-                                    onStatusChange={(s) => updateStatus(p._id, s)}
-                                />
+                                <span className="text-sm font-medium text-center">{p.name}</span>
+                                <div className="flex justify-center">
+                                    <CompletionStatusButtons
+                                        currentStatus={status}
+                                        onStatusChange={(s) => updateStatus(p._id, s)}
+                                    />
+                                </div>
                             </div>
                         );
                     })}
