@@ -11,7 +11,10 @@ import { fetcher } from "./lib/fetcher";
 import type { Player } from "./types";
 
 export default function HomePage() {
-    const { data: playersData } = useSWR("/api/players", fetcher);
+    const { data: playersData } = useSWR("/api/players", fetcher, {
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+    });
     const players: Player[] = playersData?.players ?? [];
 
     const [selectedPlayers, setSelectedPlayers] = useState<string[]>([]);
