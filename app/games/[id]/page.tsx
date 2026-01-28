@@ -1,8 +1,8 @@
 "use client";
 
-import useSWR from "swr";
 import { useParams } from "next/navigation";
-import { CompletionStatus, CompletionStatusLabel } from "../../../types/domain";
+import useSWR from "swr";
+import { CompletionStatus, CompletionStatusLabel } from "@completion/domain/valueObjects/CompletionStatus";
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
@@ -88,4 +88,3 @@ export default function GameDetailPage() {
         </div>
     );
 }
-
