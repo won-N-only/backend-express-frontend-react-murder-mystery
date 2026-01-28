@@ -1,6 +1,6 @@
-import { MongoDatabase } from "@/src/common/infrastructure/database/MongoDatabase";
 import { Player } from "@player/domain/entities/Player";
 import type { IPlayerRepository } from "@player/domain/repositories/IPlayerRepository";
+import { MongoDatabase } from "@shared/infrastructure/database/MongoDatabase";
 import { ObjectId } from "mongodb";
 
 export class MongoPlayerRepository implements IPlayerRepository {

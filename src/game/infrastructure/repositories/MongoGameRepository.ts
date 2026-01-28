@@ -1,6 +1,6 @@
-import { MongoDatabase } from "@/src/common/infrastructure/database/MongoDatabase";
 import { Game } from "@game/domain/entities/Game";
 import type { CompanyStat, IGameRepository } from "@game/domain/repositories/IGameRepository";
+import { MongoDatabase } from "@shared/infrastructure/database/MongoDatabase";
 import { Document, ObjectId } from "mongodb";
 
 export class MongoGameRepository implements IGameRepository {
