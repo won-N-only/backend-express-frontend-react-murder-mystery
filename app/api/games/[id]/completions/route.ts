@@ -1,8 +1,8 @@
+import { CompletionStatus } from "@completion/domain/valueObjects/CompletionStatus";
 import {
     getDeleteCompletionUseCase,
     getUpsertCompletionUseCase,
-} from "@/src/common/infrastructure/di/container";
-import { CompletionStatus } from "@completion/domain/valueObjects/CompletionStatus";
+} from "@shared/infrastructure/di/container";
 import { NextRequest, NextResponse } from "next/server";
 
 interface RouteParams {
@@ -14,8 +14,16 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
         const body = await req.json();
         const { playerId, status } = body as { playerId: string; status: CompletionStatus };
 
-        if (!playerId || !status) {
+        if (!playerId || status === undefined || status === null) {
             return NextResponse.json({ error: "playerId, status는 필수입니다." }, { status: 400 });
+        }
+
+        // status가 유효한 CompletionStatus 값인지 확인
+        if (status !== CompletionStatus.DONE && status !== CompletionStatus.NOT_DONE) {
+            return NextResponse.json(
+                { error: `유효하지 않은 status 값입니다: ${status}` },
+                { status: 400 },
+            );
         }
 
         const upsertCompletionUseCase = getUpsertCompletionUseCase();
