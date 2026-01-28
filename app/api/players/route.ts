@@ -1,10 +1,10 @@
+import { getGetPlayersUseCase, getUpsertPlayerUseCase } from "@/src/common/infrastructure/di/container";
 import { NextRequest, NextResponse } from "next/server";
-import { getPlayerRepository } from "../../../src/infrastructure/di/container";
 
 export async function GET() {
     try {
-        const playerRepository = getPlayerRepository();
-        const players = await playerRepository.findAll();
+        const getPlayersUseCase = getGetPlayersUseCase();
+        const players = await getPlayersUseCase.execute();
         const playersDto = players.map((p) => ({
             _id: p.id,
             name: p.name,
@@ -25,8 +25,8 @@ export async function POST(req: NextRequest) {
         if (!name) {
             return NextResponse.json({ error: "name은 필수입니다." }, { status: 400 });
         }
-        const playerRepository = getPlayerRepository();
-        const player = await playerRepository.upsert(name);
+        const upsertPlayerUseCase = getUpsertPlayerUseCase();
+        const player = await upsertPlayerUseCase.execute(name);
         const playerDto = {
             _id: player.id,
             name: player.name,

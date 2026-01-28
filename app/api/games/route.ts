@@ -1,6 +1,9 @@
+import {
+    getCreateGameUseCase,
+    getGetGamesByPlayerCountUseCase,
+    getGetGamesUseCase,
+} from "@/src/common/infrastructure/di/container";
 import { NextRequest, NextResponse } from "next/server";
-import { Game } from "../../../src/domain/entities/Game";
-import { getGameRepository } from "../../../src/infrastructure/di/container";
 
 export async function GET(req: NextRequest) {
     try {
@@ -8,14 +11,15 @@ export async function GET(req: NextRequest) {
         const minPlayersParam = searchParams.get("minPlayers");
         const maxPlayersParam = searchParams.get("maxPlayers");
 
-        const gameRepository = getGameRepository();
         let games;
         if (minPlayersParam) {
             const min = parseInt(minPlayersParam, 10);
             const max = maxPlayersParam ? parseInt(maxPlayersParam, 10) : undefined;
-            games = await gameRepository.findByPlayerCount(min, max);
+            const useCase = getGetGamesByPlayerCountUseCase();
+            games = await useCase.execute(min, max);
         } else {
-            games = await gameRepository.findAll();
+            const useCase = getGetGamesUseCase();
+            games = await useCase.execute();
         }
 
         // 엔티티를 DTO로 변환
@@ -64,22 +68,16 @@ export async function POST(req: NextRequest) {
             }
         }
 
-        const gameRepository = getGameRepository();
-        const now = new Date();
-        const game = new Game(
-            undefined,
+        const createGameUseCase = getCreateGameUseCase();
+        const createdGame = await createGameUseCase.execute({
             orderNumber,
             name,
             minPlayers,
-            maxPlayers ?? null,
-            company ?? null,
-            series ?? null,
-            ownerNoteArray,
-            now,
-            now,
-        );
-
-        const createdGame = await gameRepository.create(game);
+            maxPlayers: maxPlayers ?? null,
+            company: company ?? null,
+            series: series ?? null,
+            ownerNote: ownerNoteArray,
+        });
 
         const gameDto = {
             _id: createdGame.id,

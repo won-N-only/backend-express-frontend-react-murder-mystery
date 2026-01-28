@@ -1,5 +1,8 @@
+import {
+    getFindCombinationMatchesUseCase,
+    getFindMatchesUseCase,
+} from "@/src/common/infrastructure/di/container";
 import { NextRequest, NextResponse } from "next/server";
-import { getMatchService } from "../../../src/infrastructure/di/container";
 
 export const dynamic = "force-dynamic";
 
@@ -18,14 +21,13 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "playerIds 배열이 필요합니다." }, { status: 400 });
         }
 
-        const matchService = getMatchService();
-
         // 조합 기반 매칭 (선택된 모든 참가자를 사용)
         if (useCombination) {
             if (playerIds.length < 2) {
                 return NextResponse.json({ error: "조합 매칭은 최소 2명 이상이어야 합니다." }, { status: 400 });
             }
-            const combinations = await matchService.findCombinationMatches({
+            const findCombinationMatchesUseCase = getFindCombinationMatchesUseCase();
+            const combinations = await findCombinationMatchesUseCase.execute({
                 playerIds,
                 excludePartySeries: excludePartySeries ?? false,
                 excludeSinglePlayer: excludeSinglePlayer ?? false,
@@ -61,7 +63,8 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "playerCount는 2 이상이어야 합니다." }, { status: 400 });
         }
 
-        const matches = await matchService.findMatches({
+        const findMatchesUseCase = getFindMatchesUseCase();
+        const matches = await findMatchesUseCase.execute({
             playerIds,
             playerCount,
             excludePartySeries: excludePartySeries ?? false,

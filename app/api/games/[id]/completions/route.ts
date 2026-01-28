@@ -1,6 +1,9 @@
+import {
+    getDeleteCompletionUseCase,
+    getUpsertCompletionUseCase,
+} from "@/src/common/infrastructure/di/container";
+import { CompletionStatus } from "@completion/domain/valueObjects/CompletionStatus";
 import { NextRequest, NextResponse } from "next/server";
-import { CompletionStatus } from "../../../../../src/domain/valueObjects/CompletionStatus";
-import { getCompletionRepository } from "../../../../../src/infrastructure/di/container";
 
 interface RouteParams {
     params: { id: string };
@@ -15,8 +18,8 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
             return NextResponse.json({ error: "playerId, status는 필수입니다." }, { status: 400 });
         }
 
-        const completionRepository = getCompletionRepository();
-        const completion = await completionRepository.upsert(params.id, playerId, status);
+        const upsertCompletionUseCase = getUpsertCompletionUseCase();
+        const completion = await upsertCompletionUseCase.execute(params.id, playerId, status);
         const completionDto = {
             _id: completion.id,
             gameId: completion.gameId,
@@ -37,8 +40,8 @@ export async function DELETE(req: NextRequest, { params }: RouteParams) {
         if (!playerId) {
             return NextResponse.json({ error: "playerId는 필수입니다." }, { status: 400 });
         }
-        const completionRepository = getCompletionRepository();
-        const ok = await completionRepository.delete(params.id, playerId);
+        const deleteCompletionUseCase = getDeleteCompletionUseCase();
+        const ok = await deleteCompletionUseCase.execute(params.id, playerId);
         return NextResponse.json({ success: ok });
     } catch (error) {
         console.error("DELETE /api/games/[id]/completions error", error);

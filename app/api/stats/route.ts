@@ -1,5 +1,9 @@
+import {
+    getGetCompanyStatsUseCase,
+    getGetGameCompletionStatsUseCase,
+    getGetPlayerStatsUseCase,
+} from "@/src/common/infrastructure/di/container";
 import { NextResponse } from "next/server";
-import { getStatsService } from "../../../src/infrastructure/di/container";
 
 export const dynamic = "force-dynamic";
 
@@ -10,16 +14,17 @@ export async function GET(req: Request) {
 
         const result: any = {};
 
-        const statsService = getStatsService();
-
         if (type === "all" || type === "players") {
-            result.players = await statsService.getPlayerStats();
+            const getPlayerStatsUseCase = getGetPlayerStatsUseCase();
+            result.players = await getPlayerStatsUseCase.execute();
         }
         if (type === "all" || type === "games") {
-            result.games = await statsService.getGameCompletionStats();
+            const getGameCompletionStatsUseCase = getGetGameCompletionStatsUseCase();
+            result.games = await getGameCompletionStatsUseCase.execute();
         }
         if (type === "all" || type === "companies") {
-            result.companies = await statsService.getCompanyStats();
+            const getCompanyStatsUseCase = getGetCompanyStatsUseCase();
+            result.companies = await getCompanyStatsUseCase.execute();
         }
 
         return NextResponse.json({ stats: result });
