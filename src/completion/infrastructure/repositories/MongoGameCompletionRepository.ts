@@ -1,7 +1,7 @@
-import { MongoDatabase } from "@/src/common/infrastructure/database/MongoDatabase";
 import { GameCompletion } from "@completion/domain/entities/GameCompletion";
 import type { IGameCompletionRepository } from "@completion/domain/repositories/IGameCompletionRepository";
 import { CompletionStatus } from "@completion/domain/valueObjects/CompletionStatus";
+import { MongoDatabase } from "@shared/infrastructure/database/MongoDatabase";
 import { ObjectId } from "mongodb";
 
 export class MongoGameCompletionRepository implements IGameCompletionRepository {
@@ -80,11 +80,16 @@ export class MongoGameCompletionRepository implements IGameCompletionRepository 
     }
 
     private toDomain(document: any): GameCompletion {
+        // 기존 데이터 호환: X(0), PLANNED(2), ERROR(3)는 모두 NOT_DONE(0)으로 처리
+        let status = document.status as CompletionStatus;
+        if (status !== CompletionStatus.DONE) {
+            status = CompletionStatus.NOT_DONE;
+        }
         return new GameCompletion(
             document._id,
             document.gameId,
             document.playerId,
-            document.status as CompletionStatus,
+            status,
             document.completedAt ?? null,
         );
     }

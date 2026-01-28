@@ -1,13 +1,9 @@
 export enum CompletionStatus {
-    X = 0,
+    NOT_DONE = 0,
     DONE = 1,
-    PLANNED = 2,
-    ERROR = 3,
 }
 
 export const CompletionStatusLabel: Record<CompletionStatus, string> = {
-    [CompletionStatus.X]: "X",
+    [CompletionStatus.NOT_DONE]: "미완료",
     [CompletionStatus.DONE]: "완료",
-    [CompletionStatus.PLANNED]: "예정",
-    [CompletionStatus.ERROR]: "에러플💦",
 };
