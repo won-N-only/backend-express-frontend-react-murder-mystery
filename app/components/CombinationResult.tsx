@@ -16,9 +16,6 @@ export default function CombinationResult({ combinations, players }: Combination
                 >
                     <div className="flex items-center justify-between">
                         <span className="text-sm font-semibold text-blue-700">조합 #{idx + 1}</span>
-                        <span className="text-xs text-slate-600">
-                            점수 {Math.round(combo.totalScore)}
-                        </span>
                     </div>
                     <div className="grid md:grid-cols-2 gap-3">
                         {combo.groups.map((group, gIdx) => (
