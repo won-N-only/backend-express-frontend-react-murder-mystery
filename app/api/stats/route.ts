@@ -1,40 +1,31 @@
-import {
-  getCompanyStats,
-  getGameCompletionStats,
-  getPlayerStats,
-  getSeriesStats
-} from '@/lib/queries/stats';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
+import { getStatsService } from "../../../src/infrastructure/di/container";
 
-export async function GET(request: NextRequest) {
-  try {
-    const searchParams = request.nextUrl.searchParams;
-    const type = searchParams.get('type') || 'all';
+export const dynamic = "force-dynamic";
 
-    let stats: any = {};
+export async function GET(req: Request) {
+    try {
+        const { searchParams } = new URL(req.url);
+        const type = (searchParams.get("type") as string | null) ?? "all";
 
-    if (type === 'all' || type === 'players') {
-      stats.players = await getPlayerStats();
+        const result: any = {};
+
+        const statsService = getStatsService();
+
+        if (type === "all" || type === "players") {
+            result.players = await statsService.getPlayerStats();
+        }
+        if (type === "all" || type === "games") {
+            result.games = await statsService.getGameCompletionStats();
+        }
+        if (type === "all" || type === "companies") {
+            result.companies = await statsService.getCompanyStats();
+        }
+
+        return NextResponse.json({ stats: result });
+    } catch (error) {
+        console.error("GET /api/stats error", error);
+        return NextResponse.json({ error: "Failed to fetch stats" }, { status: 500 });
     }
-
-    if (type === 'all' || type === 'games') {
-      stats.games = await getGameCompletionStats();
-    }
-
-    if (type === 'all' || type === 'companies') {
-      stats.companies = await getCompanyStats();
-    }
-
-    if (type === 'all' || type === 'series') {
-      stats.series = await getSeriesStats();
-    }
-
-    return NextResponse.json({ stats }, { status: 200 });
-  } catch (error) {
-    console.error('Error fetching stats:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch stats' },
-      { status: 500 }
-    );
-  }
 }
+
