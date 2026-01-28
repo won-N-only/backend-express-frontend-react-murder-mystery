@@ -49,10 +49,8 @@ export async function POST(req: NextRequest) {
                     },
                     assignedPlayers: group.assignedPlayers,
                     playerNames: group.playerNames,
-                    matchScore: group.matchScore,
                     allIncomplete: group.allIncomplete,
                 })),
-                totalScore: combo.totalScore,
                 unusedPlayers: combo.unusedPlayers,
             }));
             return NextResponse.json({ combinations: combinationsDto, type: "combination" });
@@ -82,7 +80,6 @@ export async function POST(req: NextRequest) {
             ownerNote: match.game.ownerNote,
             createdAt: match.game.createdAt,
             updatedAt: match.game.updatedAt,
-            matchScore: match.matchScore,
             incompletePlayers: match.incompletePlayers,
         }));
         return NextResponse.json({ matches: matchesDto, type: "single" });

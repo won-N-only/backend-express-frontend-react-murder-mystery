@@ -22,7 +22,6 @@ export interface MatchGame {
     minPlayers: number;
     maxPlayers?: number | null;
     company?: string | null;
-    matchScore: number;
     incompletePlayers: string[];
 }
 
@@ -30,13 +29,11 @@ export interface CombinationGroup {
     game: Game;
     assignedPlayers: string[];
     playerNames: string[];
-    matchScore: number;
     allIncomplete: boolean;
 }
 
 export interface Combination {
     groups: CombinationGroup[];
-    totalScore: number;
     unusedPlayers: string[];
 }
 

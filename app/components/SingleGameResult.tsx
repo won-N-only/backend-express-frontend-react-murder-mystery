@@ -30,9 +30,6 @@ export default function SingleGameResult({ matches, limit }: SingleGameResultPro
                                 </div>
                             )}
                         </div>
-                        <div className="text-xs text-slate-500 self-center">
-                            점수 {Math.round(g.matchScore)}
-                        </div>
                     </div>
                 ))}
             </div>
