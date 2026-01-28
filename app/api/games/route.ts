@@ -2,7 +2,7 @@ import {
     getCreateGameUseCase,
     getGetGamesByPlayerCountUseCase,
     getGetGamesUseCase,
-} from "@/src/common/infrastructure/di/container";
+} from "@shared/infrastructure/di/container";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {

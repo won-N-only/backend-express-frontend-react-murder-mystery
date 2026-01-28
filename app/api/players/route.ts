@@ -1,4 +1,4 @@
-import { getGetPlayersUseCase, getUpsertPlayerUseCase } from "@/src/common/infrastructure/di/container";
+import { getGetPlayersUseCase, getUpsertPlayerUseCase } from "@shared/infrastructure/di/container";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {

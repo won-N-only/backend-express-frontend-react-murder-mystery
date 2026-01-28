@@ -2,7 +2,7 @@ import {
     getGetCompanyStatsUseCase,
     getGetGameCompletionStatsUseCase,
     getGetPlayerStatsUseCase,
-} from "@/src/common/infrastructure/di/container";
+} from "@shared/infrastructure/di/container";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";

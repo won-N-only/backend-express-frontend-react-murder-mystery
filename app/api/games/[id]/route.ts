@@ -3,7 +3,7 @@ import {
     getGetCompletionsByGameIdUseCase,
     getGetGameByIdUseCase,
     getUpdateGameUseCase,
-} from "@/src/common/infrastructure/di/container";
+} from "@shared/infrastructure/di/container";
 import { NextRequest, NextResponse } from "next/server";
 
 interface RouteParams {
@@ -14,11 +14,16 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
     try {
         const getGameByIdUseCase = getGetGameByIdUseCase();
         const getCompletionsUseCase = getGetCompletionsByGameIdUseCase();
-        const game = await getGameByIdUseCase.execute(params.id);
+
+        // 게임 정보와 완료 상태를 병렬로 가져오기
+        const [game, completions] = await Promise.all([
+            getGameByIdUseCase.execute(params.id),
+            getCompletionsUseCase.execute(params.id),
+        ]);
+
         if (!game) {
             return NextResponse.json({ error: "Game not found" }, { status: 404 });
         }
-        const completions = await getCompletionsUseCase.execute(params.id);
 
         const gameDto = {
             _id: game.id,
