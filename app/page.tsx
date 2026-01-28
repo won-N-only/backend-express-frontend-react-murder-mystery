@@ -1,254 +1,266 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import useSWR from "swr";
 
 interface Player {
-    id: number;
+    _id: string;
     name: string;
 }
 
-interface Game {
-    id: number;
+interface MatchGame {
+    _id: string;
     name: string;
-    min_players: number;
-    max_players: number | null;
-    company: string | null;
+    minPlayers: number;
+    maxPlayers?: number | null;
+    company?: string | null;
+    matchScore: number;
+    incompletePlayers: string[];
 }
 
-export default function Home() {
-    const [players, setPlayers] = useState<Player[]>([]);
-    const [selectedPlayers, setSelectedPlayers] = useState<number[]>([]);
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
+export default function HomePage() {
+    const { data: playersData } = useSWR("/api/players", fetcher);
+    const players: Player[] = playersData?.players ?? [];
+
+    const [selectedPlayers, setSelectedPlayers] = useState<string[]>([]);
     const [playerCount, setPlayerCount] = useState<number>(4);
-    const [matches, setMatches] = useState<any[]>([]);
+    const [useCombination, setUseCombination] = useState<boolean>(true);
+    const [excludePartySeries, setExcludePartySeries] = useState<boolean>(false);
+    const [excludeSinglePlayer, setExcludeSinglePlayer] = useState<boolean>(false);
+    const [matches, setMatches] = useState<MatchGame[]>([]);
+    const [combinations, setCombinations] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        fetchPlayers();
-    }, []);
-
-    const fetchPlayers = async () => {
-        try {
-            const res = await fetch("/api/players");
-            const data = await res.json();
-            setPlayers(data.players || []);
-        } catch (error) {
-            console.error("Failed to fetch players:", error);
-        }
-    };
-
-    const handlePlayerToggle = (playerId: number) => {
+    const togglePlayer = (id: string) => {
         setSelectedPlayers((prev) =>
-            prev.includes(playerId) ? prev.filter((id) => id !== playerId) : [...prev, playerId],
+            prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id],
         );
     };
 
     const handleMatch = async () => {
-        if (selectedPlayers.length === 0) {
-            alert("최소 1명의 참가자를 선택해주세요.");
-            return;
-        }
-
+        if (!selectedPlayers.length) return;
         setLoading(true);
         try {
             const res = await fetch("/api/match", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    player_ids: selectedPlayers,
-                    player_count: playerCount,
+                    playerIds: selectedPlayers,
+                    playerCount: useCombination ? undefined : playerCount,
+                    useCombination,
+                    excludePartySeries,
+                    excludeSinglePlayer,
                 }),
             });
-            const data = await res.json();
-            setMatches(data.matches || []);
-        } catch (error) {
-            console.error("Failed to find matches:", error);
-            alert("매칭 실패");
+            const json = await res.json();
+            if (json.type === "combination") {
+                setCombinations(json.combinations ?? []);
+                setMatches([]);
+            } else {
+                setMatches(json.matches ?? []);
+                setCombinations([]);
+            }
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="max-w-7xl mx-auto">
-            {/* Hero Section */}
-            <div className="text-center mb-12">
-                <h1 className="text-5xl font-bold mb-4 gradient-text">게임 매칭</h1>
-                <p className="text-xl text-gray-600">
-                    참가자와 인원 수를 선택하면 최적의 게임을 추천해드립니다
-                </p>
-            </div>
+        <div className="space-y-8">
+            <section className="space-y-3 text-center">
+                <h1 className="text-3xl md:text-4xl font-bold">ㄴㄱㄴㄱ랑할지 찾기</h1>
+            </section>
 
-            {/* Player Selection Card */}
-            <div className="glass-effect p-8 rounded-2xl shadow-xl mb-8 card-hover">
-                <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                        <span className="text-2xl">👥</span>
-                    </div>
-                    <h2 className="text-2xl font-bold text-gray-800">참가자 선택</h2>
+            <section className="rounded-2xl bg-white/80 shadow p-6 space-y-6">
+                <div>
+                    <h2 className="font-semibold text-lg">참가자 선택</h2>
+                    <p className="text-sm text-slate-500">
+                        선택된 참가자: {selectedPlayers.length}명
+                    </p>
                 </div>
 
-                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 mb-6">
-                    {players.map((player) => (
-                        <label
-                            key={player.id}
-                            className={`relative p-4 rounded-xl cursor-pointer text-center font-medium transition-all duration-200 transform ${
-                                selectedPlayers.includes(player.id)
-                                    ? "bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-lg scale-105"
-                                    : "bg-white text-gray-700 hover:bg-gray-50 shadow-md hover:shadow-lg"
-                            }`}
-                        >
+                <div className="bg-slate-50 rounded-lg p-3 border border-slate-200">
+                    <div className="text-xs font-semibold text-slate-700 mb-3">옵션 설정</div>
+                    <div className="space-y-2.5">
+                        <label className="flex items-center gap-2.5 text-sm cursor-pointer">
                             <input
                                 type="checkbox"
-                                checked={selectedPlayers.includes(player.id)}
-                                onChange={() => handlePlayerToggle(player.id)}
-                                className="hidden"
+                                checked={useCombination}
+                                onChange={(e) => setUseCombination(e.target.checked)}
+                                className="rounded w-4 h-4 text-blue-600"
                             />
-                            {player.name}
-                            {selectedPlayers.includes(player.id) && (
-                                <span className="absolute -top-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center">
-                                    <span className="text-blue-500 text-xs">✓</span>
-                                </span>
-                            )}
+                            <span className="select-none">조합 매칭</span>
                         </label>
+                        <label className="flex items-center gap-2.5 text-sm cursor-pointer">
+                            <input
+                                type="checkbox"
+                                checked={excludePartySeries}
+                                onChange={(e) => setExcludePartySeries(e.target.checked)}
+                                className="rounded w-4 h-4 text-blue-600"
+                            />
+                            <span className="select-none">파티시리즈 제외</span>
+                        </label>
+                        <label className="flex items-center gap-2.5 text-sm cursor-pointer">
+                            <input
+                                type="checkbox"
+                                checked={excludeSinglePlayer}
+                                onChange={(e) => setExcludeSinglePlayer(e.target.checked)}
+                                className="rounded w-4 h-4 text-blue-600"
+                            />
+                            <span className="select-none">1인용 게임 제외</span>
+                        </label>
+                    </div>
+                </div>
+
+                {!useCombination && (
+                    <div className="flex items-center gap-4 pt-2 border-t">
+                        <div className="flex items-center gap-2 text-sm">
+                            <span>플레이 인원</span>
+                            <input
+                                type="number"
+                                min={2}
+                                max={10}
+                                value={playerCount}
+                                onChange={(e) =>
+                                    setPlayerCount(parseInt(e.target.value || "2", 10))
+                                }
+                                className="w-16 rounded border px-2 py-1 text-center"
+                            />
+                        </div>
+                    </div>
+                )}
+
+                <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
+                    {players.map((p) => (
+                        <button
+                            key={p._id}
+                            type="button"
+                            onClick={() => togglePlayer(p._id)}
+                            className={`rounded-lg border px-3 py-2 text-sm ${
+                                selectedPlayers.includes(p._id)
+                                    ? "bg-blue-600 text-white border-blue-600"
+                                    : "bg-white hover:bg-slate-50"
+                            }`}
+                        >
+                            {p.name}
+                        </button>
                     ))}
                 </div>
 
-                <div className="flex items-center gap-4 mb-6">
-                    <label className="flex items-center gap-3 text-gray-700 font-medium">
-                        <span className="text-lg">인원 수:</span>
-                        <input
-                            type="number"
-                            min="2"
-                            max="10"
-                            value={playerCount}
-                            onChange={(e) => setPlayerCount(parseInt(e.target.value))}
-                            className="w-24 px-4 py-2 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none text-center font-semibold"
-                        />
-                        <span className="text-gray-500">명</span>
-                    </label>
-                    <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
-                    <div className="text-sm text-gray-500">
-                        선택된 참가자:{" "}
-                        <span className="font-bold text-blue-600">{selectedPlayers.length}명</span>
-                    </div>
-                </div>
-
                 <button
+                    type="button"
                     onClick={handleMatch}
-                    disabled={loading || selectedPlayers.length === 0}
-                    className="btn-primary w-full text-lg"
+                    disabled={loading || !selectedPlayers.length}
+                    className="w-full rounded-lg bg-blue-600 py-2.5 text-white font-semibold disabled:bg-slate-400 hover:bg-blue-700 transition"
                 >
-                    {loading ? (
-                        <span className="flex items-center justify-center gap-2">
-                            <span className="animate-spin">⚙️</span>
-                            매칭 중...
-                        </span>
-                    ) : (
-                        <span className="flex items-center justify-center gap-2">
-                            <span>🎯</span>
-                            게임 매칭하기
-                        </span>
-                    )}
+                    {loading ? "매칭 중..." : useCombination ? "조합 추천 보기" : "추천 게임 보기"}
                 </button>
-            </div>
+            </section>
 
-            {/* Match Results */}
-            {matches.length > 0 && (
-                <div className="glass-effect p-8 rounded-2xl shadow-xl">
-                    <div className="flex items-center gap-3 mb-6">
-                        <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
-                            <span className="text-2xl">✨</span>
-                        </div>
-                        <h2 className="text-2xl font-bold text-gray-800">
-                            추천 게임 <span className="text-blue-600">({matches.length}개)</span>
-                        </h2>
-                    </div>
-                    <div className="space-y-4">
-                        {matches.slice(0, 10).map((game, index) => (
-                            <div
-                                key={game.id}
-                                className="bg-white/60 backdrop-blur-sm p-6 rounded-xl border border-gray-200/50 hover:border-blue-300 hover:shadow-lg transition-all duration-300 group"
-                            >
-                                <div className="flex justify-between items-start gap-4">
-                                    <div className="flex-1">
-                                        <div className="flex items-center gap-3 mb-2">
-                                            <span className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-lg font-bold text-sm shadow-md">
-                                                {index + 1}
-                                            </span>
-                                            <h3 className="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors">
-                                                {game.name}
-                                            </h3>
-                                        </div>
-                                        <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600 mb-2">
-                                            <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full font-medium">
-                                                {game.min_players}
-                                                {game.max_players ? `-${game.max_players}` : "+"}인
-                                            </span>
-                                            {game.company && (
-                                                <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full font-medium">
-                                                    {game.company}
-                                                </span>
-                                            )}
-                                        </div>
-                                        {game.incomplete_players &&
-                                            game.incomplete_players.length > 0 && (
-                                                <div className="mt-3 flex items-center gap-2">
-                                                    <span className="text-xs font-medium text-green-600 bg-green-100 px-2 py-1 rounded-full">
-                                                        미완료
-                                                    </span>
-                                                    <span className="text-sm text-gray-600">
-                                                        {game.incomplete_players.join(", ")}
-                                                    </span>
-                                                </div>
-                                            )}
-                                    </div>
-                                    <Link
-                                        href={`/games/${game.id}`}
-                                        className="btn-secondary text-sm px-4 py-2"
+            {/* 조합 결과 */}
+            {combinations.length > 0 && (
+                <section className="space-y-4">
+                    <h2 className="text-lg font-semibold">추천 조합 {combinations.length}개</h2>
+                    {combinations.map((combo: any, idx: number) => (
+                        <div
+                            key={idx}
+                            className="rounded-xl bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 p-4 space-y-3"
+                        >
+                            <div className="flex items-center justify-between">
+                                <span className="text-sm font-semibold text-blue-700">
+                                    조합 #{idx + 1}
+                                </span>
+                                <span className="text-xs text-slate-600">
+                                    점수 {Math.round(combo.totalScore)}
+                                </span>
+                            </div>
+                            <div className="grid md:grid-cols-2 gap-3">
+                                {combo.groups.map((group: any, gIdx: number) => (
+                                    <div
+                                        key={gIdx}
+                                        className="rounded-lg bg-white/90 shadow-sm p-3 border border-blue-100"
                                     >
-                                        상세보기 →
-                                    </Link>
+                                        <div className="font-semibold text-sm mb-1">
+                                            {group.game.name}
+                                        </div>
+                                        <div className="text-xs text-slate-600 mb-2">
+                                            {group.game.minPlayers}
+                                            {group.game.maxPlayers
+                                                ? `-${group.game.maxPlayers}`
+                                                : "+"}
+                                            인{group.game.company && ` · ${group.game.company}`}
+                                        </div>
+                                        <div className="flex flex-wrap gap-1 mt-2">
+                                            {group.playerNames.map((name: string) => (
+                                                <span
+                                                    key={name}
+                                                    className={`px-2 py-0.5 rounded text-xs ${
+                                                        group.allIncomplete
+                                                            ? "bg-emerald-100 text-emerald-700 font-medium"
+                                                            : "bg-slate-100 text-slate-600"
+                                                    }`}
+                                                >
+                                                    {name}
+                                                </span>
+                                            ))}
+                                        </div>
+                                        {group.allIncomplete && (
+                                            <div className="mt-1 text-xs text-emerald-600 font-medium">
+                                                ✨ 모두 미완료
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                            {combo.unusedPlayers.length > 0 && (
+                                <div className="text-xs text-slate-500 pt-2 border-t">
+                                    사용 안 됨:{" "}
+                                    {combo.unusedPlayers
+                                        .map((id: string) => {
+                                            const p = players.find((p) => p._id === id);
+                                            return p?.name || id;
+                                        })
+                                        .join(", ")}
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                </section>
+            )}
+
+            {/* 단일 게임 결과 */}
+            {matches.length > 0 && (
+                <section className="space-y-4">
+                    <h2 className="text-lg font-semibold">추천 게임 {matches.length}개</h2>
+                    <div className="space-y-3">
+                        {matches.slice(0, 10).map((g) => (
+                            <div
+                                key={g._id}
+                                className="rounded-xl bg-white/80 shadow px-4 py-3 flex justify-between"
+                            >
+                                <div>
+                                    <div className="font-semibold">{g.name}</div>
+                                    <div className="text-xs text-slate-500">
+                                        {g.minPlayers}
+                                        {g.maxPlayers ? `-${g.maxPlayers}` : "+"}인
+                                        {g.company && ` · ${g.company}`}
+                                    </div>
+                                    {!!g.incompletePlayers.length && (
+                                        <div className="mt-1 text-xs text-emerald-700">
+                                            미완료: {g.incompletePlayers.join(", ")}
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="text-xs text-slate-500 self-center">
+                                    점수 {Math.round(g.matchScore)}
                                 </div>
                             </div>
                         ))}
                     </div>
-                </div>
+                </section>
             )}
-
-            {/* Quick Links */}
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Link
-                    href="/games"
-                    className="glass-effect p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 group card-hover"
-                >
-                    <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
-                        <span className="text-3xl">📚</span>
-                    </div>
-                    <h3 className="text-xl font-bold mb-2 text-gray-800">게임 목록</h3>
-                    <p className="text-gray-600">모든 게임을 한눈에 확인하세요</p>
-                </Link>
-                <Link
-                    href="/match"
-                    className="glass-effect p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 group card-hover"
-                >
-                    <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
-                        <span className="text-3xl">🎯</span>
-                    </div>
-                    <h3 className="text-xl font-bold mb-2 text-gray-800">고급 매칭</h3>
-                    <p className="text-gray-600">상세 옵션으로 정확한 매칭</p>
-                </Link>
-                <Link
-                    href="/stats"
-                    className="glass-effect p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 group card-hover"
-                >
-                    <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
-                        <span className="text-3xl">📊</span>
-                    </div>
-                    <h3 className="text-xl font-bold mb-2 text-gray-800">통계</h3>
-                    <p className="text-gray-600">참가자별 완료율 확인</p>
-                </Link>
-            </div>
         </div>
     );
 }
