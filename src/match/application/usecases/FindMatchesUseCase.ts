@@ -13,7 +13,6 @@ export interface FindMatchesRequest {
 
 export interface FindMatchesResult {
     game: Game;
-    matchScore: number;
     incompletePlayers: string[];
 }
 
@@ -27,13 +26,14 @@ export class FindMatchesUseCase {
     async execute(options: FindMatchesRequest): Promise<FindMatchesResult[]> {
         const { playerIds, playerCount, excludePartySeries = false, excludeSinglePlayer = false } = options;
 
-        // 게임 조회
+        // 게임 조회 (DB 레벨에서 기본 필터링)
         let games = await this.gameRepository.findByPlayerCount(playerCount, playerCount);
 
-        // 필터링
+        // 메모리 레벨 필터링 (normalizedMinPlayers 로직 적용)
         games = games.filter((game) => {
             if (excludePartySeries && game.isPartySeries()) return false;
             if (excludeSinglePlayer && game.isSinglePlayer()) return false;
+            // normalizedMinPlayers를 고려한 정확한 필터링
             return game.canAccommodatePlayers(playerCount);
         });
 
@@ -68,40 +68,29 @@ export class FindMatchesUseCase {
             const gameIdStr = game.id!.toString();
             const statusMap = gameCompletionMap.get(gameIdStr) || new Map();
 
-            let completedCount = 0;
-            const incompletePlayers: string[] = [];
-
+            // 모두 미완료인 게임만 추천 (조기 종료)
+            let hasCompleted = false;
             for (const playerId of playerIds) {
-                const status = statusMap.get(playerId);
-                if (status === CompletionStatus.DONE) {
-                    completedCount++;
-                } else {
-                    const playerName = playerNameMap.get(playerId);
-                    if (playerName) incompletePlayers.push(playerName);
+                if (statusMap.get(playerId) === CompletionStatus.DONE) {
+                    hasCompleted = true;
+                    break; // 하나라도 완료되면 즉시 중단
                 }
             }
 
-            // 모두 미완료인 게임만 추천
-            if (completedCount > 0) continue;
+            if (hasCompleted) continue;
 
-            const total = playerIds.length || 1;
-            const completionRate = completedCount / total;
-            const allIncompleteBonus = completedCount === 0 ? 50 : 0;
-            const matchScore = (1 - completionRate) * 100 + allIncompleteBonus;
+            // 모두 미완료인 경우에만 incompletePlayers 수집
+            const incompletePlayers = playerIds
+                .map((playerId) => playerNameMap.get(playerId))
+                .filter((name): name is string => name !== undefined);
 
             results.push({
                 game,
-                matchScore,
                 incompletePlayers,
             });
         }
 
-        return results.sort((a, b) => {
-            const scoreDiff = b.matchScore - a.matchScore;
-            if (Math.abs(scoreDiff) < 5) {
-                return Math.random() - 0.5;
-            }
-            return scoreDiff;
-        });
+        // 랜덤 정렬
+        return results.sort(() => Math.random() - 0.5);
     }
 }

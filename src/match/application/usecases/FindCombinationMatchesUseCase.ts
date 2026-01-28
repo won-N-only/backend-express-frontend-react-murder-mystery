@@ -14,13 +14,11 @@ export interface GameGroup {
     game: Game;
     assignedPlayers: string[];
     playerNames: string[];
-    matchScore: number;
     allIncomplete: boolean;
 }
 
 export interface FindCombinationMatchesResult {
     groups: GameGroup[];
-    totalScore: number;
     unusedPlayers: string[];
 }
 
@@ -112,10 +110,8 @@ export class FindCombinationMatchesUseCase {
                 if (allValid && gameGroups.length === numGroups) {
                     const gameIds = new Set(gameGroups.map((g) => g.game.id!.toString()));
                     if (gameIds.size === gameGroups.length) {
-                        const totalScore = gameGroups.reduce((sum, g) => sum + g.matchScore, 0);
                         combinations.push({
                             groups: gameGroups,
-                            totalScore,
                             unusedPlayers: [],
                         });
                     }
@@ -123,15 +119,7 @@ export class FindCombinationMatchesUseCase {
             }
         }
 
-        // 정렬 및 중복 제거
-        combinations.sort((a, b) => {
-            const scoreDiff = b.totalScore - a.totalScore;
-            if (Math.abs(scoreDiff) < 5) {
-                return Math.random() - 0.5;
-            }
-            return scoreDiff;
-        });
-
+        // 중복 제거
         const seen = new Set<string>();
         const uniqueCombinations: FindCombinationMatchesResult[] = [];
 
@@ -148,7 +136,8 @@ export class FindCombinationMatchesUseCase {
             }
         }
 
-        return uniqueCombinations.sort((a, b) => b.totalScore - a.totalScore).slice(0, 10);
+        // 랜덤 정렬
+        return uniqueCombinations.sort(() => Math.random() - 0.5).slice(0, 10);
     }
 
     private partitionPlayers(players: string[], numGroups: number): string[][] {
@@ -192,10 +181,7 @@ export class FindCombinationMatchesUseCase {
         playerNameMap: Map<string, string>,
     ): GameGroup | null {
         const groupSize = playerGroup.length;
-        let bestCandidate: { game: Game; score: number; allIncomplete: boolean } | null = null;
-        const topCandidates: Array<{ game: Game; score: number; allIncomplete: boolean }> = [];
-        let bestScore = -1;
-        let bestAllIncomplete = false;
+        const topCandidates: Game[] = [];
 
         // 한 번의 순회로 최적 게임 찾기 (정렬 최소화)
         for (const game of games) {
@@ -204,50 +190,18 @@ export class FindCombinationMatchesUseCase {
             const gameIdStr = game.id!.toString();
             const statusMap = gameCompletionMap.get(gameIdStr) || new Map();
 
-            let completedCount = 0;
+            // 플레이어 그룹의 완료 상태 확인 (조기 종료)
             let allIncomplete = true;
-
-            // 플레이어 그룹의 완료 상태 확인
             for (const pid of playerGroup) {
-                const status = statusMap.get(pid);
-                if (status === CompletionStatus.DONE) {
-                    completedCount++;
+                if (statusMap.get(pid) === CompletionStatus.DONE) {
                     allIncomplete = false;
                     break; // 하나라도 완료하면 바로 중단
                 }
             }
 
-            if (completedCount > 0) continue;
-
-            const completionRate = completedCount / groupSize;
-            const score = allIncomplete ? 1000 + (1 - completionRate) * 100 : (1 - completionRate) * 100;
-
-            // 최고 점수 후보 추적
-            if (
-                score > bestScore ||
-                (allIncomplete && !bestAllIncomplete) ||
-                (allIncomplete === bestAllIncomplete && Math.abs(score - bestScore) < 5)
-            ) {
-                if (allIncomplete && !bestAllIncomplete) {
-                    // 모두 미완료가 더 우선순위가 높음
-                    bestScore = score;
-                    bestAllIncomplete = true;
-                    topCandidates.length = 0;
-                    topCandidates.push({ game, score, allIncomplete });
-                } else if (allIncomplete === bestAllIncomplete) {
-                    if (score > bestScore) {
-                        bestScore = score;
-                        topCandidates.length = 0;
-                        topCandidates.push({ game, score, allIncomplete });
-                    } else if (Math.abs(score - bestScore) < 5) {
-                        topCandidates.push({ game, score, allIncomplete });
-                    }
-                } else if (score > bestScore) {
-                    bestScore = score;
-                    bestAllIncomplete = allIncomplete;
-                    topCandidates.length = 0;
-                    topCandidates.push({ game, score, allIncomplete });
-                }
+            // 모두 미완료인 게임만 후보에 추가
+            if (allIncomplete) {
+                topCandidates.push(game);
             }
         }
 
@@ -258,11 +212,10 @@ export class FindCombinationMatchesUseCase {
         const playerNames = playerGroup.map((pid) => playerNameMap.get(pid) || pid);
 
         return {
-            game: selected.game,
+            game: selected,
             assignedPlayers: playerGroup,
             playerNames,
-            matchScore: selected.score,
-            allIncomplete: selected.allIncomplete,
+            allIncomplete: true,
         };
     }
 
