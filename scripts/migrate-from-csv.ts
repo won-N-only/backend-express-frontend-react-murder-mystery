@@ -14,9 +14,9 @@ interface CSVRow {
   order: number;
   name: string;
   players: string;
-  company: string;
-  director: string;
-  owned_by: string;
+  company: string | null;
+  director: string | null;
+  owned_by: string | null;
   completions: Record<string, string>;
 }
 

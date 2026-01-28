@@ -2,7 +2,7 @@
 
 import { Game, Player } from "@/types";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function GameDetailPage() {
     const params = useParams();
@@ -13,14 +13,7 @@ export default function GameDetailPage() {
     const [players, setPlayers] = useState<Player[]>([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        if (gameId) {
-            fetchGameDetails();
-            fetchPlayers();
-        }
-    }, [gameId]);
-
-    const fetchGameDetails = async () => {
+    const fetchGameDetails = useCallback(async () => {
         try {
             const res = await fetch(`/api/games/${gameId}`);
             const data = await res.json();
@@ -31,7 +24,14 @@ export default function GameDetailPage() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [gameId]);
+
+    useEffect(() => {
+        if (gameId) {
+            fetchGameDetails();
+            fetchPlayers();
+        }
+    }, [gameId, fetchGameDetails]);
 
     const fetchPlayers = async () => {
         try {

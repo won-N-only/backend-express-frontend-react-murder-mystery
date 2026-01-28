@@ -28,7 +28,11 @@ export default function GamesPage() {
         }
     };
 
-    const companies = Array.from(new Set(games.map((g) => g.company).filter(Boolean)));
+    const companies = Array.from(
+        new Set(
+            games.map((g) => g.company).filter((company): company is string => company !== null),
+        ),
+    );
 
     const filteredGames = games.filter((game) => {
         if (searchTerm && !game.name.toLowerCase().includes(searchTerm.toLowerCase())) {

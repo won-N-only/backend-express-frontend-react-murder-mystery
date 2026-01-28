@@ -27,7 +27,7 @@ export async function findMatchingGames(options: MatchingOptions): Promise<Match
       FROM game_completions gc
       JOIN players p ON gc.player_id = p.id
       WHERE gc.game_id = ${game.id}
-        AND gc.player_id = ANY(${playerIds})
+        AND gc.player_id = ANY(${playerIds as any})
     `;
 
     const playerStatusMap = new Map(
