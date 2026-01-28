@@ -1,5 +1,10 @@
+import {
+    getDeleteGameUseCase,
+    getGetCompletionsByGameIdUseCase,
+    getGetGameByIdUseCase,
+    getUpdateGameUseCase,
+} from "@/src/common/infrastructure/di/container";
 import { NextRequest, NextResponse } from "next/server";
-import { getCompletionRepository, getGameRepository } from "../../../../src/infrastructure/di/container";
 
 interface RouteParams {
     params: { id: string };
@@ -7,13 +12,13 @@ interface RouteParams {
 
 export async function GET(_req: NextRequest, { params }: RouteParams) {
     try {
-        const gameRepository = getGameRepository();
-        const completionRepository = getCompletionRepository();
-        const game = await gameRepository.findById(params.id);
+        const getGameByIdUseCase = getGetGameByIdUseCase();
+        const getCompletionsUseCase = getGetCompletionsByGameIdUseCase();
+        const game = await getGameByIdUseCase.execute(params.id);
         if (!game) {
             return NextResponse.json({ error: "Game not found" }, { status: 404 });
         }
-        const completions = await completionRepository.findByGameId(params.id);
+        const completions = await getCompletionsUseCase.execute(params.id);
 
         const gameDto = {
             _id: game.id,
@@ -65,12 +70,12 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
             }
         }
 
-        const gameRepository = getGameRepository();
+        const updateGameUseCase = getUpdateGameUseCase();
         const updateData: any = { ...rest };
         if (ownerNote !== undefined) {
             updateData.ownerNote = ownerNoteArray;
         }
-        const updated = await gameRepository.update(params.id, updateData);
+        const updated = await updateGameUseCase.execute(params.id, updateData);
         if (!updated) {
             return NextResponse.json({ error: "Game not found" }, { status: 404 });
         }
@@ -97,8 +102,8 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
 
 export async function DELETE(_req: NextRequest, { params }: RouteParams) {
     try {
-        const gameRepository = getGameRepository();
-        const ok = await gameRepository.delete(params.id);
+        const deleteGameUseCase = getDeleteGameUseCase();
+        const ok = await deleteGameUseCase.execute(params.id);
         if (!ok) {
             return NextResponse.json({ error: "Game not found" }, { status: 404 });
         }
