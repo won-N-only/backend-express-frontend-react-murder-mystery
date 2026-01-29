@@ -2,6 +2,7 @@ import Navbar from "@app/components/common/Navbar";
 import ScrollToTop from "@app/components/common/ScrollToTop";
 import { SelectedPlayerProvider } from "@app/providers/SelectedPlayerProvider";
 import { SWRProvider } from "@app/providers/SWRProvider";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                             {children}
                         </main>
                         <ScrollToTop />
+                        <SpeedInsights />
                     </SelectedPlayerProvider>
                 </SWRProvider>
             </body>
