@@ -54,10 +54,10 @@ export default function HistorySection() {
     return (
         <div className="space-y-6">
             <div className="text-4xl text-bold">
-                <div>이력</div>
+                <div>전과 기록</div>
             </div>
-            <h2 className="text-2xl text-head-gray-800 font-semibold mb-4">
-                어떤 대머리의 이력을 볼까요?
+            <h2 className="text-xl text-head-gray-800 font-medium mb-4">
+                내가 저지른... 아니, 내가 해결한 수많은 사건들의 흔적.
             </h2>
             <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
                 {players.map((p) => {
@@ -67,7 +67,7 @@ export default function HistorySection() {
                             key={p._id}
                             type="button"
                             onClick={() => setSelectedPlayerId(p._id)}
-                            className={`rounded-3xl px-3 py-2 text-sm font-medium transition ${
+                            className={`rounded-3xl px-3 py-3 text-sm font-medium transition ${
                                 isSelected
                                     ? "bg-head-brown text-head-white border-head-brown shadow-soft"
                                     : "bg-head-white border-head-gray-300 text-head-gray-800 hover:bg-head-accent-brown hover:text-white"
@@ -80,35 +80,37 @@ export default function HistorySection() {
             </div>
 
             {selectedPlayer && selectedStat && (
-                <section className="rounded-2xl bg-gradient-to-b from-white to-head-main p-6 shadow-none border border-head-gray-200/60">
-                    <div className="flex items-start justify-between gap-4 flex-wrap">
-                        <div className="flex-1 min-w-0">
-                            <h2 className="text-head-gray-800 font-bold mb-2 text-xl">
-                                {selectedPlayer.name}님의 졸업률
-                            </h2>
-                            {topPercent != null && (
-                                <p className="text-head-gray-800 font-semibold text-lg mb-1">
-                                    상위 {topPercent}%
+                <div>
+                    <section className="rounded-2xl bg-gradient-to-b from-white to-head-main p-6 shadow-none border border-head-gray-200/60">
+                        <div className="flex items-start justify-between gap-4 flex-wrap">
+                            <div className="flex-1 min-w-0">
+                                <h2 className="text-head-gray-800 font-bold mb-2 text-xl">
+                                    {selectedPlayer.name}님의 졸업률
+                                </h2>
+                                {topPercent != null && (
+                                    <p className="text-head-brown font-semibold text-lg mb-1">
+                                        상위 {topPercent}%
+                                    </p>
+                                )}
+                                <p className="text-head-gray-500 text-sm">
+                                    {selectedStat.completedCount}개 완료 · 전체{" "}
+                                    {selectedStat.totalGames}개 중
                                 </p>
-                            )}
-                            <p className="text-head-gray-500 text-sm">
-                                {selectedStat.completedCount}개 완료 · 전체{" "}
-                                {selectedStat.totalGames}개 중
-                            </p>
+                            </div>
+                            <div className="flex items-center gap-4">
+                                <GraduationChart rate={selectedStat.completionRate} />
+                            </div>
                         </div>
-                        <div className="flex items-center gap-4">
-                            <GraduationChart rate={selectedStat.completionRate} />
-                        </div>
-                    </div>
+                    </section>
                     <div className="mt-4 flex justify-end">
                         <button
                             onClick={() => setShowGameCheckModal(true)}
-                            className="rounded-xl bg-head-accent-brown text-white px-5 py-2.5 text-base font-medium shadow-soft hover:opacity-90 transition-opacity"
+                            className="rounded-sm bg-head-accent-brown text-white px-5 py-1 text-md font-bold shadow-soft hover:opacity-90 transition-opacity"
                         >
                             완료한 게임 체크하기
                         </button>
                     </div>
-                </section>
+                </div>
             )}
 
             <RecentPlaysList
