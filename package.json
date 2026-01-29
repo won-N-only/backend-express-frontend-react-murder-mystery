@@ -11,6 +11,7 @@
         "create-indexes": "tsx scripts/create-indexes.ts"
     },
     "dependencies": {
+        "@fontsource/pretendard": "^5.2.5",
         "mongodb": "^6.8.0",
         "next": "^14.2.0",
         "react": "^18.3.0",
