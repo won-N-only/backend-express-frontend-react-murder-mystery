@@ -68,6 +68,8 @@ export class MongoGameRepository implements IGameRepository {
             company: game.company,
             series: game.series,
             ownerNote: game.ownerNote,
+            thumbnail: game.thumbnail ?? null,
+            description: game.description ?? null,
             createdAt: game.createdAt || now,
             updatedAt: game.updatedAt || now,
         };
@@ -81,6 +83,8 @@ export class MongoGameRepository implements IGameRepository {
             document.company,
             document.series,
             document.ownerNote,
+            document.thumbnail ?? null,
+            document.description ?? null,
             document.createdAt,
             document.updatedAt,
         );
@@ -96,6 +100,8 @@ export class MongoGameRepository implements IGameRepository {
         if (game.company !== undefined) updateData.company = game.company;
         if (game.series !== undefined) updateData.series = game.series;
         if (game.ownerNote !== undefined) updateData.ownerNote = game.ownerNote;
+        if (game.thumbnail !== undefined) updateData.thumbnail = game.thumbnail;
+        if (game.description !== undefined) updateData.description = game.description;
 
         const result = await db
             .collection(MongoGameRepository.COLLECTION_NAME)
@@ -151,6 +157,8 @@ export class MongoGameRepository implements IGameRepository {
             document.company ?? null,
             document.series ?? null,
             document.ownerNote ?? null,
+            document.thumbnail ?? null,
+            document.description ?? null,
             document.createdAt,
             document.updatedAt,
         );
