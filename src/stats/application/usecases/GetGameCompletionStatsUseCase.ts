@@ -31,16 +31,17 @@ export class GetGameCompletionStatsUseCase {
         const gameIds = games.map((g) => g.id!.toString());
         const playerIds = players.map((p) => p.id!.toString());
 
-        // 모든 게임에 대한 완료 상태 조회
-        const completions = await this.completionRepository.findByGameIdsAndPlayerIds(gameIds, playerIds);
+        // DB 레벨에서 집계 (aggregation pipeline 사용으로 성능 최적화)
+        const completionCounts = await this.completionRepository.countByGameIds(
+            gameIds,
+            playerIds,
+            CompletionStatus.DONE,
+        );
 
-        // 게임별 완료 개수 집계
+        // 게임별 완료 개수 맵 생성
         const gameCompletionMap = new Map<string, number>();
-        for (const completion of completions) {
-            if (completion.status === CompletionStatus.DONE) {
-                const gameIdStr = completion.gameId.toString();
-                gameCompletionMap.set(gameIdStr, (gameCompletionMap.get(gameIdStr) || 0) + 1);
-            }
+        for (const count of completionCounts) {
+            gameCompletionMap.set(count.gameId, count.count);
         }
 
         const stats: GameCompletionStat[] = games.map((game) => {

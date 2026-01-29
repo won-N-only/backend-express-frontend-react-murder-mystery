@@ -27,19 +27,19 @@ export class GetPlayerStatsUseCase {
         const totalGames = games.length || 0;
         if (totalGames === 0 || players.length === 0) return [];
 
-        // 완료 상태 조회
+        // DB 레벨에서 집계 (aggregation pipeline 사용으로 성능 최적화)
         const gameIds = games.map((g) => g.id!.toString());
         const playerIds = players.map((p) => p.id!.toString());
-        const completions = await this.completionRepository.findByGameIdsAndPlayerIds(gameIds, playerIds);
+        const completionCounts = await this.completionRepository.countByPlayerIds(
+            gameIds,
+            playerIds,
+            CompletionStatus.DONE,
+        );
 
-        // 완료된 게임만 필터링
-        const completedCompletions = completions.filter((c) => c.status === CompletionStatus.DONE);
-
-        // 플레이어별 완료 개수 집계
+        // 플레이어별 완료 개수 맵 생성
         const completionMap = new Map<string, number>();
-        for (const completion of completedCompletions) {
-            const playerIdStr = completion.playerId.toString();
-            completionMap.set(playerIdStr, (completionMap.get(playerIdStr) || 0) + 1);
+        for (const count of completionCounts) {
+            completionMap.set(count.playerId, count.count);
         }
 
         const stats: PlayerStats[] = players.map((player) => {
