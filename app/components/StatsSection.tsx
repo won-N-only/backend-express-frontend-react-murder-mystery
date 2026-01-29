@@ -14,9 +14,9 @@ export default function StatsSection({ players, companies }: StatsSectionProps) 
     const [selectedPlayerName, setSelectedPlayerName] = useState<string | null>(null);
 
     const getRankEmoji = (index: number) => {
-        if (index === 0) return "🥇";
-        if (index === 1) return "🥈";
-        if (index === 2) return "🥉";
+        if (index === 0) return "1";
+        if (index === 1) return "2";
+        if (index === 2) return "3";
         return `${index + 1}.`;
     };
 
