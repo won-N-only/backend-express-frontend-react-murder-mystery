@@ -30,7 +30,7 @@ export default function MatchOptions({
                         type="checkbox"
                         checked={excludePartySeries}
                         onChange={(e) => onExcludePartySeriesChange(e.target.checked)}
-                        className="rounded w-4 h-4 text-head-blue focus:ring-head-blue"
+                        className="rounded w-4 h-4 accent-head-brown focus:ring-head-brown"
                     />
                     <span className="select-none text-head-gray-800">파티시리즈 제외</span>
                 </label>
@@ -39,7 +39,7 @@ export default function MatchOptions({
                         type="checkbox"
                         checked={excludeSinglePlayer}
                         onChange={(e) => onExcludeSinglePlayerChange(e.target.checked)}
-                        className="rounded w-4 h-4 text-head-blue focus:ring-head-blue"
+                        className="rounded w-4 h-4 accent-head-brown focus:ring-head-brown"
                     />
                     <span className="select-none text-head-gray-800">1인용 게임 제외</span>
                 </label>
@@ -48,7 +48,7 @@ export default function MatchOptions({
                         type="checkbox"
                         checked={excludeTwoPlayer}
                         onChange={(e) => onExcludeTwoPlayerChange(e.target.checked)}
-                        className="rounded w-4 h-4 text-head-blue focus:ring-head-blue"
+                        className="rounded w-4 h-4 accent-head-brown focus:ring-head-brown"
                     />
                     <span className="select-none text-head-gray-800">2인용 게임 제외</span>
                 </label>
@@ -73,7 +73,7 @@ export default function MatchOptions({
                                     }
                                 }
                             }}
-                            className="w-20 rounded border border-head-gray-300 px-2 py-1 text-center text-head-gray-800 focus:outline-none focus:ring-2 focus:ring-head-blue"
+                            className="w-20 rounded border border-head-gray-300 px-2 py-1 text-center text-head-gray-800 focus:outline-none focus:ring-2 focus:ring-head-brown"
                         />
                         <span className="text-xs text-head-gray-500">
                             (최대 {selectedPlayersCount}개)
