@@ -13,6 +13,7 @@ const config: Config = {
         foreground: "var(--foreground)",
         /* 메인·구분선 (globals.css :root 참조) */
         "head-main": "var(--color-main)",
+        "head-badge": "var(--color-badge-bg)",
         "head-border": "var(--color-border)",
         /* 포인트/버튼 컬러 (블루 통일) */
         "head-brown": "var(--color-primary)",
