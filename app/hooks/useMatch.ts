@@ -6,6 +6,7 @@ interface MatchOptions {
     useCombination: boolean;
     excludePartySeries: boolean;
     excludeSinglePlayer: boolean;
+    numGroups?: number;
 }
 
 interface MatchResult {
@@ -32,6 +33,7 @@ export function useMatch() {
                     useCombination: options.useCombination,
                     excludePartySeries: options.excludePartySeries,
                     excludeSinglePlayer: options.excludeSinglePlayer,
+                    numGroups: options.useCombination ? options.numGroups : undefined,
                 }),
             });
             const json: MatchResult = await res.json();

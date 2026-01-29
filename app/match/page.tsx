@@ -11,17 +11,13 @@ import { fetcher } from "../lib/fetcher";
 import type { Player } from "../types";
 
 export default function MatchPage() {
-    const { data: playersData } = useSWR("/api/players", fetcher, {
-        revalidateOnFocus: false,
-        revalidateOnReconnect: false,
-    });
+    const { data: playersData } = useSWR("/api/players", fetcher);
     const players: Player[] = playersData?.players ?? [];
 
     const [selectedPlayers, setSelectedPlayers] = useState<string[]>([]);
-    const [playerCount, setPlayerCount] = useState<number>(4);
-    const [useCombination, setUseCombination] = useState<boolean>(true);
     const [excludePartySeries, setExcludePartySeries] = useState<boolean>(false);
     const [excludeSinglePlayer, setExcludeSinglePlayer] = useState<boolean>(false);
+    const [numGroups, setNumGroups] = useState<number | undefined>(undefined);
 
     const { matches, combinations, loading, executeMatch } = useMatch();
 
@@ -34,33 +30,32 @@ export default function MatchPage() {
     const handleMatch = () => {
         executeMatch({
             playerIds: selectedPlayers,
-            playerCount,
-            useCombination,
+            useCombination: true, // 항상 조합 매칭 사용
             excludePartySeries,
             excludeSinglePlayer,
+            numGroups,
         });
     };
 
     return (
         <div className="space-y-6">
-            <h1 className="text-2xl font-bold">게임 매칭</h1>
-            <section className="rounded-2xl bg-white/80 shadow p-6 space-y-4">
+            <h1 className="text-2xl font-bold text-head-gray-800">게임 매칭</h1>
+            <section className="rounded-2xl bg-head-white shadow-soft p-6 space-y-4">
                 <div>
-                    <h2 className="font-semibold">참가자 선택</h2>
-                    <p className="text-xs text-slate-500 mt-1">
+                    <h2 className="font-semibold text-head-gray-800">참가자 선택</h2>
+                    <p className="text-xs text-head-gray-500 mt-1">
                         선택된 참가자: {selectedPlayers.length}명
                     </p>
                 </div>
 
                 <MatchOptions
-                    useCombination={useCombination}
                     excludePartySeries={excludePartySeries}
                     excludeSinglePlayer={excludeSinglePlayer}
-                    playerCount={playerCount}
-                    onUseCombinationChange={setUseCombination}
+                    numGroups={numGroups}
+                    selectedPlayersCount={selectedPlayers.length}
                     onExcludePartySeriesChange={setExcludePartySeries}
                     onExcludeSinglePlayerChange={setExcludeSinglePlayer}
-                    onPlayerCountChange={setPlayerCount}
+                    onNumGroupsChange={setNumGroups}
                 />
 
                 <PlayerSelector
@@ -73,9 +68,9 @@ export default function MatchPage() {
                     type="button"
                     onClick={handleMatch}
                     disabled={loading || !selectedPlayers.length}
-                    className="w-full rounded-lg bg-blue-600 py-2.5 text-white font-semibold disabled:bg-slate-400 hover:bg-blue-700 transition"
+                    className="w-full rounded-lg bg-head-blue py-2.5 text-head-white font-semibold disabled:bg-head-gray-300 disabled:text-head-gray-500 hover:bg-head-blue-dark transition"
                 >
-                    {loading ? "매칭 중..." : useCombination ? "조합 추천 보기" : "추천 게임 보기"}
+                    {loading ? "매칭 중..." : "조합 추천 보기"}
                 </button>
             </section>
 
