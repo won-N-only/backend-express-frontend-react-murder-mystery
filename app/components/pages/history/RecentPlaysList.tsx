@@ -19,9 +19,9 @@ export default function RecentPlaysList({
     emptyHint = "대머리를 선택해주세요.",
 }: RecentPlaysListProps) {
     return (
-        <section className="rounded-2xl bg-head-white shadow-soft p-6">
+        <section className="rounded-2xl bg-gradient-to-b from-white to-head-main p-6 shadow-none border border-head-gray-200/60">
             <div className="flex items-center justify-between mb-4">
-                <h2 className="text-head-gray-800 font-semibold text-lg">완료한 게임</h2>
+                <h2 className="text-head-gray-800 font-bold text-xl">완료한 게임</h2>
                 <button
                     onClick={onViewAll}
                     className="text-sm text-head-brown font-medium hover:text-head-brown-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
