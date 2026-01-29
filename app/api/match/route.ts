@@ -15,6 +15,7 @@ export async function POST(req: NextRequest) {
             useCombination,
             excludePartySeries,
             excludeSinglePlayer,
+            excludeTwoPlayer,
             numGroups,
         } = body as {
             playerIds: string[];
@@ -22,6 +23,7 @@ export async function POST(req: NextRequest) {
             useCombination?: boolean;
             excludePartySeries?: boolean;
             excludeSinglePlayer?: boolean;
+            excludeTwoPlayer?: boolean;
             numGroups?: number;
         };
 
@@ -39,6 +41,7 @@ export async function POST(req: NextRequest) {
                 playerIds,
                 excludePartySeries: excludePartySeries ?? false,
                 excludeSinglePlayer: excludeSinglePlayer ?? false,
+                excludeTwoPlayer: excludeTwoPlayer ?? false,
                 numGroups,
             });
             // 도메인 엔티티를 DTO로 변환
@@ -76,6 +79,7 @@ export async function POST(req: NextRequest) {
             playerCount,
             excludePartySeries: excludePartySeries ?? false,
             excludeSinglePlayer: excludeSinglePlayer ?? false,
+            excludeTwoPlayer: excludeTwoPlayer ?? false,
         });
         // 도메인 엔티티를 DTO로 변환
         const matchesDto = matches.map((match) => ({
