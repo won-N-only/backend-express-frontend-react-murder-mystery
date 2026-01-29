@@ -3,8 +3,8 @@ export const NAV_ITEMS = [
     { href: "/", label: "대머리" },
     { href: "/history", label: "전과 기록" },
     { href: "/games", label: "사건 수색" },
-    { href: "/match", label: "매칭" },
-    { href: "/stats", label: "통계" },
+    { href: "/match", label: "사건 배당" },
+    { href: "/stats", label: "대머리 성적표" },
 ] as const;
 
 export const LINK_CLASS_INACTIVE =
