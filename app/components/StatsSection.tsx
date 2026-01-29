@@ -93,22 +93,7 @@ export default function StatsSection({ players, companies }: StatsSectionProps) 
                     </div>
                 </section>
 
-                <section className="space-y-3">
-                    <h2 className="text-xl font-semibold text-head-gray-800">제작사별 요약</h2>
-                    <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-                        {companies.map((c) => (
-                            <div
-                                key={c.company}
-                                className="rounded-xl bg-head-white shadow-soft px-4 py-3 text-sm hover:shadow-md transition-shadow"
-                            >
-                                <div className="font-semibold mb-1 text-head-gray-800">
-                                    {c.company}
-                                </div>
-                                <div className="text-head-gray-600">게임 수: {c.gameCount}</div>
-                            </div>
-                        ))}
-                    </div>
-                </section>
+                <section className="space-y-3">{/* 추후 뭔가 추가할 예정 */}</section>
             </div>
 
             {/* 완료한 게임 모달 */}
