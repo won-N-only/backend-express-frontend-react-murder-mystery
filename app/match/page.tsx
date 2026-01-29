@@ -15,9 +15,9 @@ export default function MatchPage() {
     const players: Player[] = playersData?.players ?? [];
 
     const [selectedPlayers, setSelectedPlayers] = useState<string[]>([]);
-    const [excludePartySeries, setExcludePartySeries] = useState<boolean>(false);
-    const [excludeSinglePlayer, setExcludeSinglePlayer] = useState<boolean>(false);
-    const [excludeTwoPlayer, setExcludeTwoPlayer] = useState<boolean>(false);
+    const [excludePartySeries, setExcludePartySeries] = useState<boolean>(true);
+    const [excludeSinglePlayer, setExcludeSinglePlayer] = useState<boolean>(true);
+    const [excludeTwoPlayer, setExcludeTwoPlayer] = useState<boolean>(true);
     const [numGroups, setNumGroups] = useState<number | undefined>(undefined);
 
     const { matches, combinations, loading, executeMatch } = useMatch();
