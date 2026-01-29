@@ -4,6 +4,7 @@ import CompletedGamesModal from "@app/components/common/CompletedGamesModal";
 import GameCheckModal from "@app/components/common/GameCheckModal";
 import GraduationChart from "@app/components/common/GraduationChart";
 import PageHeader from "@app/components/common/PageHeader";
+import PlayerListGrid from "@app/components/common/PlayerListGrid";
 import RecentPlaysList from "@app/components/pages/history/RecentPlaysList";
 import { fetcher } from "@app/lib/fetcher";
 import { useSelectedPlayer } from "@app/providers/SelectedPlayerProvider";
@@ -58,25 +59,11 @@ export default function HistorySection() {
                 title="전과 기록"
                 description="내가 저지른... 아니, 내가 해결한 수많은 사건들의 흔적."
             />
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
-                {players.map((p) => {
-                    const isSelected = selectedPlayer?._id === p._id;
-                    return (
-                        <button
-                            key={p._id}
-                            type="button"
-                            onClick={() => setSelectedPlayerId(p._id)}
-                            className={`rounded-3xl px-3 py-3 text-sm font-medium transition ${
-                                isSelected
-                                    ? "bg-head-brown text-head-white border-head-brown shadow-soft"
-                                    : "bg-head-white border-head-gray-300 text-head-gray-800 hover:bg-head-accent-brown hover:text-white"
-                            }`}
-                        >
-                            {p.name}
-                        </button>
-                    );
-                })}
-            </div>
+            <PlayerListGrid
+                players={players}
+                selectedPlayerIds={selectedPlayerId ? [selectedPlayerId] : []}
+                onSelectPlayer={setSelectedPlayerId}
+            />
 
             {selectedPlayer && selectedStat && (
                 <div>

@@ -1,8 +1,9 @@
 "use client";
 
+import PageHeader from "@app/components/common/PageHeader";
+import PlayerListGrid from "@app/components/common/PlayerListGrid";
 import CombinationResult from "@app/components/pages/match/CombinationResult";
 import MatchOptions from "@app/components/pages/match/MatchOptions";
-import PlayerSelector from "@app/components/pages/match/PlayerSelector";
 import SingleGameResult from "@app/components/pages/match/SingleGameResult";
 import { useMatch } from "@app/hooks/useMatch";
 import { fetcher } from "@app/lib/fetcher";
@@ -41,42 +42,41 @@ export default function MatchPage() {
 
     return (
         <div className="space-y-6">
-            <h1 className="text-2xl font-bold text-head-gray-800">게임 매칭</h1>
-            <section className="rounded-2xl bg-head-white shadow-soft p-6 space-y-4">
-                <div>
-                    <h2 className="font-semibold text-head-gray-800">참가자 선택</h2>
-                    <p className="text-xs text-head-gray-500 mt-1">
-                        선택된 참가자: {selectedPlayers.length}명
-                    </p>
-                </div>
+            <PageHeader title="사건 배당" description="토 달지 마세요. 불만은 사절." />
 
-                <MatchOptions
-                    excludePartySeries={excludePartySeries}
-                    excludeSinglePlayer={excludeSinglePlayer}
-                    excludeTwoPlayer={excludeTwoPlayer}
-                    numGroups={numGroups}
-                    selectedPlayersCount={selectedPlayers.length}
-                    onExcludePartySeriesChange={setExcludePartySeries}
-                    onExcludeSinglePlayerChange={setExcludeSinglePlayer}
-                    onExcludeTwoPlayerChange={setExcludeTwoPlayer}
-                    onNumGroupsChange={setNumGroups}
-                />
+            <div>
+                <h2 className="text-xl font-semibold text-head-gray-800">참가자 선택</h2>
+                <p className="text-sm text-head-gray-500 mt-1">
+                    선택된 참가자: {selectedPlayers.length}명
+                </p>
+            </div>
 
-                <PlayerSelector
-                    players={players}
-                    selectedPlayers={selectedPlayers}
-                    onToggle={togglePlayer}
-                />
+            <MatchOptions
+                excludePartySeries={excludePartySeries}
+                excludeSinglePlayer={excludeSinglePlayer}
+                excludeTwoPlayer={excludeTwoPlayer}
+                numGroups={numGroups}
+                selectedPlayersCount={selectedPlayers.length}
+                onExcludePartySeriesChange={setExcludePartySeries}
+                onExcludeSinglePlayerChange={setExcludeSinglePlayer}
+                onExcludeTwoPlayerChange={setExcludeTwoPlayer}
+                onNumGroupsChange={setNumGroups}
+            />
 
-                <button
-                    type="button"
-                    onClick={handleMatch}
-                    disabled={loading || !selectedPlayers.length}
-                    className="w-full rounded-lg bg-head-brown py-2.5 text-head-white font-semibold disabled:bg-head-gray-300 disabled:text-head-gray-500 hover:bg-head-brown-dark transition"
-                >
-                    {loading ? "매칭 중..." : "조합 추천 보기"}
-                </button>
-            </section>
+            <PlayerListGrid
+                players={players}
+                selectedPlayerIds={selectedPlayers}
+                onSelectPlayer={togglePlayer}
+            />
+
+            <button
+                type="button"
+                onClick={handleMatch}
+                disabled={loading || !selectedPlayers.length}
+                className="btn-primary w-full"
+            >
+                {loading ? "매칭 중..." : "조합 추천 보기"}
+            </button>
 
             {combinations.length > 0 && (
                 <CombinationResult combinations={combinations} players={players} />
