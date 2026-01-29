@@ -26,7 +26,7 @@ export default function GraduationChart({ rate }: GraduationChartProps) {
                 />
             </svg>
             <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-2xl font-bold text-head-gray-800">{Math.round(rate)}%</span>
+                <span className="text-2xl font-bold text-head-brown">{Math.round(rate)}%</span>
             </div>
         </div>
     );
