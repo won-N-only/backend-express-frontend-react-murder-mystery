@@ -24,6 +24,20 @@ export class MongoGameRepository implements IGameRepository {
         return game ? this.toDomain(game) : null;
     }
 
+    async findByIds(ids: string[]): Promise<Game[]> {
+        if (ids.length === 0) return [];
+        const db = await MongoDatabase.getDb();
+        const objectIds = ids.map((id) => new ObjectId(id));
+        const games = await db
+            .collection(MongoGameRepository.COLLECTION_NAME)
+            .find({ _id: { $in: objectIds } })
+            .toArray();
+
+        // 입력 순서대로 정렬하여 반환
+        const gameMap = new Map(games.map((g) => [g._id.toString(), this.toDomain(g)]));
+        return ids.map((id) => gameMap.get(id)).filter((g): g is Game => g !== undefined);
+    }
+
     async findByPlayerCount(minPlayers: number, maxPlayers?: number): Promise<Game[]> {
         const db = await MongoDatabase.getDb();
         const query: any = {
