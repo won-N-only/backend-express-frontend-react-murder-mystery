@@ -8,7 +8,7 @@ interface CheckboxProps {
 }
 
 const CHECKBOX_VISUAL_CLASS =
-    "relative w-4 h-4 shrink-0 rounded border-2 border-head-brown flex items-center justify-center after:absolute after:inset-1 after:rounded-[2px] after:bg-head-brown after:content-[''] after:opacity-0 peer-checked:after:opacity-100";
+    "relative w-4 h-4 shrink-0 rounded border-2 border-head-brown flex items-center justify-center after:absolute after:inset-0.5 after:rounded-[2px] after:bg-head-brown after:content-[''] after:opacity-0 peer-checked:after:opacity-100";
 
 /**
  * 공용 체크박스 (바깥 테두리 + 체크 시 안쪽 진한 사각형).

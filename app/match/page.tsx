@@ -68,7 +68,7 @@ export default function MatchPage() {
                 type="button"
                 onClick={handleMatch}
                 disabled={loading || !selectedPlayers.length}
-                className="btn-primary w-full"
+                className="w-1/4 block mx-auto btn-primary"
             >
                 {loading ? "매칭 중..." : "조합 추천 보기"}
             </button>
