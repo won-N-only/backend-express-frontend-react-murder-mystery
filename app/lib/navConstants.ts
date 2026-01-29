@@ -1,8 +1,8 @@
 /** 네비게이션 메뉴 항목 (Navbar / NavbarFallback 공용) */
 export const NAV_ITEMS = [
     { href: "/", label: "대머리" },
-    { href: "/history", label: "이력" },
-    { href: "/games", label: "찾기" },
+    { href: "/history", label: "전과 기록" },
+    { href: "/games", label: "사건 수색" },
     { href: "/match", label: "매칭" },
     { href: "/stats", label: "통계" },
 ] as const;

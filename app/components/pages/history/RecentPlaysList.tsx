@@ -55,7 +55,7 @@ export default function RecentPlaysList({
                                 )}
                                 <Link
                                     href={`/games/${game.gameId}`}
-                                    className="shrink-0 w-fit rounded-sm border border-head-brown text-head-brown px-4 py-1.5 text-sm font-medium hover:bg-head-brown hover:text-head-white transition-colors"
+                                    className="shrink-0 w-fit border border-head-brown text-head-brown px-4 py-1 text-sm font-medium hover:bg-head-brown hover:text-head-white transition-colors"
                                 >
                                     상세보기
                                 </Link>

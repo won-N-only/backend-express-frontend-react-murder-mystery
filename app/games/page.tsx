@@ -32,7 +32,7 @@ export default function GamesPage() {
             <div className="space-y-6">
                 <div className="flex items-center justify-between">
                     <h1 className="text-2xl font-bold text-head-gray-800">
-                        게임 목록 ({filteredGames.length})
+                        사건 수색 ({filteredGames.length})
                     </h1>
                 </div>
 
