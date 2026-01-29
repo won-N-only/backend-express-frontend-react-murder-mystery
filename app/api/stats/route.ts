@@ -14,18 +14,35 @@ export async function GET(req: Request) {
 
         const result: any = {};
 
+        // 병렬 실행으로 성능 개선
+        const promises: Promise<any>[] = [];
+
         if (type === "all" || type === "players") {
             const getPlayerStatsUseCase = getGetPlayerStatsUseCase();
-            result.players = await getPlayerStatsUseCase.execute();
+            promises.push(
+                getPlayerStatsUseCase.execute().then((players) => {
+                    result.players = players;
+                }),
+            );
         }
         if (type === "all" || type === "games") {
             const getGameCompletionStatsUseCase = getGetGameCompletionStatsUseCase();
-            result.games = await getGameCompletionStatsUseCase.execute();
+            promises.push(
+                getGameCompletionStatsUseCase.execute().then((games) => {
+                    result.games = games;
+                }),
+            );
         }
         if (type === "all" || type === "companies") {
             const getCompanyStatsUseCase = getGetCompanyStatsUseCase();
-            result.companies = await getCompanyStatsUseCase.execute();
+            promises.push(
+                getCompanyStatsUseCase.execute().then((companies) => {
+                    result.companies = companies;
+                }),
+            );
         }
+
+        await Promise.all(promises);
 
         return NextResponse.json({ stats: result });
     } catch (error) {
