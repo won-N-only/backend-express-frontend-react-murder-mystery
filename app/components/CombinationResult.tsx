@@ -43,11 +43,6 @@ export default function CombinationResult({ combinations, players }: Combination
                                         </span>
                                     ))}
                                 </div>
-                                {group.allIncomplete && (
-                                    <div className="mt-1 text-xs text-emerald-600 font-medium">
-                                        ✨ 모두 미완료
-                                    </div>
-                                )}
                             </div>
                         ))}
                     </div>
