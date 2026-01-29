@@ -111,7 +111,8 @@ export default function GameCheckModal({ playerId, playerName, onClose }: GameCh
                 className="bg-head-white rounded-2xl shadow-soft max-w-[720px] w-full max-h-[90vh] overflow-hidden flex flex-col"
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className="p-6 space-y-4 flex-shrink-0">
+                {/* 헤더 및 검색 - sticky */}
+                <div className="sticky top-0 bg-head-white z-10 p-6 space-y-4 border-b border-head-gray-200 flex-shrink-0">
                     {/* 헤더 */}
                     <div className="flex items-start justify-between">
                         <div>
