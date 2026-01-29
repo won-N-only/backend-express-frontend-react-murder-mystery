@@ -24,7 +24,7 @@ export default function RecentPlaysList({
                 <h2 className="text-head-gray-800 font-semibold text-lg">완료한 게임</h2>
                 <button
                     onClick={onViewAll}
-                    className="text-sm text-head-blue font-medium hover:text-head-blue-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="text-sm text-head-brown font-medium hover:text-head-brown-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={!selectedPlayerName}
                 >
                     전체보기
@@ -44,7 +44,7 @@ export default function RecentPlaysList({
                             <div className="flex-1 min-w-0">
                                 <Link
                                     href={`/games/${game.gameId}`}
-                                    className="text-head-gray-800 font-medium truncate hover:text-head-blue transition-colors block"
+                                    className="text-head-gray-800 font-medium truncate hover:text-head-brown transition-colors block"
                                 >
                                     {game.gameName}
                                 </Link>
@@ -56,7 +56,7 @@ export default function RecentPlaysList({
                             </div>
                             <Link
                                 href={`/games/${game.gameId}`}
-                                className="shrink-0 rounded-lg border border-head-blue text-head-blue px-4 py-1.5 text-sm font-medium hover:bg-head-blue hover:text-head-white transition-colors"
+                                className="shrink-0 rounded-lg border border-head-brown text-head-brown px-4 py-1.5 text-sm font-medium hover:bg-head-brown hover:text-head-white transition-colors"
                             >
                                 상세보기
                             </Link>
