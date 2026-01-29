@@ -6,6 +6,7 @@ interface MatchOptions {
     useCombination: boolean;
     excludePartySeries: boolean;
     excludeSinglePlayer: boolean;
+    excludeTwoPlayer: boolean;
     numGroups?: number;
 }
 
@@ -33,6 +34,7 @@ export function useMatch() {
                     useCombination: options.useCombination,
                     excludePartySeries: options.excludePartySeries,
                     excludeSinglePlayer: options.excludeSinglePlayer,
+                    excludeTwoPlayer: options.excludeTwoPlayer,
                     numGroups: options.useCombination ? options.numGroups : undefined,
                 }),
             });

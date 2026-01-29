@@ -1,20 +1,24 @@
 interface MatchOptionsProps {
     excludePartySeries: boolean;
     excludeSinglePlayer: boolean;
+    excludeTwoPlayer: boolean;
     numGroups?: number;
     selectedPlayersCount?: number;
     onExcludePartySeriesChange: (value: boolean) => void;
     onExcludeSinglePlayerChange: (value: boolean) => void;
+    onExcludeTwoPlayerChange: (value: boolean) => void;
     onNumGroupsChange?: (value: number) => void;
 }
 
 export default function MatchOptions({
     excludePartySeries,
     excludeSinglePlayer,
+    excludeTwoPlayer,
     numGroups,
     selectedPlayersCount = 0,
     onExcludePartySeriesChange,
     onExcludeSinglePlayerChange,
+    onExcludeTwoPlayerChange,
     onNumGroupsChange,
 }: MatchOptionsProps) {
     return (
@@ -38,6 +42,15 @@ export default function MatchOptions({
                         className="rounded w-4 h-4 text-head-blue focus:ring-head-blue"
                     />
                     <span className="select-none text-head-gray-800">1인용 게임 제외</span>
+                </label>
+                <label className="flex items-center gap-2.5 text-sm cursor-pointer">
+                    <input
+                        type="checkbox"
+                        checked={excludeTwoPlayer}
+                        onChange={(e) => onExcludeTwoPlayerChange(e.target.checked)}
+                        className="rounded w-4 h-4 text-head-blue focus:ring-head-blue"
+                    />
+                    <span className="select-none text-head-gray-800">2인용 게임 제외</span>
                 </label>
             </div>
             {onNumGroupsChange && (
