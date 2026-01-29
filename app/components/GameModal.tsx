@@ -69,11 +69,11 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
             onClick={onClose}
         >
             <div
-                className="bg-head-white rounded-2xl shadow-soft max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+                className="bg-head-white rounded-2xl shadow-soft max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col"
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className="p-6 space-y-6">
-                    {/* 헤더 */}
+                {/* 헤더 - sticky */}
+                <div className="sticky top-0 bg-head-white z-10 p-6 border-b border-head-gray-200 flex-shrink-0">
                     <div className="flex items-start justify-between">
                         {isLoadingGame ? (
                             <div className="text-head-gray-500">로딩 중...</div>
@@ -87,7 +87,10 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
                             ×
                         </button>
                     </div>
+                </div>
 
+                {/* 콘텐츠 영역 - 스크롤 가능 */}
+                <div className="flex-1 overflow-y-auto p-6">
                     {/* 참가자별 완료 상태 */}
                     {game && (
                         <section className="space-y-4">
