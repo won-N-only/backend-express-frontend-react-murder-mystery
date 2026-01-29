@@ -16,7 +16,7 @@ export default function LandingPage() {
                 </div>
 
                 <p
-                    className="text-center text-xl md:text-4xl text-[#333] mb-6 font-medium"
+                    className="text-center text-4xl   text-[#333] mb-6 font-medium"
                     style={{ fontFamily: '"Tom\'s Handwriting", Georgia, cursive' }}
                 >
                     Don&apos;t worry, we have hair.
