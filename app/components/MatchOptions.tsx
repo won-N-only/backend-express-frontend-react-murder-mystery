@@ -58,9 +58,8 @@ export default function MatchOptions({
                     <div className="flex items-center gap-2 text-sm">
                         <span className="text-head-gray-800">조합당 게임 수</span>
                         <input
-                            type="number"
-                            min={2}
-                            max={5}
+                            type="text"
+                            inputMode="numeric"
                             value={numGroups ?? ""}
                             placeholder="자동"
                             onChange={(e) => {
