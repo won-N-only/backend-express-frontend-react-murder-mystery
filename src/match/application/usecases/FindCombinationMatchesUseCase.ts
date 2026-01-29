@@ -8,6 +8,7 @@ export interface FindCombinationMatchesRequest {
     playerIds: string[];
     excludePartySeries?: boolean;
     excludeSinglePlayer?: boolean;
+    excludeTwoPlayer?: boolean;
     numGroups?: number; // 조합 하나에 들어갈 게임 수 (파티 수)
 }
 
@@ -35,6 +36,7 @@ export class FindCombinationMatchesUseCase {
             playerIds,
             excludePartySeries = false,
             excludeSinglePlayer = false,
+            excludeTwoPlayer = false,
             numGroups: requestedNumGroups,
         } = options;
 
@@ -47,6 +49,7 @@ export class FindCombinationMatchesUseCase {
         games = games.filter((game) => {
             if (excludePartySeries && game.isPartySeries()) return false;
             if (excludeSinglePlayer && game.isSinglePlayer()) return false;
+            if (excludeTwoPlayer && game.isTwoPlayer()) return false;
             return true;
         });
 
