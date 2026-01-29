@@ -1,14 +1,14 @@
 "use client";
 
+import CombinationResult from "@app/components/pages/match/CombinationResult";
+import MatchOptions from "@app/components/pages/match/MatchOptions";
+import PlayerSelector from "@app/components/pages/match/PlayerSelector";
+import SingleGameResult from "@app/components/pages/match/SingleGameResult";
+import { useMatch } from "@app/hooks/useMatch";
+import { fetcher } from "@app/lib/fetcher";
+import type { Player } from "@app/types";
 import { useState } from "react";
 import useSWR from "swr";
-import CombinationResult from "../components/CombinationResult";
-import MatchOptions from "../components/MatchOptions";
-import PlayerSelector from "../components/PlayerSelector";
-import SingleGameResult from "../components/SingleGameResult";
-import { useMatch } from "../hooks/useMatch";
-import { fetcher } from "../lib/fetcher";
-import type { Player } from "../types";
 
 export default function MatchPage() {
     const { data: playersData } = useSWR("/api/players", fetcher);

@@ -1,5 +1,5 @@
+import { SCROLL_POSITION_KEY } from "@app/lib/constants";
 import { useEffect, useRef } from "react";
-import { SCROLL_POSITION_KEY } from "../lib/constants";
 
 export function useScrollRestore(dependencies: any[] = []) {
     const hasRestoredRef = useRef(false);

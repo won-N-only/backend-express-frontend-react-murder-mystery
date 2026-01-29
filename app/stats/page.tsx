@@ -1,9 +1,9 @@
 "use client";
 
+import StatsSection from "@app/components/pages/stats/StatsSection";
+import { fetcher } from "@app/lib/fetcher";
+import type { CompanyStat, PlayerStat } from "@app/types";
 import useSWR from "swr";
-import StatsSection from "../components/StatsSection";
-import { fetcher } from "../lib/fetcher";
-import type { CompanyStat, PlayerStat } from "../types";
 
 export default function StatsPage() {
     const { data } = useSWR("/api/stats", fetcher);
