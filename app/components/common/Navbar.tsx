@@ -25,8 +25,8 @@ function NavbarInner() {
         isActive(item) ? LINK_CLASS_ACTIVE : LINK_CLASS_INACTIVE;
 
     return (
-        <div className="sticky top-0 z-40 w-full bg-head-main">
-            <nav className="flex items-center justify-center w-full h-[100px] bg-head-main">
+        <div className="fixed top-0 left-0 right-0 z-40 w-full bg-head-main">
+            <nav className="flex items-center justify-center w-full h-[80px] bg-head-main">
                 <div className="mx-auto max-w-[720px] w-full px-4 flex items-center justify-between">
                     <Link
                         href="/"

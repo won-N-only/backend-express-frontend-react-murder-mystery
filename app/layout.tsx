@@ -15,7 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <SWRProvider>
                     <SelectedPlayerProvider>
                         <Navbar />
-                        <main className="mx-auto max-w-[720px] px-4 py-8 bg-transparent">
+                        <main className="mx-auto max-w-[720px] px-4 pt-[100px] pb-8 bg-transparent">
                             {children}
                         </main>
                     </SelectedPlayerProvider>
