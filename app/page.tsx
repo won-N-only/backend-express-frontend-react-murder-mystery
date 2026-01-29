@@ -1,141 +1,45 @@
-"use client";
+import Image from "next/image";
 
-import CompletedGamesModal from "@app/components/common/CompletedGamesModal";
-import GameCheckModal from "@app/components/common/GameCheckModal";
-import GraduationChart from "@app/components/common/GraduationChart";
-import RecentPlaysList from "@app/components/pages/home/RecentPlaysList";
-import { fetcher } from "@app/lib/fetcher";
-import { useSelectedPlayer } from "@app/providers/SelectedPlayerProvider";
-import type { CompletedGame, Player, PlayerStat } from "@app/types";
-import { useMemo, useState } from "react";
-import useSWR from "swr";
-
-export default function HomePage() {
-    const { selectedPlayerId, setSelectedPlayerId } = useSelectedPlayer();
-
-    const { data: playersData } = useSWR<{ players: Player[] }>("/api/players", fetcher);
-    const players = useMemo(() => playersData?.players ?? [], [playersData?.players]);
-
-    const { data: statsData } = useSWR<{ stats: { players?: PlayerStat[] } }>(
-        "/api/stats",
-        fetcher,
-    );
-    const playerStats = useMemo(() => statsData?.stats?.players ?? [], [statsData?.stats?.players]);
-
-    const [showCompletedGamesModal, setShowCompletedGamesModal] = useState(false);
-    const [showGameCheckModal, setShowGameCheckModal] = useState(false);
-
-    const selectedPlayer = useMemo(() => {
-        if (!selectedPlayerId) return null;
-        return players.find((p) => p._id === selectedPlayerId) ?? null;
-    }, [players, selectedPlayerId]);
-
-    const selectedStat = useMemo(
-        () => playerStats.find((s) => s.playerId === selectedPlayer?._id) ?? null,
-        [playerStats, selectedPlayer],
-    );
-
-    const { data: completedData } = useSWR<{ completedGames: CompletedGame[] }>(
-        selectedPlayer ? `/api/stats/players/${selectedPlayer._id}/completed-games` : null,
-        fetcher,
-    );
-    const completedGames = completedData?.completedGames ?? [];
-    const recentPlays = completedGames.slice(0, 5);
-
-    const topPercent = useMemo(() => {
-        if (!selectedStat || playerStats.length === 0) return null;
-        const sorted = [...playerStats].sort((a, b) => b.completionRate - a.completionRate);
-        const rank = sorted.findIndex((s) => s.playerId === selectedStat.playerId) + 1;
-        if (rank <= 0) return null;
-        // 상위 퍼센트 계산: 1등이면 상위 1%, 2등이면 상위 2% 등
-        // rank가 작을수록 상위에 있으므로 rank / total * 100
-        const percent = (rank / playerStats.length) * 100;
-        // 소수점 첫째 자리까지 표시하되, 1% 미만이면 1%로 표시
-        return Math.max(1, Math.round(percent * 10) / 10);
-    }, [selectedStat, playerStats]);
-
+export default function LandingPage() {
     return (
-        <div className="space-y-6">
-            {/* 어떤 대머리의 이력을 볼까요? */}
-            <section className="rounded-2xl bg-head-white shadow-soft p-6">
-                <h2 className="text-head-gray-800 font-semibold mb-4">
-                    어떤 대머리의 이력을 볼까요?
-                </h2>
-                <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
-                    {players.map((p) => {
-                        const isSelected = selectedPlayer?._id === p._id;
-                        return (
-                            <button
-                                key={p._id}
-                                type="button"
-                                onClick={() => setSelectedPlayerId(p._id)}
-                                className={`rounded-lg border px-3 py-2 text-sm font-medium transition ${
-                                    isSelected
-                                        ? "bg-head-blue text-head-white border-head-blue shadow-soft"
-                                        : "bg-head-white hover:bg-head-gray-100 border-head-gray-300 text-head-gray-800"
-                                }`}
-                            >
-                                {p.name}
-                            </button>
-                        );
-                    })}
+        <div className="min-h-screen flex flex-col">
+            <div className="flex-1 flex flex-col items-center px-4 pt-6 pb-12">
+                <div className="relative w-full max-w-md aspect-[4/3] mb-6">
+                    <Image
+                        src="/detective-office.png"
+                        alt="탐정 사무실"
+                        fill
+                        className="object-contain"
+                        priority
+                        sizes="(max-width: 768px) 100vw, 448px"
+                    />
                 </div>
-            </section>
 
-            {/* OO님의 졸업률 */}
-            {selectedPlayer && selectedStat && (
-                <section className="rounded-2xl bg-head-white shadow-soft p-6">
-                    <div className="flex items-start justify-between gap-4 flex-wrap">
-                        <div className="flex-1 min-w-0">
-                            <h2 className="text-head-gray-800 font-semibold mb-2 text-xl">
-                                {selectedPlayer.name}님의 졸업률
-                            </h2>
-                            {topPercent != null && (
-                                <p className="text-head-blue font-semibold text-lg mb-1">
-                                    상위 {topPercent}%
-                                </p>
-                            )}
-                            <p className="text-head-gray-500 text-sm">
-                                {selectedStat.completedCount}개 완료 · 전체{" "}
-                                {selectedStat.totalGames}개 중
-                            </p>
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <GraduationChart rate={selectedStat.completionRate} />
-                        </div>
-                    </div>
-                    <div className="mt-4 pt-4 border-t border-head-gray-200">
-                        <button
-                            onClick={() => setShowGameCheckModal(true)}
-                            className="w-full rounded-lg bg-head-blue text-head-white px-4 py-2.5 text-xl font-medium hover:bg-head-blue-dark transition-colors"
-                        >
-                            한 게임 체크하기
-                        </button>
-                    </div>
-                </section>
-            )}
+                <p
+                    className="text-center text-xl md:text-4xl text-[#333] mb-6 font-medium"
+                    style={{ fontFamily: '"Tom\'s Handwriting", Georgia, cursive' }}
+                >
+                    Don&apos;t worry, we have hair.
+                </p>
 
-            <RecentPlaysList
-                plays={recentPlays}
-                selectedPlayerName={selectedPlayer?.name ?? null}
-                onViewAll={() => setShowCompletedGamesModal(true)}
-                emptyMessage="완료한 게임이 없습니다."
-                emptyHint="대머리를 선택해주세요."
-            />
-
-            {/* 완료한 게임 모달 */}
-            <CompletedGamesModal
-                playerId={showCompletedGamesModal ? (selectedPlayer?._id ?? null) : null}
-                playerName={selectedPlayer?.name ?? null}
-                onClose={() => setShowCompletedGamesModal(false)}
-            />
-
-            {/* 게임 체크 모달 */}
-            <GameCheckModal
-                playerId={showGameCheckModal ? (selectedPlayer?._id ?? null) : null}
-                playerName={selectedPlayer?.name ?? null}
-                onClose={() => setShowGameCheckModal(false)}
-            />
+                <div className="text-center text-head-gray-800 space-y-3 max-w-lg mx-auto text-[15px] leading-7 font-medium">
+                    <p>&quot;머리숱 없는 사람만 가입하나요?&quot;</p>
+                    <p>
+                        아아- 오해입니다. 오해예요.
+                        <br />
+                        우리의 대머리는 대구 머더 미스터리의 줄임말일 뿐,
+                        <br />
+                        당신의 소중한 머리카락은 건드리지 않습니다. (아마도요..?)
+                    </p>
+                    <p className="pt-2">
+                        다만, 사건을 파헤치느라 머리를 좀 많이 써야 할 수는 있습니다.
+                        <br />
+                        평범한 대구 시민인 당신이 천재 탐정이 되거나, 소름 돋는 살인마가 되는 곳!
+                        <br />
+                        함께 머리를 맞대고(가발 아님) 추리의 세계로 빠져보시죠!
+                    </p>
+                </div>
+            </div>
         </div>
     );
 }
