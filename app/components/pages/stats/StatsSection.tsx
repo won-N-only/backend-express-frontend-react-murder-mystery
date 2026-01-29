@@ -22,7 +22,7 @@ export default function StatsSection({ players, companies }: StatsSectionProps) 
 
     const getProgressColor = (rate: number) => {
         if (rate >= 80) return "from-emerald-500 to-green-600";
-        if (rate >= 50) return "from-head-blue to-head-blue-dark";
+        if (rate >= 50) return "from-head-brown to-head-brown-dark";
         if (rate >= 30) return "from-yellow-500 to-orange-500";
         return "from-red-400 to-red-500";
     };
@@ -59,7 +59,7 @@ export default function StatsSection({ players, companies }: StatsSectionProps) 
                                         </span>
                                     </div>
                                     <div className="text-right">
-                                        <div className="text-2xl font-bold text-head-blue">
+                                        <div className="text-2xl font-bold text-head-brown">
                                             {p.completionRate.toFixed(1)}%
                                         </div>
                                         <div className="text-xs text-head-gray-500">
