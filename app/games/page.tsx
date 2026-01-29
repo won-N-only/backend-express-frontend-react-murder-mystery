@@ -60,7 +60,7 @@ export default function GamesPage() {
                 </h2>
 
                 {/* 카드 그리드 */}
-                {filteredGames.length === 0 ? (
+                {filteredGames.length === 0 && searchQuery.trim() !== "" ? (
                     <div className="text-center py-12 text-head-gray-500">
                         <Image
                             src="/sad_head.png"
