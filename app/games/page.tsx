@@ -34,7 +34,7 @@ export default function GamesPage() {
             <div className="space-y-6">
                 <PageHeader
                     title="사건 수색"
-                    description="입맛에 맞는 살인 사건 없나? 당장 추리하고 싶은 미스터리 뒤지기."
+                    description="입맛에 맞는 살인 사건 없나? 당장 추리하고 싶은 사건 뒤지기"
                 />
 
                 {/* 검색 바: 입력 필드 + 검색 버튼 */}
@@ -56,14 +56,21 @@ export default function GamesPage() {
 
                 {/* 게임 목록 헤더 */}
                 <h2 className="text-xl font-bold text-head-gray-800">
-                    게임 목록 ({filteredGames.length})
+                    머더 미스터리 목록 ({filteredGames.length})
                 </h2>
 
                 {/* 카드 그리드 */}
                 {filteredGames.length === 0 ? (
                     <div className="text-center py-12 text-head-gray-500">
-                        <p className="text-lg">그런 머미는 없어요</p>
-                        <p className="text-sm mt-1">제대로 입력해보세요~</p>
+                        <Image
+                            src="/sad_head.png"
+                            alt="sad head"
+                            width={600}
+                            height={600}
+                            className="w-20 h-22 mx-auto pb-4"
+                        />
+                        <p className="text-xl">그런 머미는 없어요 ㅠ.ㅠ</p>
+                        <p className="text-md mt-1">다시 입력해주세요</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -89,8 +96,8 @@ export default function GamesPage() {
                 <Image
                     src="/top_head.png"
                     alt="맨 위로"
-                    width={56}
-                    height={56}
+                    width={420}
+                    height={420}
                     className="w-full h-full object-contain"
                 />
             </button>
