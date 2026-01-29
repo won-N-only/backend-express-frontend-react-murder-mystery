@@ -53,40 +53,41 @@ export default function HistorySection() {
 
     return (
         <div className="space-y-6">
-            <section className="rounded-2xl bg-head-white shadow-soft p-6">
-                <h2 className="text-head-gray-800 font-semibold mb-4">
-                    어떤 대머리의 이력을 볼까요?
-                </h2>
-                <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
-                    {players.map((p) => {
-                        const isSelected = selectedPlayer?._id === p._id;
-                        return (
-                            <button
-                                key={p._id}
-                                type="button"
-                                onClick={() => setSelectedPlayerId(p._id)}
-                                className={`rounded-lg border px-3 py-2 text-sm font-medium transition ${
-                                    isSelected
-                                        ? "bg-head-blue text-head-white border-head-blue shadow-soft"
-                                        : "bg-head-white hover:bg-head-gray-100 border-head-gray-300 text-head-gray-800"
-                                }`}
-                            >
-                                {p.name}
-                            </button>
-                        );
-                    })}
-                </div>
-            </section>
+            <div className="text-4xl text-bold">
+                <div>이력</div>
+            </div>
+            <h2 className="text-2xl text-head-gray-800 font-semibold mb-4">
+                어떤 대머리의 이력을 볼까요?
+            </h2>
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
+                {players.map((p) => {
+                    const isSelected = selectedPlayer?._id === p._id;
+                    return (
+                        <button
+                            key={p._id}
+                            type="button"
+                            onClick={() => setSelectedPlayerId(p._id)}
+                            className={`rounded-3xl px-3 py-2 text-sm font-medium transition ${
+                                isSelected
+                                    ? "bg-head-brown text-head-white border-head-brown shadow-soft"
+                                    : "bg-head-white border-head-gray-300 text-head-gray-800 hover:bg-head-accent-brown hover:text-white"
+                            }`}
+                        >
+                            {p.name}
+                        </button>
+                    );
+                })}
+            </div>
 
             {selectedPlayer && selectedStat && (
-                <section className="rounded-2xl bg-head-white shadow-soft p-6">
+                <section className="rounded-2xl bg-gradient-to-b from-white to-head-main p-6 shadow-none border border-head-gray-200/60">
                     <div className="flex items-start justify-between gap-4 flex-wrap">
                         <div className="flex-1 min-w-0">
-                            <h2 className="text-head-gray-800 font-semibold mb-2 text-xl">
+                            <h2 className="text-head-gray-800 font-bold mb-2 text-xl">
                                 {selectedPlayer.name}님의 졸업률
                             </h2>
                             {topPercent != null && (
-                                <p className="text-head-blue font-semibold text-lg mb-1">
+                                <p className="text-head-gray-800 font-semibold text-lg mb-1">
                                     상위 {topPercent}%
                                 </p>
                             )}
@@ -99,12 +100,12 @@ export default function HistorySection() {
                             <GraduationChart rate={selectedStat.completionRate} />
                         </div>
                     </div>
-                    <div className="mt-4 pt-4 border-t border-head-gray-200">
+                    <div className="mt-4 flex justify-end">
                         <button
                             onClick={() => setShowGameCheckModal(true)}
-                            className="w-full rounded-lg bg-head-blue text-head-white px-4 py-2.5 text-xl font-medium hover:bg-head-blue-dark transition-colors"
+                            className="rounded-xl bg-head-accent-brown text-white px-5 py-2.5 text-base font-medium shadow-soft hover:opacity-90 transition-opacity"
                         >
-                            한 게임 체크하기
+                            완료한 게임 체크하기
                         </button>
                     </div>
                 </section>
