@@ -19,7 +19,7 @@ export default function RecentPlaysList({
     emptyHint = "대머리를 선택해주세요.",
 }: RecentPlaysListProps) {
     return (
-        <section className="rounded-2xl bg-gradient-to-b from-white to-head-main p-6 shadow-none border border-head-gray-200/60">
+        <section className="section-card">
             <div className="flex items-center justify-between mb-4">
                 <h2 className="text-head-gray-800 font-bold text-xl">완료한 게임</h2>
                 <button
@@ -55,7 +55,7 @@ export default function RecentPlaysList({
                                 )}
                                 <Link
                                     href={`/games/${game.gameId}`}
-                                    className="shrink-0 w-fit border border-head-brown text-head-brown px-4 py-1 text-sm font-medium hover:bg-head-brown hover:text-head-white transition-colors"
+                                    className="shrink-0 w-fit bg-white border border-head-brown text-head-brown px-4 py-1 text-sm font-medium hover:bg-head-brown hover:text-head-white transition-colors"
                                 >
                                     상세보기
                                 </Link>
