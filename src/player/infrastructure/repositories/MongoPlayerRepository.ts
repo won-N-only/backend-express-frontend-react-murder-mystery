@@ -44,13 +44,17 @@ export class MongoPlayerRepository implements IPlayerRepository {
     }
 
     async findByIds(ids: string[]): Promise<Player[]> {
+        if (ids.length === 0) return [];
         const db = await MongoDatabase.getDb();
         const objectIds = ids.map((id) => new ObjectId(id));
         const players = await db
             .collection(MongoPlayerRepository.COLLECTION_NAME)
             .find({ _id: { $in: objectIds } })
             .toArray();
-        return players.map(this.toDomain);
+
+        // 입력 순서대로 정렬하여 반환
+        const playerMap = new Map(players.map((p) => [p._id.toString(), this.toDomain(p)]));
+        return ids.map((id) => playerMap.get(id)).filter((p): p is Player => p !== undefined);
     }
 
     private toDomain(document: any): Player {
