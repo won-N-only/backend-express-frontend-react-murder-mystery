@@ -17,6 +17,7 @@ export default function MatchPage() {
     const [selectedPlayers, setSelectedPlayers] = useState<string[]>([]);
     const [excludePartySeries, setExcludePartySeries] = useState<boolean>(false);
     const [excludeSinglePlayer, setExcludeSinglePlayer] = useState<boolean>(false);
+    const [excludeTwoPlayer, setExcludeTwoPlayer] = useState<boolean>(false);
     const [numGroups, setNumGroups] = useState<number | undefined>(undefined);
 
     const { matches, combinations, loading, executeMatch } = useMatch();
@@ -33,6 +34,7 @@ export default function MatchPage() {
             useCombination: true, // 항상 조합 매칭 사용
             excludePartySeries,
             excludeSinglePlayer,
+            excludeTwoPlayer,
             numGroups,
         });
     };
@@ -51,10 +53,12 @@ export default function MatchPage() {
                 <MatchOptions
                     excludePartySeries={excludePartySeries}
                     excludeSinglePlayer={excludeSinglePlayer}
+                    excludeTwoPlayer={excludeTwoPlayer}
                     numGroups={numGroups}
                     selectedPlayersCount={selectedPlayers.length}
                     onExcludePartySeriesChange={setExcludePartySeries}
                     onExcludeSinglePlayerChange={setExcludeSinglePlayer}
+                    onExcludeTwoPlayerChange={setExcludeTwoPlayer}
                     onNumGroupsChange={setNumGroups}
                 />
 
