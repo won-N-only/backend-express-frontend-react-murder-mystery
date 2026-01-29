@@ -85,22 +85,6 @@ export default function GamesPage() {
                 )}
             </div>
             <GameModal gameId={selectedGameId} onClose={() => setSelectedGameId(null)} />
-
-            {/* 우측 하단: 최상단으로 버튼 */}
-            <button
-                type="button"
-                onClick={() => window.scrollTo({ top: 0 })}
-                className="fixed bottom-6 right-6 z-30 w-14 h-14 rounded-full overflow-hidden shadow-soft hover:scale-105 active:scale-95 transition-transform  "
-                aria-label="맨 위로"
-            >
-                <Image
-                    src="/top_head.png"
-                    alt="맨 위로"
-                    width={420}
-                    height={420}
-                    className="w-full h-full object-contain"
-                />
-            </button>
         </>
     );
 }
