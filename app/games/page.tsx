@@ -42,7 +42,7 @@ export default function GamesPage() {
                         placeholder="게임 이름, 제작사, 시리즈로 검색..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full rounded-xl border border-head-gray-300 bg-head-white px-4 py-2.5 pr-10 text-head-gray-800 focus:outline-none focus:ring-2 focus:ring-head-blue focus:border-transparent"
+                        className="w-full rounded-xl border border-head-gray-300 bg-head-white px-4 py-2.5 pr-10 text-head-gray-800 focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent"
                     />
                     {searchQuery && (
                         <button

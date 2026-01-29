@@ -2,8 +2,8 @@ import Image from "next/image";
 
 export default function LandingPage() {
     return (
-        <div className="min-h-screen flex flex-col">
-            <div className="flex-1 flex flex-col items-center px-4 pt-6 pb-12">
+        <div className="flex flex-col">
+            <div className="flex flex-col items-center px-4 pt-6 pb-12">
                 <div className="relative w-full max-w-md aspect-[4/3] mb-6">
                     <Image
                         src="/detective-office.png"
