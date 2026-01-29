@@ -6,6 +6,7 @@ import useSWR from "swr";
 import CompletedGamesModal from "./components/CompletedGamesModal";
 import GameCheckModal from "./components/GameCheckModal";
 import { fetcher } from "./lib/fetcher";
+import { useSelectedPlayer } from "./providers/SelectedPlayerProvider";
 import type { Player, PlayerStat } from "./types";
 
 interface CompletedGame {
@@ -55,6 +56,8 @@ function GraduationChart({ rate }: { rate: number }) {
 }
 
 export default function HomePage() {
+    const { selectedPlayerId, setSelectedPlayerId } = useSelectedPlayer();
+
     const { data: playersData } = useSWR<{ players: Player[] }>("/api/players", fetcher);
     const players = useMemo(() => playersData?.players ?? [], [playersData?.players]);
 
@@ -64,13 +67,12 @@ export default function HomePage() {
     );
     const playerStats = useMemo(() => statsData?.stats?.players ?? [], [statsData?.stats?.players]);
 
-    const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
     const [showCompletedGamesModal, setShowCompletedGamesModal] = useState(false);
     const [showGameCheckModal, setShowGameCheckModal] = useState(false);
 
     const selectedPlayer = useMemo(() => {
-        const id = selectedPlayerId ?? players[0]?._id;
-        return players.find((p) => p._id === id) ?? players[0] ?? null;
+        if (!selectedPlayerId) return null;
+        return players.find((p) => p._id === selectedPlayerId) ?? null;
     }, [players, selectedPlayerId]);
 
     const selectedStat = useMemo(
