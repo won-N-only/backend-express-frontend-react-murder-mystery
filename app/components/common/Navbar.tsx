@@ -6,9 +6,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
-const HEADER_BG = "#f1f0ec";
-const HEADER_BORDER = "#000000";
-
 export default function Navbar() {
     const pathname = usePathname();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -38,15 +35,12 @@ export default function Navbar() {
         }`;
 
     return (
-        <div className="sticky top-0 z-40 w-full bg-[#f1f0ec]">
-            <nav
-                className="flex items-center justify-center w-full"
-                style={{ height: "100px", backgroundColor: HEADER_BG }}
-            >
+        <div className="sticky top-0 z-40 w-full bg-head-main">
+            <nav className="flex items-center justify-center w-full h-[100px] bg-head-main">
                 <div className="mx-auto max-w-[720px] w-full px-4 flex items-center justify-between">
                     <Link
                         href="/"
-                        className="group/icon relative flex-shrink-0 block w-16 h-16 rounded-full overflow-hidden transition-transform duration-500 ease-out hover:rotate-[7deg]"
+                        className="group/icon relative flex-shrink-0 block w-16 h-16 rounded-full overflow-visible transition-transform duration-500 ease-out hover:rotate-[7deg]"
                         aria-label="홈으로"
                     >
                         <Image
@@ -62,7 +56,7 @@ export default function Navbar() {
                             alt=""
                             width={80}
                             height={80}
-                            className="absolute inset-0 w-full h-full object-cover object-center transition-all duration-1000 ease-out group-hover/icon:translate-y-[-120%] group-hover/icon:rotate-[360deg] group-hover/icon:opacity-0"
+                            className="absolute inset-0 w-full h-full object-cover object-center transition-all duration-1000 ease-out group-hover/icon:translate-y-[-120%] group-hover/icon:rotate-[360deg]"
                             aria-hidden
                         />
                     </Link>
@@ -108,7 +102,7 @@ export default function Navbar() {
             />
             {/* 슬라이드 패널 */}
             <div
-                className={`md:hidden fixed top-0 right-0 z-50 h-full w-64 max-w-[85vw] bg-[#f1f0ec] shadow-xl transition-transform duration-300 ease-out ${
+                className={`md:hidden fixed top-0 right-0 z-50 h-full w-64 max-w-[85vw] bg-head-main shadow-xl transition-transform duration-300 ease-out ${
                     mobileMenuOpen ? "translate-x-0" : "translate-x-full"
                 }`}
             >
@@ -118,8 +112,7 @@ export default function Navbar() {
                 >
                     <div className="text-3xl font-bold">메뉴</div>
                     <div
-                        className="w-full border-b-2 border-solid text-2xl"
-                        style={{ borderColor: HEADER_BORDER }}
+                        className="w-full border-b-2 border-head-border border-solid text-2xl"
                         aria-hidden
                     />{" "}
                     {navItems.map((item) => (
@@ -139,11 +132,7 @@ export default function Navbar() {
             </div>
 
             {/* 헤더 아래 구분선 */}
-            <div
-                className="w-full border-b-2 border-solid"
-                style={{ borderColor: HEADER_BORDER }}
-                aria-hidden
-            />
+            <div className="w-full border-b-2 border-head-border border-solid" aria-hidden />
         </div>
     );
 }
