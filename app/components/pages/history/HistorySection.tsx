@@ -105,7 +105,7 @@ export default function HistorySection() {
                     <div className="mt-4 flex justify-end">
                         <button
                             onClick={() => setShowGameCheckModal(true)}
-                            className="rounded-sm bg-head-accent-brown text-white px-5 py-1 text-md font-bold shadow-soft hover:opacity-90 transition-opacity"
+                            className="bg-head-accent-brown text-white px-5 py-1 text-md font-bold shadow-soft hover:opacity-90 transition-opacity"
                         >
                             완료한 게임 체크하기
                         </button>

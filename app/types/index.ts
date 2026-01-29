@@ -60,7 +60,7 @@ export interface CompanyStat {
     gameCount: number;
 }
 
-/** 이력/완료한 게임 목록에서 사용하는 완료 게임 항목 */
+/** 전과 기록/완료한 게임 목록에서 사용하는 완료 게임 항목 */
 export interface CompletedGame {
     gameId: string;
     gameName: string;
