@@ -24,7 +24,7 @@ export function useMatch() {
     const executeMatch = async (options: MatchOptions) => {
         if (!options.playerIds.length) return;
         setLoading(true);
-        const maxRetries = 50;
+        const maxRetries = 10;
         const payload = {
             playerIds: options.playerIds,
             playerCount: options.useCombination ? undefined : options.playerCount,

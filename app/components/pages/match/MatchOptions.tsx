@@ -65,9 +65,6 @@ export default function MatchOptions({
                             }}
                             className="w-20 border border-head-gray-300 px-2 py-0.5 text-sm text-center text-head-gray-800 focus:outline-none focus:ring-1"
                         />
-                        <span className="text-xs text-head-gray-500">
-                            (최대 {Math.min(selectedPlayersCount, 5)}개)
-                        </span>
                     </div>
                 </div>
             )}
