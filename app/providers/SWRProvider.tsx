@@ -1,7 +1,7 @@
 "use client";
 
+import { fetcher } from "@app/lib/fetcher";
 import { SWRConfig } from "swr";
-import { fetcher } from "../lib/fetcher";
 
 const swrConfig = {
     fetcher,

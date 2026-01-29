@@ -1,59 +1,14 @@
 "use client";
 
-import Link from "next/link";
+import CompletedGamesModal from "@app/components/common/CompletedGamesModal";
+import GameCheckModal from "@app/components/common/GameCheckModal";
+import GraduationChart from "@app/components/common/GraduationChart";
+import RecentPlaysList from "@app/components/pages/home/RecentPlaysList";
+import { fetcher } from "@app/lib/fetcher";
+import { useSelectedPlayer } from "@app/providers/SelectedPlayerProvider";
+import type { CompletedGame, Player, PlayerStat } from "@app/types";
 import { useMemo, useState } from "react";
 import useSWR from "swr";
-import CompletedGamesModal from "./components/CompletedGamesModal";
-import GameCheckModal from "./components/GameCheckModal";
-import { fetcher } from "./lib/fetcher";
-import { useSelectedPlayer } from "./providers/SelectedPlayerProvider";
-import type { Player, PlayerStat } from "./types";
-
-interface CompletedGame {
-    gameId: string;
-    gameName: string;
-    orderNumber: number;
-    completedAt: Date | null;
-}
-
-function PlayerAvatar({ name, size = "md" }: { name: string; size?: "sm" | "md" }) {
-    const initial = name.length >= 2 ? name.slice(0, 2) : name.slice(0, 1);
-    const sizeClass = size === "sm" ? "w-8 h-8 text-xs" : "w-10 h-10 text-sm";
-    return (
-        <div
-            className={`${sizeClass} rounded-full bg-head-blue text-head-white flex items-center justify-center font-medium shrink-0`}
-        >
-            {initial}
-        </div>
-    );
-}
-
-function GraduationChart({ rate }: { rate: number }) {
-    const circumference = 2 * Math.PI * 45;
-    const strokeDashoffset = circumference - (rate / 100) * circumference;
-    return (
-        <div className="relative w-28 h-28 shrink-0">
-            <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="45" fill="none" stroke="#d1d5db" strokeWidth="8" />
-                <circle
-                    cx="50"
-                    cy="50"
-                    r="45"
-                    fill="none"
-                    stroke="#3b82f6"
-                    strokeWidth="8"
-                    strokeDasharray={circumference}
-                    strokeDashoffset={strokeDashoffset}
-                    strokeLinecap="round"
-                    className="transition-all duration-500"
-                />
-            </svg>
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-lg font-bold text-head-gray-800">{Math.round(rate)}%</span>
-            </div>
-        </div>
-    );
-}
 
 export default function HomePage() {
     const { selectedPlayerId, setSelectedPlayerId } = useSelectedPlayer();
@@ -101,10 +56,10 @@ export default function HomePage() {
 
     return (
         <div className="space-y-6">
-            {/* 어떤 대머리의 기록을 볼까요? */}
+            {/* 어떤 대머리의 이력을 볼까요? */}
             <section className="rounded-2xl bg-head-white shadow-soft p-6">
                 <h2 className="text-head-gray-800 font-semibold mb-4">
-                    어떤 대머리의 기록을 볼까요?
+                    어떤 대머리의 이력을 볼까요?
                 </h2>
                 <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
                     {players.map((p) => {
@@ -160,53 +115,13 @@ export default function HomePage() {
                 </section>
             )}
 
-            {/* 완료한 게임 */}
-            <section className="rounded-2xl bg-head-white shadow-soft p-6">
-                <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-head-gray-800 font-semibold text-lg">완료한 게임</h2>
-                    <button
-                        onClick={() => setShowCompletedGamesModal(true)}
-                        className="text-sm text-head-blue font-medium hover:text-head-blue-dark transition-colors"
-                        disabled={!selectedPlayer}
-                    >
-                        전체보기
-                    </button>
-                </div>
-                {recentPlays.length === 0 ? (
-                    <p className="text-head-gray-500 text-sm py-4">
-                        {selectedPlayer ? "완료한 게임이 없습니다." : "대머리를 선택해주세요."}
-                    </p>
-                ) : (
-                    <ul className="space-y-3">
-                        {recentPlays.map((game) => (
-                            <li
-                                key={game.gameId}
-                                className="flex items-center gap-3 py-3 px-2 border-b border-head-gray-100 last:border-0 hover:bg-head-gray-50 rounded-lg transition-colors"
-                            >
-                                <div className="flex-1 min-w-0">
-                                    <Link
-                                        href={`/games/${game.gameId}`}
-                                        className="text-head-gray-800 font-medium truncate hover:text-head-blue transition-colors block"
-                                    >
-                                        {game.gameName}
-                                    </Link>
-                                    {game.completedAt && (
-                                        <p className="text-head-gray-500 text-xs mt-0.5">
-                                            {new Date(game.completedAt).toLocaleDateString("ko-KR")}
-                                        </p>
-                                    )}
-                                </div>
-                                <Link
-                                    href={`/games/${game.gameId}`}
-                                    className="shrink-0 rounded-lg border border-head-blue text-head-blue px-4 py-1.5 text-sm font-medium hover:bg-head-blue hover:text-head-white transition-colors"
-                                >
-                                    상세보기
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                )}
-            </section>
+            <RecentPlaysList
+                plays={recentPlays}
+                selectedPlayerName={selectedPlayer?.name ?? null}
+                onViewAll={() => setShowCompletedGamesModal(true)}
+                emptyMessage="완료한 게임이 없습니다."
+                emptyHint="대머리를 선택해주세요."
+            />
 
             {/* 완료한 게임 모달 */}
             <CompletedGamesModal

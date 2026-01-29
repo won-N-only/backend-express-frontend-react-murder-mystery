@@ -1,8 +1,8 @@
+import Navbar from "@app/components/common/Navbar";
+import { SelectedPlayerProvider } from "@app/providers/SelectedPlayerProvider";
+import { SWRProvider } from "@app/providers/SWRProvider";
 import type { Metadata } from "next";
-import Navbar from "./components/Navbar";
 import "./globals.css";
-import { SelectedPlayerProvider } from "./providers/SelectedPlayerProvider";
-import { SWRProvider } from "./providers/SWRProvider";
 
 export const metadata: Metadata = {
     title: "대머리",

@@ -1,12 +1,12 @@
 "use client";
 
+import CompletionStatusButtons from "@app/components/common/CompletionStatusButtons";
+import GameInfo from "@app/components/pages/games/GameInfo";
+import { fetcher } from "@app/lib/fetcher";
+import type { Game, Player } from "@app/types";
 import { CompletionStatus } from "@completion/domain/valueObjects/CompletionStatus";
 import { useParams } from "next/navigation";
 import useSWR from "swr";
-import CompletionStatusButtons from "../../components/CompletionStatusButtons";
-import GameInfo from "../../components/GameInfo";
-import { fetcher } from "../../lib/fetcher";
-import type { Game, Player } from "../../types";
 
 export default function GameDetailPage() {
     const params = useParams<{ id: string }>();

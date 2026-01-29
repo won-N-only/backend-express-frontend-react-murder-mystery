@@ -1,12 +1,12 @@
 "use client";
 
+import GameCard from "@app/components/pages/games/GameCard";
+import GameModal from "@app/components/pages/games/GameModal";
+import { useScrollRestore } from "@app/hooks/useScrollRestore";
+import { fetcher } from "@app/lib/fetcher";
+import type { Game } from "@app/types";
 import { useMemo, useState } from "react";
 import useSWR from "swr";
-import GameCard from "../components/GameCard";
-import GameModal from "../components/GameModal";
-import { useScrollRestore } from "../hooks/useScrollRestore";
-import { fetcher } from "../lib/fetcher";
-import type { Game } from "../types";
 
 export default function GamesPage() {
     const { data } = useSWR("/api/games", fetcher);
