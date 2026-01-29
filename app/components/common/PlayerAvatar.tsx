@@ -8,7 +8,7 @@ export default function PlayerAvatar({ name, size = "md" }: PlayerAvatarProps) {
     const sizeClass = size === "sm" ? "w-8 h-8 text-xs" : "w-10 h-10 text-sm";
     return (
         <div
-            className={`${sizeClass} rounded-full bg-head-blue text-head-white flex items-center justify-center font-medium shrink-0`}
+            className={`${sizeClass} rounded-full bg-head-brown text-head-white flex items-center justify-center font-medium shrink-0`}
         >
             {initial}
         </div>
