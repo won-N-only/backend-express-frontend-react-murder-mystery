@@ -16,12 +16,10 @@ export class GetCompletedGamesByPlayerIdUseCase {
     ) { }
 
     async execute(playerId: string): Promise<CompletedGame[]> {
-        // 플레이어의 모든 완료 상태 조회
-        const completions = await this.completionRepository.findByPlayerId(playerId);
-
-        // 완료된 게임만 필터링
-        const completedCompletions = completions.filter(
-            (c) => c.status === CompletionStatus.DONE,
+        // DB 레벨에서 완료된 게임만 조회 (인덱스 최적화)
+        const completedCompletions = await this.completionRepository.findByPlayerId(
+            playerId,
+            CompletionStatus.DONE,
         );
 
         if (completedCompletions.length === 0) return [];
@@ -31,14 +29,10 @@ export class GetCompletedGamesByPlayerIdUseCase {
             new Set(completedCompletions.map((c) => c.gameId.toString())),
         );
 
-        // 필요한 게임만 병렬로 조회
-        const games = await Promise.all(
-            gameIds.map((id) => this.gameRepository.findById(id)),
-        );
+        // 배치 조회로 성능 개선
+        const games = await this.gameRepository.findByIds(gameIds);
         const gameMap = new Map(
-            games
-                .filter((g): g is NonNullable<typeof g> => g !== null)
-                .map((g) => [g.id!.toString(), g]),
+            games.map((g) => [g.id!.toString(), g]),
         );
 
         // 완료된 게임 정보 매핑
