@@ -1,3 +1,5 @@
+import Checkbox from "@app/components/common/Checkbox";
+
 interface MatchOptionsProps {
     excludePartySeries: boolean;
     excludeSinglePlayer: boolean;
@@ -22,36 +24,24 @@ export default function MatchOptions({
     onNumGroupsChange,
 }: MatchOptionsProps) {
     return (
-        <div className="bg-head-gray-100 rounded-lg p-3 border border-head-gray-300">
-            <div className="text-xs font-semibold text-head-gray-800 mb-3">옵션 설정</div>
+        <div className="bg-white p-3 border border-head-brown">
+            <div className="text-sm font-bold text-head-gray-800 mb-2">옵션 설정</div>
             <div className="space-y-2.5">
-                <label className="flex items-center gap-2.5 text-sm cursor-pointer">
-                    <input
-                        type="checkbox"
-                        checked={excludePartySeries}
-                        onChange={(e) => onExcludePartySeriesChange(e.target.checked)}
-                        className="rounded w-4 h-4 accent-head-brown focus:ring-head-brown"
-                    />
-                    <span className="select-none text-head-gray-800">파티시리즈 제외</span>
-                </label>
-                <label className="flex items-center gap-2.5 text-sm cursor-pointer">
-                    <input
-                        type="checkbox"
-                        checked={excludeSinglePlayer}
-                        onChange={(e) => onExcludeSinglePlayerChange(e.target.checked)}
-                        className="rounded w-4 h-4 accent-head-brown focus:ring-head-brown"
-                    />
-                    <span className="select-none text-head-gray-800">1인용 게임 제외</span>
-                </label>
-                <label className="flex items-center gap-2.5 text-sm cursor-pointer">
-                    <input
-                        type="checkbox"
-                        checked={excludeTwoPlayer}
-                        onChange={(e) => onExcludeTwoPlayerChange(e.target.checked)}
-                        className="rounded w-4 h-4 accent-head-brown focus:ring-head-brown"
-                    />
-                    <span className="select-none text-head-gray-800">2인용 게임 제외</span>
-                </label>
+                <Checkbox
+                    checked={excludePartySeries}
+                    onChange={onExcludePartySeriesChange}
+                    label="파티시리즈 제외"
+                />
+                <Checkbox
+                    checked={excludeSinglePlayer}
+                    onChange={onExcludeSinglePlayerChange}
+                    label="1인용 게임 제외"
+                />
+                <Checkbox
+                    checked={excludeTwoPlayer}
+                    onChange={onExcludeTwoPlayerChange}
+                    label="2인용 게임 제외"
+                />
             </div>
             {onNumGroupsChange && (
                 <div className="flex items-center gap-4 pt-2 border-t border-head-gray-300 mt-2">
@@ -73,10 +63,10 @@ export default function MatchOptions({
                                     }
                                 }
                             }}
-                            className="w-20 rounded border border-head-gray-300 px-2 py-1 text-center text-head-gray-800 focus:outline-none focus:ring-2 focus:ring-head-brown"
+                            className="w-20 border border-head-gray-300 px-2 py-0.5 text-sm text-center text-head-gray-800 focus:outline-none focus:ring-1"
                         />
                         <span className="text-xs text-head-gray-500">
-                            (최대 {selectedPlayersCount}개)
+                            (최대 {Math.min(selectedPlayersCount, 5)}개)
                         </span>
                     </div>
                 </div>
