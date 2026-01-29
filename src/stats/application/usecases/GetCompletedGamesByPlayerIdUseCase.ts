@@ -48,7 +48,13 @@ export class GetCompletedGamesByPlayerIdUseCase {
                 };
             })
             .filter((g): g is CompletedGame => g !== null)
-            .sort((a, b) => a.orderNumber - b.orderNumber);
+            .sort((a, b) => {
+                // completedAt 기준 최신순 정렬 (null은 맨 뒤로)
+                if (!a.completedAt && !b.completedAt) return 0;
+                if (!a.completedAt) return 1;
+                if (!b.completedAt) return -1;
+                return b.completedAt.getTime() - a.completedAt.getTime();
+            });
 
         return completedGames;
     }

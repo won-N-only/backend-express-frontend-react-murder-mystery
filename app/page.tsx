@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import useSWR from "swr";
+import CompletedGamesModal from "./components/CompletedGamesModal";
 import { fetcher } from "./lib/fetcher";
 import type { Player, PlayerStat } from "./types";
 
@@ -63,6 +64,7 @@ export default function HomePage() {
     const playerStats = useMemo(() => statsData?.stats?.players ?? [], [statsData?.stats?.players]);
 
     const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
+    const [showCompletedGamesModal, setShowCompletedGamesModal] = useState(false);
 
     const selectedPlayer = useMemo(() => {
         const id = selectedPlayerId ?? players[0]?._id;
@@ -95,10 +97,10 @@ export default function HomePage() {
 
     return (
         <div className="space-y-6">
-            {/* 어떤 탐정의 기록을 볼까요? */}
+            {/* 어떤 대머리의 기록을 볼까요? */}
             <section className="rounded-2xl bg-head-white shadow-soft p-6">
                 <h2 className="text-head-gray-800 font-semibold mb-4">
-                    어떤 탐정의 기록을 볼까요?
+                    어떤 대머리의 기록을 볼까요?
                 </h2>
                 <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
                     {players.map((p) => {
@@ -146,20 +148,21 @@ export default function HomePage() {
                 </section>
             )}
 
-            {/* 최근 플레이 */}
+            {/* 완료한 게임 */}
             <section className="rounded-2xl bg-head-white shadow-soft p-6">
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-head-gray-800 font-semibold text-lg">최근 플레이</h2>
-                    <Link
-                        href="/stats"
+                    <h2 className="text-head-gray-800 font-semibold text-lg">완료한 게임</h2>
+                    <button
+                        onClick={() => setShowCompletedGamesModal(true)}
                         className="text-sm text-head-blue font-medium hover:text-head-blue-dark transition-colors"
+                        disabled={!selectedPlayer}
                     >
                         전체보기
-                    </Link>
+                    </button>
                 </div>
                 {recentPlays.length === 0 ? (
                     <p className="text-head-gray-500 text-sm py-4">
-                        {selectedPlayer ? "완료한 게임이 없습니다." : "탐정을 선택해주세요."}
+                        {selectedPlayer ? "완료한 게임이 없습니다." : "대머리를 선택해주세요."}
                     </p>
                 ) : (
                     <ul className="space-y-3">
@@ -168,26 +171,37 @@ export default function HomePage() {
                                 key={game.gameId}
                                 className="flex items-center gap-3 py-3 px-2 border-b border-head-gray-100 last:border-0 hover:bg-head-gray-50 rounded-lg transition-colors"
                             >
-                                {selectedPlayer && (
-                                    <PlayerAvatar name={selectedPlayer.name} size="sm" />
-                                )}
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-head-gray-800 font-medium truncate">
+                                    <Link
+                                        href={`/games/${game.gameId}`}
+                                        className="text-head-gray-800 font-medium truncate hover:text-head-blue transition-colors block"
+                                    >
                                         {game.gameName}
-                                    </p>
-                                    <p className="text-head-gray-500 text-xs mt-0.5">완료</p>
+                                    </Link>
+                                    {game.completedAt && (
+                                        <p className="text-head-gray-500 text-xs mt-0.5">
+                                            {new Date(game.completedAt).toLocaleDateString("ko-KR")}
+                                        </p>
+                                    )}
                                 </div>
                                 <Link
                                     href={`/games/${game.gameId}`}
                                     className="shrink-0 rounded-lg border border-head-blue text-head-blue px-4 py-1.5 text-sm font-medium hover:bg-head-blue hover:text-head-white transition-colors"
                                 >
-                                    완료
+                                    상세보기
                                 </Link>
                             </li>
                         ))}
                     </ul>
                 )}
             </section>
+
+            {/* 완료한 게임 모달 */}
+            <CompletedGamesModal
+                playerId={showCompletedGamesModal ? (selectedPlayer?._id ?? null) : null}
+                playerName={selectedPlayer?.name ?? null}
+                onClose={() => setShowCompletedGamesModal(false)}
+            />
         </div>
     );
 }
