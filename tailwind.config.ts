@@ -11,8 +11,13 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        "head-blue": "#3b82f6",
-        "head-blue-dark": "#2563eb",
+        /* 메인·구분선 (globals.css :root 참조) */
+        "head-main": "var(--color-main)",
+        "head-border": "var(--color-border)",
+        /* 포인트/버튼 컬러 (블루 통일) */
+        "head-brown": "var(--color-primary)",
+        "head-brown-dark": "var(--color-primary-dark)",
+        "head-accent-brown": "var(--color-accent-brown)",
         "head-white": "#ffffff",
         "head-gray": {
           50: "#f9fafb",

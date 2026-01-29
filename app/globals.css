@@ -6,11 +6,24 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===== 디자인 토큰 (메인·포인트 컬러) ===== */
+:root {
+    --color-main: #f1f0ec; /* 메인 배경 */
+    --color-border: #000000; /* 구분선·테두리 */
+    --color-primary: #694d40; /* 포인트/버튼 */
+    --color-primary-dark: #573f33cc; /* 포인트 호버 */
+    --color-accent-brown: #6b473a; /* 졸업률 배너·차트·버튼 다크 브라운 */
+}
+
 /* Tom's Handwriting (TTF) - 상업적 사용 시 라이선스 확인 필요 (Free for personal use only) */
 @font-face {
     font-family: "Tom's Handwriting";
     src: url("/fonts/Toms%20Handwriting.ttf") format("truetype");
     font-display: swap;
+}
+
+html {
+    overflow-x: hidden;
 }
 
 body {
@@ -20,4 +33,5 @@ body {
         -apple-system,
         BlinkMacSystemFont,
         sans-serif;
+    overflow-x: hidden;
 }
