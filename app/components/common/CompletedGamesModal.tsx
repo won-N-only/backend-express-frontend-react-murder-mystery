@@ -77,7 +77,7 @@ export default function CompletedGamesModal({
                                 <Link
                                     key={game.gameId}
                                     href={`/games/${game.gameId}`}
-                                    className="block rounded-lg border border-head-gray-300 bg-head-white p-4 hover:shadow-md hover:border-head-blue transition-all"
+                                    className="block rounded-lg border border-head-gray-300 bg-head-white p-4 hover:shadow-md hover:border-head-brown transition-all"
                                 >
                                     <div className="flex items-center justify-between">
                                         <div className="flex-1 min-w-0">
@@ -99,7 +99,7 @@ export default function CompletedGamesModal({
                                             )}
                                         </div>
                                         <div className="shrink-0 ml-4">
-                                            <span className="text-xs font-semibold text-head-blue bg-head-blue/10 px-3 py-1 rounded-full">
+                                            <span className="text-xs font-semibold text-head-brown bg-head-brown/10 px-3 py-1 rounded-full">
                                                 완료
                                             </span>
                                         </div>

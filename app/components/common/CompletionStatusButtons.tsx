@@ -23,7 +23,7 @@ export default function CompletionStatusButtons({
                     onClick={() => onStatusChange(s)}
                     className={`px-2 py-1 text-xs rounded transition-colors ${
                         currentStatus === s
-                            ? "bg-head-blue text-head-white"
+                            ? "bg-head-brown text-head-white"
                             : "bg-head-gray-100 text-head-gray-700 hover:bg-head-gray-200"
                     }`}
                 >

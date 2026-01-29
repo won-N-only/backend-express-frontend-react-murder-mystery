@@ -2,28 +2,31 @@ interface GraduationChartProps {
     rate: number;
 }
 
+const TRACK_COLOR = "#EAEAEA"; /* 원형 차트 배경(미완료) */
+const FILL_COLOR = "#6B473A"; /* 원형 차트 채움 - 다크 브라운 (globals --color-accent-brown) */
+
 export default function GraduationChart({ rate }: GraduationChartProps) {
     const circumference = 2 * Math.PI * 45;
     const strokeDashoffset = circumference - (rate / 100) * circumference;
     return (
         <div className="relative w-28 h-28 shrink-0">
             <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="45" fill="none" stroke="#d1d5db" strokeWidth="8" />
+                <circle cx="50" cy="50" r="40" fill="none" stroke={TRACK_COLOR} strokeWidth="12" />
                 <circle
                     cx="50"
                     cy="50"
-                    r="45"
+                    r="40"
                     fill="none"
-                    stroke="#3b82f6"
-                    strokeWidth="8"
+                    stroke={FILL_COLOR}
+                    strokeWidth="12"
                     strokeDasharray={circumference}
                     strokeDashoffset={strokeDashoffset}
-                    strokeLinecap="round"
+                    strokeLinecap="square"
                     className="transition-all duration-500"
                 />
             </svg>
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-lg font-bold text-head-gray-800">{Math.round(rate)}%</span>
+            <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-2xl font-bold text-head-gray-800">{Math.round(rate)}%</span>
             </div>
         </div>
     );
