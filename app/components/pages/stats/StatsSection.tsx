@@ -1,6 +1,7 @@
 "use client";
 
 import CompletedGamesModal from "@app/components/common/CompletedGamesModal";
+import PageHeader from "@app/components/common/PageHeader";
 import type { CompanyStat, PlayerStat } from "@app/types";
 import { useState } from "react";
 
@@ -20,10 +21,10 @@ export default function StatsSection({ players, companies }: StatsSectionProps) 
         return `${index + 1}.`;
     };
 
-    const getProgressColor = (rate: number) => {
-        if (rate >= 80) return "from-emerald-500 to-green-600";
-        if (rate >= 50) return "from-head-brown to-head-brown-dark";
-        if (rate >= 30) return "from-yellow-500 to-orange-500";
+    const getProgressColorByRank = (rank: number) => {
+        if (rank <= 3) return "from-emerald-500 to-green-600";
+        else if (rank <= 16) return "from-head-brown to-head-brown-dark";
+        else if (rank <= 30) return "from-yellow-500 to-orange-500";
         return "from-red-400 to-red-500";
     };
 
@@ -40,11 +41,14 @@ export default function StatsSection({ players, companies }: StatsSectionProps) 
     return (
         <>
             <div className="space-y-8">
-                <h1 className="text-2xl font-bold text-head-gray-800">통계</h1>
+                <PageHeader
+                    title="대머리 성적표"
+                    description="머리를 얼마나 썼는지 확인해볼까요?"
+                />
 
                 <section className="space-y-4">
-                    <h2 className="text-xl font-semibold text-head-gray-800">참가자별 졸업률</h2>
-                    <div className="grid gap-4 md:grid-cols-2">
+                    <h2 className="text-xl font-semibold text-head-gray-800">대머리 졸업 순위</h2>
+                    <div className="grid gap-4 md:grid-cols-1">
                         {players.map((p, index) => (
                             <div
                                 key={p.playerId}
@@ -70,8 +74,8 @@ export default function StatsSection({ players, companies }: StatsSectionProps) 
                                 <div className="space-y-2">
                                     <div className="h-4 rounded-full bg-head-gray-300 overflow-hidden">
                                         <div
-                                            className={`h-full rounded-full bg-gradient-to-r ${getProgressColor(
-                                                p.completionRate,
+                                            className={`h-full rounded-full bg-gradient-to-r ${getProgressColorByRank(
+                                                index + 1,
                                             )} transition-all duration-500 flex items-center justify-end pr-2`}
                                             style={{ width: `${Math.min(100, p.completionRate)}%` }}
                                         >
