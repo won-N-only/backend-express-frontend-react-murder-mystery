@@ -41,7 +41,7 @@ export default function RecentPlaysList({
                             key={game.gameId}
                             className="flex items-center gap-3 py-3 px-2 border-b border-head-gray-100 last:border-0 hover:bg-head-gray-50 rounded-lg transition-colors"
                         >
-                            <div className="flex-1 min-w-0">
+                            <div className="flex-1 min-w-0 flex flex-col gap-2">
                                 <Link
                                     href={`/games/${game.gameId}`}
                                     className="text-head-gray-800 font-medium truncate hover:text-head-brown transition-colors block"
@@ -49,17 +49,17 @@ export default function RecentPlaysList({
                                     {game.gameName}
                                 </Link>
                                 {game.completedAt && (
-                                    <p className="text-head-gray-500 text-xs mt-0.5">
+                                    <p className="text-head-gray-500 text-xs">
                                         {new Date(game.completedAt).toLocaleDateString("ko-KR")}
                                     </p>
                                 )}
+                                <Link
+                                    href={`/games/${game.gameId}`}
+                                    className="shrink-0 w-fit rounded-sm border border-head-brown text-head-brown px-4 py-1.5 text-sm font-medium hover:bg-head-brown hover:text-head-white transition-colors"
+                                >
+                                    상세보기
+                                </Link>
                             </div>
-                            <Link
-                                href={`/games/${game.gameId}`}
-                                className="shrink-0 rounded-lg border border-head-brown text-head-brown px-4 py-1.5 text-sm font-medium hover:bg-head-brown hover:text-head-white transition-colors"
-                            >
-                                상세보기
-                            </Link>
                         </li>
                     ))}
                 </ul>
