@@ -24,28 +24,43 @@ export function useMatch() {
     const executeMatch = async (options: MatchOptions) => {
         if (!options.playerIds.length) return;
         setLoading(true);
+        const maxRetries = 50;
+        const payload = {
+            playerIds: options.playerIds,
+            playerCount: options.useCombination ? undefined : options.playerCount,
+            useCombination: options.useCombination,
+            excludePartySeries: options.excludePartySeries,
+            excludeSinglePlayer: options.excludeSinglePlayer,
+            excludeTwoPlayer: options.excludeTwoPlayer,
+            numGroups: options.useCombination ? options.numGroups : undefined,
+        };
         try {
-            const res = await fetch("/api/match", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    playerIds: options.playerIds,
-                    playerCount: options.useCombination ? undefined : options.playerCount,
-                    useCombination: options.useCombination,
-                    excludePartySeries: options.excludePartySeries,
-                    excludeSinglePlayer: options.excludeSinglePlayer,
-                    excludeTwoPlayer: options.excludeTwoPlayer,
-                    numGroups: options.useCombination ? options.numGroups : undefined,
-                }),
-            });
-            const json: MatchResult = await res.json();
-            if (json.type === "combination") {
-                setCombinations(json.combinations ?? []);
-                setMatches([]);
-            } else {
-                setMatches(json.matches ?? []);
-                setCombinations([]);
+            for (let attempt = 0; attempt < maxRetries; attempt++) {
+                const res = await fetch("/api/match", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload),
+                });
+                const json: MatchResult = await res.json();
+                if (json.type === "combination") {
+                    const list = json.combinations ?? [];
+                    if (list.length > 0) {
+                        setCombinations(list);
+                        setMatches([]);
+                        return;
+                    }
+                } else {
+                    const list = json.matches ?? [];
+                    if (list.length > 0) {
+                        setMatches(list);
+                        setCombinations([]);
+                        return;
+                    }
+                }
+                await new Promise((r) => setTimeout(r, 100));
             }
+            setCombinations([]);
+            setMatches([]);
         } finally {
             setLoading(false);
         }
