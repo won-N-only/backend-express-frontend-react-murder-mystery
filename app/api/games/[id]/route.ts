@@ -34,6 +34,8 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
             company: game.company,
             series: game.series,
             ownerNote: game.ownerNote,
+            thumbnail: game.thumbnail,
+            description: game.description,
             createdAt: game.createdAt,
             updatedAt: game.updatedAt,
         };
@@ -80,6 +82,8 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
         if (ownerNote !== undefined) {
             updateData.ownerNote = ownerNoteArray;
         }
+        if (body.thumbnail !== undefined) updateData.thumbnail = body.thumbnail ?? null;
+        if (body.description !== undefined) updateData.description = body.description ?? null;
         const updated = await updateGameUseCase.execute(params.id, updateData);
         if (!updated) {
             return NextResponse.json({ error: "Game not found" }, { status: 404 });
@@ -94,6 +98,8 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
             company: updated.company,
             series: updated.series,
             ownerNote: updated.ownerNote,
+            thumbnail: updated.thumbnail,
+            description: updated.description,
             createdAt: updated.createdAt,
             updatedAt: updated.updatedAt,
         };
