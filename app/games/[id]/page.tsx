@@ -17,10 +17,7 @@ export default function GameDetailPage() {
         mutate,
         isLoading: isLoadingGame,
     } = useSWR(id ? `/api/games/${id}` : null, fetcher);
-    const { data: playersData, isLoading: isLoadingPlayers } = useSWR("/api/players", fetcher, {
-        revalidateOnFocus: false,
-        revalidateOnReconnect: false,
-    });
+    const { data: playersData, isLoading: isLoadingPlayers } = useSWR("/api/players", fetcher);
 
     const game: Game | undefined = data?.game;
     const completions = data?.completions ?? [];
