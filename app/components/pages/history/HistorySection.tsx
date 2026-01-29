@@ -3,6 +3,7 @@
 import CompletedGamesModal from "@app/components/common/CompletedGamesModal";
 import GameCheckModal from "@app/components/common/GameCheckModal";
 import GraduationChart from "@app/components/common/GraduationChart";
+import PageHeader from "@app/components/common/PageHeader";
 import RecentPlaysList from "@app/components/pages/history/RecentPlaysList";
 import { fetcher } from "@app/lib/fetcher";
 import { useSelectedPlayer } from "@app/providers/SelectedPlayerProvider";
@@ -53,12 +54,10 @@ export default function HistorySection() {
 
     return (
         <div className="space-y-6">
-            <div className="text-4xl text-bold">
-                <div>전과 기록</div>
-            </div>
-            <h2 className="text-xl text-head-gray-800 font-medium mb-4">
-                내가 저지른... 아니, 내가 해결한 수많은 사건들의 흔적.
-            </h2>
+            <PageHeader
+                title="전과 기록"
+                description="내가 저지른... 아니, 내가 해결한 수많은 사건들의 흔적."
+            />
             <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
                 {players.map((p) => {
                     const isSelected = selectedPlayer?._id === p._id;
@@ -81,7 +80,7 @@ export default function HistorySection() {
 
             {selectedPlayer && selectedStat && (
                 <div>
-                    <section className="rounded-2xl bg-gradient-to-b from-white to-head-main p-6 shadow-none border border-head-gray-200/60">
+                    <section className="section-card">
                         <div className="flex items-start justify-between gap-4 flex-wrap">
                             <div className="flex-1 min-w-0">
                                 <h2 className="text-head-gray-800 font-bold mb-2 text-xl">
