@@ -8,6 +8,7 @@ export interface FindCombinationMatchesRequest {
     playerIds: string[];
     excludePartySeries?: boolean;
     excludeSinglePlayer?: boolean;
+    numGroups?: number; // 조합 하나에 들어갈 게임 수 (파티 수)
 }
 
 export interface GameGroup {
@@ -30,7 +31,12 @@ export class FindCombinationMatchesUseCase {
     ) { }
 
     async execute(options: FindCombinationMatchesRequest): Promise<FindCombinationMatchesResult[]> {
-        const { playerIds, excludePartySeries = false, excludeSinglePlayer = false } = options;
+        const {
+            playerIds,
+            excludePartySeries = false,
+            excludeSinglePlayer = false,
+            numGroups: requestedNumGroups,
+        } = options;
 
         if (playerIds.length < 2) return [];
 
@@ -71,11 +77,15 @@ export class FindCombinationMatchesUseCase {
 
         const combinations: FindCombinationMatchesResult[] = [];
         const n = playerIds.length;
-        const maxGroups = Math.min(4, n);
-        const minGroups = 2;
 
-        // 2~4개 그룹으로 나누기
-        for (let numGroups = minGroups; numGroups <= maxGroups; numGroups++) {
+        // 사용자가 지정한 그룹 수가 있으면 그 값 사용, 없으면 2~4개 범위에서 시도
+        const groupRange = requestedNumGroups
+            ? [requestedNumGroups]
+            : Array.from({ length: Math.min(3, n - 1) }, (_, i) => i + 2);
+
+        // 지정된 그룹 수로 나누기
+        for (const numGroups of groupRange) {
+            if (numGroups < 2 || numGroups > n) continue;
             if (combinations.length >= 100) break;
 
             const attempts = numGroups === 2 ? 50 : numGroups === 3 ? 40 : 30;
