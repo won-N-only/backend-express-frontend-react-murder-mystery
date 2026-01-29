@@ -1,10 +1,12 @@
 "use client";
 
+import PageHeader from "@app/components/common/PageHeader";
 import GameCard from "@app/components/pages/games/GameCard";
 import GameModal from "@app/components/pages/games/GameModal";
 import { useScrollRestore } from "@app/hooks/useScrollRestore";
 import { fetcher } from "@app/lib/fetcher";
 import type { Game } from "@app/types";
+import Image from "next/image";
 import { useMemo, useState } from "react";
 import useSWR from "swr";
 
@@ -30,38 +32,41 @@ export default function GamesPage() {
     return (
         <>
             <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                    <h1 className="text-2xl font-bold text-head-gray-800">
-                        사건 수색 ({filteredGames.length})
-                    </h1>
-                </div>
+                <PageHeader
+                    title="사건 수색"
+                    description="입맛에 맞는 살인 사건 없나? 당장 추리하고 싶은 미스터리 뒤지기."
+                />
 
-                <div className="relative">
+                {/* 검색 바: 입력 필드 + 검색 버튼 */}
+                <div className="flex  ">
                     <input
                         type="text"
                         placeholder="게임 이름, 제작사, 시리즈로 검색..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full rounded-xl border border-head-gray-300 bg-head-white px-4 py-2.5 pr-10 text-head-gray-800 focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent"
+                        className="flex-1  border border-head-brown bg-head-white px-4 py-2.5 text-head-gray-800 placeholder:text-head-gray-400 focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent"
                     />
-                    {searchQuery && (
-                        <button
-                            type="button"
-                            onClick={() => setSearchQuery("")}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-head-gray-400 hover:text-head-gray-600"
-                        >
-                            ✕
-                        </button>
-                    )}
+                    <button
+                        type="button"
+                        className="shrink-0  bg-head-accent-brown text-white px-5 py-2.5 text-sm font-medium hover:opacity-90 transition-opacity"
+                    >
+                        검색
+                    </button>
                 </div>
 
+                {/* 게임 목록 헤더 */}
+                <h2 className="text-xl font-bold text-head-gray-800">
+                    게임 목록 ({filteredGames.length})
+                </h2>
+
+                {/* 카드 그리드 */}
                 {filteredGames.length === 0 ? (
                     <div className="text-center py-12 text-head-gray-500">
-                        <p className="text-lg">검색 결과가 없습니다.</p>
-                        <p className="text-sm mt-1">다른 검색어를 시도해보세요.</p>
+                        <p className="text-lg">그런 머미는 없어요</p>
+                        <p className="text-sm mt-1">제대로 입력해보세요~</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {filteredGames.map((g) => (
                             <GameCard
                                 key={g._id}
@@ -73,6 +78,22 @@ export default function GamesPage() {
                 )}
             </div>
             <GameModal gameId={selectedGameId} onClose={() => setSelectedGameId(null)} />
+
+            {/* 우측 하단: 최상단으로 버튼 */}
+            <button
+                type="button"
+                onClick={() => window.scrollTo({ top: 0 })}
+                className="fixed bottom-6 right-6 z-30 w-14 h-14 rounded-full overflow-hidden shadow-soft hover:scale-105 active:scale-95 transition-transform  "
+                aria-label="맨 위로"
+            >
+                <Image
+                    src="/top_head.png"
+                    alt="맨 위로"
+                    width={56}
+                    height={56}
+                    className="w-full h-full object-contain"
+                />
+            </button>
         </>
     );
 }
