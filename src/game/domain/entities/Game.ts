@@ -10,6 +10,8 @@ export class Game {
         public readonly company: string | null,
         public readonly series: string | null,
         public readonly ownerNote: string[] | null,
+        public readonly thumbnail: string | null,
+        public readonly description: string | null,
         public readonly createdAt: Date,
         public readonly updatedAt: Date,
     ) { }

@@ -9,6 +9,8 @@ export interface CreateGameRequest {
     company?: string | null;
     series?: string | null;
     ownerNote?: string[] | null;
+    thumbnail?: string | null;
+    description?: string | null;
 }
 
 export class CreateGameUseCase {
@@ -25,6 +27,8 @@ export class CreateGameUseCase {
             request.company ?? null,
             request.series ?? null,
             request.ownerNote ?? null,
+            request.thumbnail ?? null,
+            request.description ?? null,
             now,
             now,
         );
