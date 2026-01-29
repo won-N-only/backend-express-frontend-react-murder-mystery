@@ -14,18 +14,11 @@ export default function StatsSection({ players, companies }: StatsSectionProps) 
     const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
     const [selectedPlayerName, setSelectedPlayerName] = useState<string | null>(null);
 
-    const getRankEmoji = (index: number) => {
-        if (index === 0) return "1";
-        if (index === 1) return "2";
-        if (index === 2) return "3";
-        return `${index + 1}.`;
-    };
-
     const getProgressColorByRank = (rank: number) => {
-        if (rank <= 3) return "from-emerald-500 to-green-600";
-        else if (rank <= 16) return "from-head-brown to-head-brown-dark";
-        else if (rank <= 30) return "from-yellow-500 to-orange-500";
-        return "from-red-400 to-red-500";
+        if (rank <= 3) return "from-[#4C7382] to-[#7CABB8]";
+        if (rank <= 16) return "from-[#EB9262] to-[#EB9262]";
+        if (rank <= 30) return "from-[#C25D49] to-[#C25D49]";
+        return "from-[#7CABB8] to-[#4C7382]";
     };
 
     const handlePlayerClick = (playerId: string, playerName: string) => {
@@ -52,12 +45,12 @@ export default function StatsSection({ players, companies }: StatsSectionProps) 
                         {players.map((p, index) => (
                             <div
                                 key={p.playerId}
-                                className="rounded-xl bg-head-white shadow-soft border border-head-gray-300 p-5 hover:shadow-md transition-shadow cursor-pointer"
+                                className="section-card"
                                 onClick={() => handlePlayerClick(p.playerId, p.playerName)}
                             >
                                 <div className="flex items-center justify-between mb-3">
                                     <div className="flex items-center gap-3">
-                                        <span className="text-2xl">{getRankEmoji(index)}</span>
+                                        <span className="text-2xl">{index + 1 + "."}</span>
                                         <span className="font-bold text-lg text-head-gray-800">
                                             {p.playerName}
                                         </span>
