@@ -9,6 +9,7 @@ export interface FindMatchesRequest {
     playerCount: number;
     excludePartySeries?: boolean;
     excludeSinglePlayer?: boolean;
+    excludeTwoPlayer?: boolean;
 }
 
 export interface FindMatchesResult {
@@ -24,7 +25,7 @@ export class FindMatchesUseCase {
     ) { }
 
     async execute(options: FindMatchesRequest): Promise<FindMatchesResult[]> {
-        const { playerIds, playerCount, excludePartySeries = false, excludeSinglePlayer = false } = options;
+        const { playerIds, playerCount, excludePartySeries = false, excludeSinglePlayer = false, excludeTwoPlayer = false } = options;
 
         // 게임 조회 (DB 레벨에서 기본 필터링)
         let games = await this.gameRepository.findByPlayerCount(playerCount, playerCount);
@@ -33,6 +34,7 @@ export class FindMatchesUseCase {
         games = games.filter((game) => {
             if (excludePartySeries && game.isPartySeries()) return false;
             if (excludeSinglePlayer && game.isSinglePlayer()) return false;
+            if (excludeTwoPlayer && game.isTwoPlayer()) return false;
             // normalizedMinPlayers를 고려한 정확한 필터링
             return game.canAccommodatePlayers(playerCount);
         });
