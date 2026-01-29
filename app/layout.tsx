@@ -1,4 +1,5 @@
 import Navbar from "@app/components/common/Navbar";
+import ScrollToTop from "@app/components/common/ScrollToTop";
 import { SelectedPlayerProvider } from "@app/providers/SelectedPlayerProvider";
 import { SWRProvider } from "@app/providers/SWRProvider";
 import type { Metadata } from "next";
@@ -18,6 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                         <main className="mx-auto max-w-[720px] px-4 pt-[100px] pb-8 bg-transparent">
                             {children}
                         </main>
+                        <ScrollToTop />
                     </SelectedPlayerProvider>
                 </SWRProvider>
             </body>
