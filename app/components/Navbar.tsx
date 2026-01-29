@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SCROLL_POSITION_KEY } from "../lib/constants";
 
@@ -21,9 +22,9 @@ export default function Navbar() {
         <nav className="sticky top-0 z-40 bg-[#f7f7f7] border-b border-slate-200">
             <div className="mx-auto max-w-[720px] px-4 py-[1.3rem] flex flex-col gap-[0.975rem] w-full">
                 <div className="flex items-end gap-3 justify-left">
-                    <a href="/" className="text-5xl font-bold text-head-gray-800">
+                    <Link href="/" className="text-5xl font-bold text-head-gray-800">
                         대머리
-                    </a>
+                    </Link>
                     <span className="text-xs px-2 py-1 rounded-xl bg-[#e5e5e5] text-[#555]">
                         대구 머더 미스터리
                     </span>
@@ -36,7 +37,7 @@ export default function Navbar() {
                             (item.href === "/" && pathname === "/") ||
                             (item.href !== "/" && pathname?.startsWith(item.href));
                         return (
-                            <a
+                            <Link
                                 key={item.href}
                                 href={item.href}
                                 onClick={item.href === "/games" ? handleGamesClick : undefined}
@@ -47,7 +48,7 @@ export default function Navbar() {
                                 }`}
                             >
                                 {item.label}
-                            </a>
+                            </Link>
                         );
                     })}
                 </div>
