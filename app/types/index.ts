@@ -12,6 +12,8 @@ export interface Game {
     company?: string | null;
     series?: string | null;
     ownerNote?: string[] | null;
+    thumbnail?: string | null;
+    description?: string | null;
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -56,4 +58,12 @@ export interface GameCompletionStat {
 export interface CompanyStat {
     company: string;
     gameCount: number;
+}
+
+/** 이력/완료한 게임 목록에서 사용하는 완료 게임 항목 */
+export interface CompletedGame {
+    gameId: string;
+    gameName: string;
+    orderNumber: number;
+    completedAt: Date | null;
 }
