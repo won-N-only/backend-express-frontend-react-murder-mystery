@@ -42,6 +42,13 @@ export class Game {
     }
 
     /**
+     * 2인용 게임인지 확인
+     */
+    isTwoPlayer(): boolean {
+        return this.maxPlayers === 2;
+    }
+
+    /**
      * 파티 시리즈인지 확인
      */
     isPartySeries(): boolean {
