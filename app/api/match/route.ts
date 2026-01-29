@@ -9,12 +9,20 @@ export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        const { playerIds, playerCount, useCombination, excludePartySeries, excludeSinglePlayer } = body as {
+        const {
+            playerIds,
+            playerCount,
+            useCombination,
+            excludePartySeries,
+            excludeSinglePlayer,
+            numGroups,
+        } = body as {
             playerIds: string[];
             playerCount?: number;
             useCombination?: boolean;
             excludePartySeries?: boolean;
             excludeSinglePlayer?: boolean;
+            numGroups?: number;
         };
 
         if (!Array.isArray(playerIds) || playerIds.length === 0) {
@@ -31,6 +39,7 @@ export async function POST(req: NextRequest) {
                 playerIds,
                 excludePartySeries: excludePartySeries ?? false,
                 excludeSinglePlayer: excludeSinglePlayer ?? false,
+                numGroups,
             });
             // 도메인 엔티티를 DTO로 변환
             const combinationsDto = combinations.map((combo) => ({

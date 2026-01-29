@@ -20,8 +20,8 @@ export default function PlayerSelector({
                     onClick={() => onToggle(p._id)}
                     className={`rounded-lg border px-3 py-2 text-sm transition ${
                         selectedPlayers.includes(p._id)
-                            ? "bg-blue-600 text-white border-blue-600 shadow-md"
-                            : "bg-white hover:bg-slate-50"
+                            ? "bg-head-blue text-head-white border-head-blue shadow-soft"
+                            : "bg-head-white hover:bg-head-gray-100 border-head-gray-300 text-head-gray-800"
                     }`}
                 >
                     {p.name}
