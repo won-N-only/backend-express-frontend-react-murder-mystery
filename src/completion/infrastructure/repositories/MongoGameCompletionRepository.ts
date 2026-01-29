@@ -1,5 +1,9 @@
 import { GameCompletion } from "@completion/domain/entities/GameCompletion";
-import type { IGameCompletionRepository } from "@completion/domain/repositories/IGameCompletionRepository";
+import type {
+    CompletionCountByGame,
+    CompletionCountByPlayer,
+    IGameCompletionRepository,
+} from "@completion/domain/repositories/IGameCompletionRepository";
 import { CompletionStatus } from "@completion/domain/valueObjects/CompletionStatus";
 import { MongoDatabase } from "@shared/infrastructure/database/MongoDatabase";
 import { ObjectId } from "mongodb";
@@ -37,25 +41,16 @@ export class MongoGameCompletionRepository implements IGameCompletionRepository 
 
     async findByGameId(gameId: string): Promise<GameCompletion[]> {
         const db = await MongoDatabase.getDb();
+        // $lookup 제거: player 정보가 필요하지 않으므로 단순 find 쿼리로 최적화
         const completions = await db
             .collection(MongoGameCompletionRepository.COLLECTION_NAME)
-            .aggregate([
-                { $match: { gameId: new ObjectId(gameId) } },
-                {
-                    $lookup: {
-                        from: "players",
-                        localField: "playerId",
-                        foreignField: "_id",
-                        as: "player",
-                    },
-                },
-                { $unwind: "$player" },
-            ])
+            .find({ gameId: new ObjectId(gameId) })
             .toArray();
         return completions.map(this.toDomain);
     }
 
     async findByGameIdAndPlayerIds(gameId: string, playerIds: string[]): Promise<GameCompletion[]> {
+        if (playerIds.length === 0) return [];
         const db = await MongoDatabase.getDb();
         const objectIds = playerIds.map((id) => new ObjectId(id));
         const completions = await db
@@ -65,27 +60,116 @@ export class MongoGameCompletionRepository implements IGameCompletionRepository 
         return completions.map(this.toDomain);
     }
 
-    async findByGameIdsAndPlayerIds(gameIds: string[], playerIds: string[]): Promise<GameCompletion[]> {
+    async findByGameIdsAndPlayerIds(gameIds: string[], playerIds: string[], status?: CompletionStatus): Promise<GameCompletion[]> {
+        if (gameIds.length === 0 || playerIds.length === 0) return [];
         const db = await MongoDatabase.getDb();
         const gameObjectIds = gameIds.map((id) => new ObjectId(id));
         const playerObjectIds = playerIds.map((id) => new ObjectId(id));
+        const query: any = {
+            gameId: { $in: gameObjectIds },
+            playerId: { $in: playerObjectIds },
+        };
+        if (status !== undefined) {
+            query.status = status;
+        }
         const completions = await db
             .collection(MongoGameCompletionRepository.COLLECTION_NAME)
-            .find({
-                gameId: { $in: gameObjectIds },
-                playerId: { $in: playerObjectIds },
-            })
+            .find(query)
             .toArray();
         return completions.map(this.toDomain);
     }
 
-    async findByPlayerId(playerId: string): Promise<GameCompletion[]> {
+    async findByPlayerId(playerId: string, status?: CompletionStatus): Promise<GameCompletion[]> {
         const db = await MongoDatabase.getDb();
+        const query: any = { playerId: new ObjectId(playerId) };
+        if (status !== undefined) {
+            query.status = status;
+        }
         const completions = await db
             .collection(MongoGameCompletionRepository.COLLECTION_NAME)
-            .find({ playerId: new ObjectId(playerId) })
+            .find(query)
             .toArray();
         return completions.map(this.toDomain);
+    }
+
+    async countByGameIds(
+        gameIds: string[],
+        playerIds: string[],
+        status: CompletionStatus,
+    ): Promise<CompletionCountByGame[]> {
+        if (gameIds.length === 0 || playerIds.length === 0) return [];
+        const db = await MongoDatabase.getDb();
+        const gameObjectIds = gameIds.map((id) => new ObjectId(id));
+        const playerObjectIds = playerIds.map((id) => new ObjectId(id));
+
+        // 인덱스 최적화: status를 먼저 배치하여 idx_completions_status_gameId_playerId 인덱스 활용
+        const results = await db
+            .collection(MongoGameCompletionRepository.COLLECTION_NAME)
+            .aggregate<CompletionCountByGame>([
+                {
+                    $match: {
+                        status, // equality 조건을 먼저 배치하여 인덱스 효율성 극대화
+                        gameId: { $in: gameObjectIds },
+                        playerId: { $in: playerObjectIds },
+                    },
+                },
+                {
+                    $group: {
+                        _id: "$gameId",
+                        count: { $sum: 1 },
+                    },
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        gameId: { $toString: "$_id" },
+                        count: 1,
+                    },
+                },
+            ])
+            .toArray();
+
+        return results;
+    }
+
+    async countByPlayerIds(
+        gameIds: string[],
+        playerIds: string[],
+        status: CompletionStatus,
+    ): Promise<CompletionCountByPlayer[]> {
+        if (gameIds.length === 0 || playerIds.length === 0) return [];
+        const db = await MongoDatabase.getDb();
+        const gameObjectIds = gameIds.map((id) => new ObjectId(id));
+        const playerObjectIds = playerIds.map((id) => new ObjectId(id));
+
+        // 인덱스 최적화: status를 먼저 배치하여 idx_completions_status_gameId_playerId 인덱스 활용
+        const results = await db
+            .collection(MongoGameCompletionRepository.COLLECTION_NAME)
+            .aggregate<CompletionCountByPlayer>([
+                {
+                    $match: {
+                        status, // equality 조건을 먼저 배치하여 인덱스 효율성 극대화
+                        gameId: { $in: gameObjectIds },
+                        playerId: { $in: playerObjectIds },
+                    },
+                },
+                {
+                    $group: {
+                        _id: "$playerId",
+                        count: { $sum: 1 },
+                    },
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        playerId: { $toString: "$_id" },
+                        count: 1,
+                    },
+                },
+            ])
+            .toArray();
+
+        return results;
     }
 
     private toDomain(document: any): GameCompletion {
