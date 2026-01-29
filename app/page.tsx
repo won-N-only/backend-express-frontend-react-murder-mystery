@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import useSWR from "swr";
 import CompletedGamesModal from "./components/CompletedGamesModal";
+import GameCheckModal from "./components/GameCheckModal";
 import { fetcher } from "./lib/fetcher";
 import type { Player, PlayerStat } from "./types";
 
@@ -65,6 +66,7 @@ export default function HomePage() {
 
     const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
     const [showCompletedGamesModal, setShowCompletedGamesModal] = useState(false);
+    const [showGameCheckModal, setShowGameCheckModal] = useState(false);
 
     const selectedPlayer = useMemo(() => {
         const id = selectedPlayerId ?? players[0]?._id;
@@ -145,6 +147,14 @@ export default function HomePage() {
                             <GraduationChart rate={selectedStat.completionRate} />
                         </div>
                     </div>
+                    <div className="mt-4 pt-4 border-t border-head-gray-200">
+                        <button
+                            onClick={() => setShowGameCheckModal(true)}
+                            className="w-full rounded-lg bg-head-blue text-head-white px-4 py-2.5 text-xl font-medium hover:bg-head-blue-dark transition-colors"
+                        >
+                            한 게임 체크하기
+                        </button>
+                    </div>
                 </section>
             )}
 
@@ -201,6 +211,13 @@ export default function HomePage() {
                 playerId={showCompletedGamesModal ? (selectedPlayer?._id ?? null) : null}
                 playerName={selectedPlayer?.name ?? null}
                 onClose={() => setShowCompletedGamesModal(false)}
+            />
+
+            {/* 게임 체크 모달 */}
+            <GameCheckModal
+                playerId={showGameCheckModal ? (selectedPlayer?._id ?? null) : null}
+                playerName={selectedPlayer?.name ?? null}
+                onClose={() => setShowGameCheckModal(false)}
             />
         </div>
     );
