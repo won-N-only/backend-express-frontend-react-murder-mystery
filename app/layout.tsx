@@ -8,6 +8,9 @@ import "./globals.css";
 
 export const metadata: Metadata = {
     title: "대머리",
+    icons: {
+        icon: "/favicon_face.png",
+    },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
