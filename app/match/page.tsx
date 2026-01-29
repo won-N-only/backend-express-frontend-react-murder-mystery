@@ -72,7 +72,7 @@ export default function MatchPage() {
                     type="button"
                     onClick={handleMatch}
                     disabled={loading || !selectedPlayers.length}
-                    className="w-full rounded-lg bg-head-blue py-2.5 text-head-white font-semibold disabled:bg-head-gray-300 disabled:text-head-gray-500 hover:bg-head-blue-dark transition"
+                    className="w-full rounded-lg bg-head-brown py-2.5 text-head-white font-semibold disabled:bg-head-gray-300 disabled:text-head-gray-500 hover:bg-head-brown-dark transition"
                 >
                     {loading ? "매칭 중..." : "조합 추천 보기"}
                 </button>
