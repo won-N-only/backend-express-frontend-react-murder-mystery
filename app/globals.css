@@ -41,4 +41,17 @@ body {
     .section-card {
         @apply rounded-2xl bg-gradient-to-b from-white to-head-main p-6 shadow-none border border-head-gray-200/60;
     }
+
+    /* ===== 유저 목록 버튼 (전과 기록·참가자 선택 등) ===== */
+    .user-list-btn {
+        @apply rounded-3xl px-3 py-3 text-sm font-medium transition border bg-head-white  text-head-gray-800 hover:bg-head-accent-brown hover:text-white;
+    }
+    .user-list-btn-selected {
+        @apply bg-head-brown text-head-white border-head-brown shadow-soft;
+    }
+
+    /* ===== 메인 CTA 버튼 (매칭 실행·전체 너비 등) ===== */
+    .btn-primary {
+        @apply rounded-lg bg-head-brown text-head-white font-semibold py-2.5 px-5 hover:bg-head-brown-dark transition disabled:bg-head-gray-300 disabled:text-head-gray-500 disabled:cursor-not-allowed;
+    }
 }
