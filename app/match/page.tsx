@@ -44,13 +44,6 @@ export default function MatchPage() {
         <div className="space-y-6">
             <PageHeader title="사건 배당" description="토 달지 마세요. 불만은 사절." />
 
-            <div>
-                <h2 className="text-xl font-semibold text-head-gray-800">참가자 선택</h2>
-                <p className="text-sm text-head-gray-500 mt-1">
-                    선택된 참가자: {selectedPlayers.length}명
-                </p>
-            </div>
-
             <MatchOptions
                 excludePartySeries={excludePartySeries}
                 excludeSinglePlayer={excludeSinglePlayer}
@@ -62,7 +55,9 @@ export default function MatchPage() {
                 onExcludeTwoPlayerChange={setExcludeTwoPlayer}
                 onNumGroupsChange={setNumGroups}
             />
-
+            <div>
+                <span className="font-bold">선택된 참가자</span> {selectedPlayers.length}명
+            </div>
             <PlayerListGrid
                 players={players}
                 selectedPlayerIds={selectedPlayers}
