@@ -152,17 +152,20 @@ export const useGameLogic = () => {
     }, [gameState, gameClear, gameOver]);
 
     const startGame = useCallback(() => {
-        scoreRef.current = 0;
+        // 최고 점수가 200점 이상이면 하드 모드(2000점)로 시작
+        const isHardStart = highScore >= 200;
+        scoreRef.current = isHardStart ? 2000 : 0;
         frameCountRef.current = 0;
         obstaclesRef.current = [];
         playerRef.current.x = CANVAS_WIDTH / 2 - PLAYER_SIZE / 2;
 
-        setIsSkinUnlocked(false);
-        isSkinUnlockedRef.current = false;
-        setPlayerSkin("/thumbnail.png");
+        // 하드 모드 시작 시 스킨 해금 상태로 시작 (즉시 클리어 화면 뜨는 것 방지)
+        setIsSkinUnlocked(isHardStart);
+        isSkinUnlockedRef.current = isHardStart;
+        setPlayerSkin(isHardStart ? "/sad_head.png" : "/thumbnail.png");
 
         setGameState("playing");
-    }, []);
+    }, [highScore]);
 
     const continueGame = useCallback(() => {
         setIsSkinUnlocked(true);
