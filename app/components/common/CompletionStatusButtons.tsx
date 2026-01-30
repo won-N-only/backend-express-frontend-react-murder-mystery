@@ -22,7 +22,7 @@ export default function CompletionStatusButtons({
                     className={`px-2 py-1 text-sm rounded transition-colors ${
                         currentStatus === s
                             ? "bg-head-accent-brown text-head-white"
-                            : "bg-head-gray-100 text-head-gray-700 hover:bg-head-gray-200"
+                            : "bg-head-gray-100 text-head-text hover:bg-head-gray-200"
                     }`}
                 >
                     {CompletionStatusLabel[s]}

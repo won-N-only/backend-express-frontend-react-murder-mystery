@@ -70,20 +70,21 @@ export default function AuthorSuggestInput({
                 onFocus={handleFocus}
                 placeholder={placeholder}
                 disabled={disabled}
-                className={`w-full text-sm border border-head-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent ${inputClassName}`}
+                className={`w-full text-sm border border-head-border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent ${inputClassName}`}
                 autoComplete="off"
             />
             {open && suggestions.length > 0 && (
                 <ul
-                    className="absolute z-10 mt-1 w-full max-h-48 overflow-y-auto rounded-lg border border-head-gray-200 bg-white shadow-lg py-1"
+                    className="absolute z-10 mt-1 w-full max-h-48 overflow-y-auto rounded-lg border border-head-border bg-white shadow-lg py-1"
                     role="listbox"
                 >
                     {suggestions.map((p) => (
                         <li
                             key={p._id}
                             role="option"
+                            aria-selected={selectedId === p._id}
                             onClick={() => handleSelect(p)}
-                            className="px-3 py-2 text-sm text-head-gray-800 cursor-pointer hover:bg-head-gray-100 focus:bg-head-gray-100"
+                            className="px-3 py-2 text-sm text-head-text cursor-pointer hover:bg-head-gray-100 focus:bg-head-gray-100"
                         >
                             {p.name}
                         </li>

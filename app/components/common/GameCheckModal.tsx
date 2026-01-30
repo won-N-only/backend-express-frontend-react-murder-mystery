@@ -24,8 +24,11 @@ export default function GameCheckModal({ playerId, playerName, onClose }: GameCh
         completedGames: CompletedGame[];
     }>(playerId ? `/api/stats/players/${playerId}/completed-games` : null, fetcher);
 
-    const games = gamesData?.games ?? [];
-    const completedGames = completedGamesData?.completedGames ?? [];
+    const games = useMemo(() => gamesData?.games ?? [], [gamesData?.games]);
+    const completedGames = useMemo(
+        () => completedGamesData?.completedGames ?? [],
+        [completedGamesData?.completedGames],
+    );
 
     const completedGameIds = useMemo(
         () => new Set(completedGames.map((g) => g.gameId)),
@@ -90,22 +93,22 @@ export default function GameCheckModal({ playerId, playerName, onClose }: GameCh
             onClick={onClose}
         >
             <div
-                className="bg-head-white rounded-2xl shadow-soft max-w-[720px] w-full max-h-[90vh] overflow-hidden flex flex-col"
+                className="bg-head-white rounded-2xl shadow-soft max-w-content w-full max-h-[90vh] overflow-hidden flex flex-col"
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className="sticky top-0 bg-head-white z-10 p-6 space-y-4 border-b border-head-gray-200 flex-shrink-0">
+                <div className="sticky top-0 bg-head-white z-10 p-6 space-y-4 border-b border-head-border flex-shrink-0">
                     <div className="flex items-start justify-between">
                         <div>
-                            <h2 className="text-xl font-bold text-head-gray-800">
+                            <h2 className="text-xl font-bold text-head-text">
                                 {playerName}님의 게임 체크
                             </h2>
-                            <p className="text-sm text-head-gray-500 mt-1">
+                            <p className="text-sm text-head-text mt-1">
                                 완료한 게임을 체크해주세요
                             </p>
                         </div>
                         <button
                             onClick={onClose}
-                            className="text-head-gray-500 hover:text-head-gray-800 text-2xl leading-none"
+                            className="text-head-text hover:text-head-text text-2xl leading-none"
                         >
                             ×
                         </button>
@@ -116,10 +119,10 @@ export default function GameCheckModal({ playerId, playerName, onClose }: GameCh
                             placeholder="게임 이름, 제작사, 시리즈로 검색..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full rounded-lg border border-head-gray-300 bg-head-white px-4 py-2.5 pr-10 text-head-gray-800 focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent"
+                            className="w-full rounded-lg border border-head-border bg-head-white px-4 py-2.5 pr-10 text-head-text focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent"
                         />
                         <svg
-                            className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-head-gray-400"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-head-text"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -134,11 +137,11 @@ export default function GameCheckModal({ playerId, playerName, onClose }: GameCh
                     </div>
                 </div>
 
-                <div className="flex-1 overflow-y-auto px-6 pb-6">
+                <div className="flex-1 overflow-y-auto px-6">
                     {isLoadingGames || isLoadingCompleted ? (
-                        <div className="text-center py-8 text-head-gray-500">로딩 중...</div>
+                        <div className="text-center py-8 text-head-text">로딩 중...</div>
                     ) : filteredGames.length === 0 ? (
-                        <div className="text-center py-8 text-head-gray-500">
+                        <div className="text-center py-8 text-head-text">
                             {searchQuery ? "검색 결과가 없습니다." : "게임이 없습니다."}
                         </div>
                     ) : (
@@ -154,20 +157,20 @@ export default function GameCheckModal({ playerId, playerName, onClose }: GameCh
                                         disabled={isUpdating}
                                         className={`w-full flex items-center gap-3 p-4 rounded-lg border transition-all text-left ${
                                             isCompleted
-                                                ? "border-head-brown bg-head-brown/5 hover:bg-head-brown/10"
-                                                : "border-head-gray-300 bg-head-white hover:shadow-md hover:border-head-brown"
+                                                ? "border-head-border bg-head-brown/5 hover:bg-head-brown/10"
+                                                : "border-head-border bg-head-white hover:shadow-md hover:border-head-border"
                                         } ${isUpdating ? "opacity-50 cursor-wait" : "cursor-pointer"}`}
                                     >
                                         <div className="flex-1 min-w-0">
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <span className="text-xs font-semibold text-head-gray-500 bg-head-gray-100 px-2 py-0.5 rounded">
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-xs font-semibold text-head-text bg-head-gray-100 px-2 py-0.5 rounded">
                                                     #{game.orderNumber}
                                                 </span>
-                                                <span className="font-medium text-head-gray-800 truncate">
+                                                <span className="font-medium text-head-text truncate">
                                                     {game.name}
                                                 </span>
                                             </div>
-                                            <div className="flex items-center gap-2 text-xs text-head-gray-500">
+                                            <div className="flex items-center gap-2 text-xs text-head-text mt-1">
                                                 {game.company && (
                                                     <span className="truncate">{game.company}</span>
                                                 )}
@@ -183,7 +186,7 @@ export default function GameCheckModal({ playerId, playerName, onClose }: GameCh
                                         </div>
                                         <div className="shrink-0 flex items-center gap-2">
                                             {isUpdating ? (
-                                                <div className="flex items-center gap-2 text-head-gray-500">
+                                                <div className="flex items-center gap-2 text-head-text">
                                                     <svg
                                                         className="animate-spin h-4 w-4"
                                                         xmlns="http://www.w3.org/2000/svg"
@@ -211,7 +214,7 @@ export default function GameCheckModal({ playerId, playerName, onClose }: GameCh
                                                     완료
                                                 </span>
                                             ) : (
-                                                <span className="text-xs font-semibold text-head-gray-400 bg-head-gray-100 px-3 py-1 rounded-full">
+                                                <span className="text-xs font-semibold text-head-text bg-head-gray-100 px-3 py-1 rounded-full">
                                                     미완료
                                                 </span>
                                             )}
@@ -221,6 +224,7 @@ export default function GameCheckModal({ playerId, playerName, onClose }: GameCh
                             })}
                         </div>
                     )}
+                    <div className="pt-6" aria-hidden />
                 </div>
             </div>
         </div>
