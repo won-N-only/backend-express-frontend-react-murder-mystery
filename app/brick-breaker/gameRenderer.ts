@@ -1,4 +1,4 @@
-import { HAIR_SIZE, HEAD_SIZE, BALL_R, PADDLE_HIT_WIDTH } from "./constants";
+import { BALL_R, HAIR_SIZE, HEAD_SIZE, PADDLE_HIT_WIDTH } from "./constants";
 import type { GameState } from "./types";
 
 export function clearCanvas(ctx: CanvasRenderingContext2D, width: number, height: number) {
@@ -57,9 +57,17 @@ export function drawFallingHair(
     paddleX: number,
     canvasHeight: number,
     fallingY: number,
+    rotationAngle: number,
     hairImg: HTMLImageElement | null
 ) {
     if (!hairImg) return;
     const headX = paddleX + (PADDLE_HIT_WIDTH - HEAD_SIZE) / 2;
-    ctx.drawImage(hairImg, headX, fallingY, HEAD_SIZE, HEAD_SIZE);
+    const centerX = headX + HEAD_SIZE / 2;
+    const centerY = fallingY + HEAD_SIZE / 2;
+
+    ctx.save();
+    ctx.translate(centerX, centerY);
+    ctx.rotate((rotationAngle * Math.PI) / 180);
+    ctx.drawImage(hairImg, -HEAD_SIZE / 2, -HEAD_SIZE / 2, HEAD_SIZE, HEAD_SIZE);
+    ctx.restore();
 }

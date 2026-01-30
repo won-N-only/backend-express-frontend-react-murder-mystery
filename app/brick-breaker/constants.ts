@@ -9,6 +9,8 @@ export const HAIR_SPEED_MIN = 1;
 export const HAIR_SPEED_MAX = 3;
 /** 클리어 시 가발이 떨어지는 속도 (px/frame) */
 export const FALLING_HAIR_SPEED = 2;
+/** 클리어 시 가발이 떨어지면서 회전하는 속도 (deg/frame) */
+export const FALLING_HAIR_ROTATION_SPEED = 8;
 
 export const CANVAS_WIDTH = 800;
 export const CANVAS_HEIGHT = 500;

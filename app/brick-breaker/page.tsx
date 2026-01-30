@@ -5,32 +5,28 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
     CANVAS_HEIGHT,
     CANVAS_WIDTH,
+    FALLING_HAIR_ROTATION_SPEED,
     FALLING_HAIR_SPEED,
     HEAD_SIZE,
     PADDLE_HIT_WIDTH,
 } from "./constants";
 import {
+    checkPaddleCollision,
     createInitialGameState,
     initHairs,
     updateBallPosition,
-    checkPaddleCollision,
     updateHairsAndCheckCollisions,
 } from "./gameLogic";
-import {
-    clearCanvas,
-    drawBall,
-    drawFallingHair,
-    drawHairs,
-    drawPaddle,
-} from "./gameRenderer";
+import { clearCanvas, drawBall, drawFallingHair, drawHairs, drawPaddle } from "./gameRenderer";
+import type { GameState } from "./types";
 import { useImages } from "./useImages";
 import { useMouseControl } from "./useMouseControl";
-import type { GameState } from "./types";
 
 export default function BrickBreakerPage() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const gameRef = useRef<GameState | null>(null);
     const fallingHairYRef = useRef<number | null>(null);
+    const fallingHairRotationRef = useRef<number>(0);
     const fallingAnimIdRef = useRef<number | null>(null);
 
     const { paddleImgRef, sadHeadImgRef, hairImgRef } = useImages();
@@ -55,6 +51,7 @@ export default function BrickBreakerPage() {
         setGameOver(false);
         setWon(false);
         fallingHairYRef.current = null;
+        fallingHairRotationRef.current = 0;
         setStarted(true);
     }, []);
 
@@ -77,11 +74,7 @@ export default function BrickBreakerPage() {
             const g = gameRef.current;
             if (!g || g.stopped) return;
 
-            const { ballLeft, ballRight, ballTop, ballBottom } = updateBallPosition(
-                g,
-                cw,
-                ch
-            );
+            const { ballLeft, ballRight, ballTop, ballBottom } = updateBallPosition(g, cw, ch);
 
             checkPaddleCollision(g, ballLeft, ballRight, ballTop, ballBottom, ch);
 
@@ -97,7 +90,7 @@ export default function BrickBreakerPage() {
                 ballLeft,
                 ballRight,
                 ballTop,
-                ballBottom
+                ballBottom,
             );
 
             if (scoreIncrease > 0) {
@@ -118,7 +111,8 @@ export default function BrickBreakerPage() {
             drawPaddle(ctx, paddleX, ch, paddleImgRef.current);
 
             if (justWon && hairImgRef.current) {
-                drawFallingHair(ctx, paddleX, ch, ch - HEAD_SIZE, hairImgRef.current);
+                const hairStopY = ch - HEAD_SIZE - HEAD_SIZE;
+                drawFallingHair(ctx, paddleX, ch, hairStopY, 0, hairImgRef.current);
             }
 
             g.animId = requestAnimationFrame(tick);
@@ -144,8 +138,9 @@ export default function BrickBreakerPage() {
         const paddleX = g.finalPaddleX !== null ? g.finalPaddleX : g.paddleX;
         const headX = paddleX + (PADDLE_HIT_WIDTH - HEAD_SIZE) / 2;
         const headY = ch - HEAD_SIZE;
+        const hairStopY = headY - HEAD_SIZE;
 
-        const drawFinalFrame = (fallingY: number | null) => {
+        const drawFinalFrame = (fallingY: number | null, rotationAngle: number = 0) => {
             clearCanvas(ctx, cw, ch);
             drawHairs(ctx, g.hairs, hairImgRef.current);
 
@@ -155,29 +150,31 @@ export default function BrickBreakerPage() {
                 ctx.drawImage(headImg, headX, headY, HEAD_SIZE, HEAD_SIZE);
             }
             if (won && hairImgRef.current) {
-                const drawY = fallingY !== null ? fallingY : headY;
-                ctx.drawImage(hairImgRef.current, headX, drawY, HEAD_SIZE, HEAD_SIZE);
+                const drawY = fallingY !== null ? fallingY : hairStopY;
+                drawFallingHair(ctx, paddleX, ch, drawY, rotationAngle, hairImgRef.current);
             }
         };
 
         if (won) {
             if (fallingHairYRef.current === null) {
                 fallingHairYRef.current = -HEAD_SIZE;
+                fallingHairRotationRef.current = 0;
             }
 
             const tick = () => {
                 const currentY = fallingHairYRef.current;
                 if (currentY === null) return;
 
-                if (currentY >= headY) {
-                    fallingHairYRef.current = headY;
+                if (currentY >= hairStopY) {
+                    fallingHairYRef.current = hairStopY;
                     fallingAnimIdRef.current = null;
-                    drawFinalFrame(headY);
+                    drawFinalFrame(hairStopY, fallingHairRotationRef.current);
                     return;
                 }
 
-                fallingHairYRef.current = Math.min(currentY + FALLING_HAIR_SPEED, headY);
-                drawFinalFrame(fallingHairYRef.current);
+                fallingHairYRef.current = Math.min(currentY + FALLING_HAIR_SPEED, hairStopY);
+                fallingHairRotationRef.current += FALLING_HAIR_ROTATION_SPEED;
+                drawFinalFrame(fallingHairYRef.current, fallingHairRotationRef.current);
                 fallingAnimIdRef.current = requestAnimationFrame(tick);
             };
             fallingAnimIdRef.current = requestAnimationFrame(tick);
