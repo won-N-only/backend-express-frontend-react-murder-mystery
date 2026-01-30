@@ -63,10 +63,10 @@ body {
 
     /* ===== 유저 목록 버튼 (전과 기록·참가자 선택 등) ===== */
     .user-list-btn {
-        @apply rounded-3xl px-3 py-3 text-sm font-medium bg-head-white text-head-text hover:bg-head-accent-brown hover:text-white;
+        @apply rounded-3xl px-3 py-3 text-sm bg-head-white text-head-text hover:bg-head-accent-brown hover:text-white;
     }
     .user-list-btn-selected {
-        @apply bg-head-brown text-head-white font-extrabold shadow-soft;
+        @apply bg-head-brown text-head-white text-sm font-extrabold shadow-soft py-2;
     }
 
     /* ===== 메인 CTA 버튼 (매칭 실행·전체 너비 등) ===== */
