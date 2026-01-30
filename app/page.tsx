@@ -3,15 +3,15 @@ import Image from "next/image";
 export default function LandingPage() {
     return (
         <div className="flex flex-col">
-            <div className="flex flex-col items-center px-4 pt-section">
+            <div className="flex flex-col items-center px-4 pt-[100px]">
                 <div className="relative w-full max-w-md aspect-[4/3]">
                     <Image
                         src="/detective_office.png"
                         alt="탐정 사무실"
-                        fill
                         className="object-contain"
+                        width={544}
+                        height={420}
                         priority
-                        sizes="(max-width: 768px) 100vw, 448px"
                     />
                 </div>
 
