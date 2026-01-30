@@ -39,7 +39,7 @@ export default function LandingPage() {
                             />
                             {/* 헤어 - hover 시 머리 위에서 돌면서 얹힘 */}
                             <div className="absolute inset-0 w-full h-full pointer-events-none overflow-visible">
-                                <div className="hair-fly-in absolute top-0 left-1/2 w-[48px] h-[34px] transition-all duration-700 ease-out opacity-0 group-hover/face:opacity-100">
+                                <div className="hair-fly-in absolute top-0.4 left-1/2 w-[48px] h-[36px] transition-all duration-700 ease-out opacity-0 group-hover/face:opacity-100">
                                     <Image
                                         src="/detective_office_hair.png"
                                         alt=""
