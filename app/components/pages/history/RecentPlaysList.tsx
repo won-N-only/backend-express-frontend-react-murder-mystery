@@ -1,7 +1,7 @@
 "use client";
 
 import type { CompletedGame } from "@app/types";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface RecentPlaysListProps {
     plays: CompletedGame[];
@@ -18,6 +18,12 @@ export default function RecentPlaysList({
     emptyMessage = "완료한 게임이 없습니다.",
     emptyHint = "대머리를 선택해주세요.",
 }: RecentPlaysListProps) {
+    const router = useRouter();
+
+    const openGameModal = (gameId: string) => {
+        router.push(`/games?gameId=${gameId}`);
+    };
+
     return (
         <section className="section-card">
             <div className="flex items-center justify-between mb-4">
@@ -42,23 +48,25 @@ export default function RecentPlaysList({
                             className="flex items-center gap-3 py-3 px-2 border-b border-head-gray-100 last:border-0 hover:bg-head-gray-50 rounded-lg transition-colors"
                         >
                             <div className="flex-1 min-w-0 flex flex-col gap-2">
-                                <Link
-                                    href={`/games/${game.gameId}`}
-                                    className="text-head-gray-800 font-medium truncate hover:text-head-brown transition-colors block"
+                                <button
+                                    type="button"
+                                    onClick={() => openGameModal(game.gameId)}
+                                    className="text-head-gray-800 font-medium truncate hover:text-head-brown transition-colors block text-left w-full"
                                 >
                                     {game.gameName}
-                                </Link>
+                                </button>
                                 {game.completedAt && (
                                     <p className="text-head-gray-500 text-xs">
                                         {new Date(game.completedAt).toLocaleDateString("ko-KR")}
                                     </p>
                                 )}
-                                <Link
-                                    href={`/games/${game.gameId}`}
+                                <button
+                                    type="button"
+                                    onClick={() => openGameModal(game.gameId)}
                                     className="shrink-0 w-fit bg-white border border-head-brown text-head-brown px-4 py-1 text-sm font-medium hover:bg-head-brown hover:text-head-white transition-colors"
                                 >
                                     상세보기
-                                </Link>
+                                </button>
                             </div>
                         </li>
                     ))}
