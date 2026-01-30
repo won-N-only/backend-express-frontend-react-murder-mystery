@@ -70,7 +70,7 @@ export default function AuthorSuggestInput({
                 onFocus={handleFocus}
                 placeholder={placeholder}
                 disabled={disabled}
-                className={`w-full text-sm border border-head-border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent ${inputClassName}`}
+                className={`w-full text-sm border border-head-brown   px-3 py-2 focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent ${inputClassName}`}
                 autoComplete="off"
             />
             {open && suggestions.length > 0 && (
