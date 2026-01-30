@@ -28,24 +28,14 @@ export default function GameListItem({
             type={onClick ? "button" : undefined}
         >
             <div className="min-w-0 p-2 flex-1">
-                <div className="text-xs text-head-gray-500 font-medium">
-                    #{orderNumber}
-                </div>
-                <div className="text-base font-bold text-head-text truncate">
-                    {title}
-                </div>
+                <div className="text-xs text-head-gray-500 font-medium">#{orderNumber}</div>
+                <div className="text-lg font-bold text-head-text truncate">{title}</div>
                 {subtitle && (
-                    <div className="text-xs font-medium text-head-text mt-1">
-                        {subtitle}
-                    </div>
+                    <div className="text-xs font-medium text-head-text mt-1">{subtitle}</div>
                 )}
             </div>
 
-            {action && (
-                <div className="mr-[20px] flex-shrink-0">
-                    {action}
-                </div>
-            )}
+            {action && <div className="mr-[20px] flex-shrink-0">{action}</div>}
         </Container>
     );
 }

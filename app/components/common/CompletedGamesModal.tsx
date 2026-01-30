@@ -50,7 +50,7 @@ export default function CompletedGamesModal({
                             : undefined
                     }
                     action={
-                        <span className="text-xs font-semibold text-head-brown bg-head-brown/10 px-3 py-1 rounded-full">
+                        <span className="text-md font-extrabold text-head-white bg-head-brown px-6 py-1 rounded-none">
                             완료
                         </span>
                     }
