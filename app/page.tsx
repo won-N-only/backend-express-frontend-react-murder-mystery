@@ -6,7 +6,7 @@ export default function LandingPage() {
             <div className="flex flex-col items-center px-4 pt-6 pb-12">
                 <div className="relative w-full max-w-md aspect-[4/3] mb-6">
                     <Image
-                        src="/detective-office.png"
+                        src="/detective_office.png"
                         alt="탐정 사무실"
                         fill
                         className="object-contain"
