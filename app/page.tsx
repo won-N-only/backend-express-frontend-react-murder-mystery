@@ -2,68 +2,33 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useCallback, useRef, useState } from "react";
-
-const FACE_AREA = {
-    x: 45,
-    xEnd: 60,
-    y: 10,
-    yEnd: 35,
-    hairPosition: { top: "16%", left: "52.2%" },
-    hairSize: 80,
-} as const;
-
-function getRelativePosition(
-    e: React.MouseEvent<HTMLDivElement>,
-    container: HTMLDivElement | null,
-) {
-    if (!container) return null;
-    const rect = container.getBoundingClientRect();
-    return {
-        x: ((e.clientX - rect.left) / rect.width) * 100,
-        y: ((e.clientY - rect.top) / rect.height) * 100,
-    };
-}
-
-function isInFaceArea(x: number, y: number): boolean {
-    return x >= FACE_AREA.x && x <= FACE_AREA.xEnd && y >= FACE_AREA.y && y <= FACE_AREA.yEnd;
-}
+import { useCallback, useEffect, useState } from "react";
 
 export default function LandingPage() {
-    const [isHovering, setIsHovering] = useState(false);
-    const imageRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
+    const [hairStartPos, setHairStartPos] = useState({ x: 0, y: 0, angle: 0 });
 
-    const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-        const pos = getRelativePosition(e, imageRef.current);
-        if (pos) {
-            const inFaceArea = isInFaceArea(pos.x, pos.y);
-            setIsHovering((prev) => (prev !== inFaceArea ? inFaceArea : prev));
-        }
+    useEffect(() => {
+        // 랜덤한 각도 (0-360도)
+        const angle = Math.random() * 360;
+        // 랜덤한 거리 (300-500px)
+        const distance = 300 + Math.random() * 200;
+        // 각도에 따른 x, y 좌표 계산
+        const x = Math.cos((angle * Math.PI) / 180) * distance;
+        const y = Math.sin((angle * Math.PI) / 180) * distance;
+
+        setHairStartPos({ x, y, angle });
     }, []);
 
-    const handleClick = useCallback(
-        (e: React.MouseEvent<HTMLDivElement>) => {
-            const pos = getRelativePosition(e, imageRef.current);
-            if (pos && isInFaceArea(pos.x, pos.y)) {
-                router.push("/brick-breaker");
-            }
-        },
-        [router],
-    );
-
-    const handleMouseLeave = useCallback(() => setIsHovering(false), []);
+    const handleFaceClick = useCallback(() => {
+        router.push("/brick-breaker");
+    }, [router]);
 
     return (
         <div className="flex flex-col">
             <div className="flex flex-col items-center px-4 pt-[100px] pb-[100px]">
-                <div
-                    className={`relative w-full max-w-md aspect-[4/3] ${isHovering ? "cursor-pointer" : "cursor-default"}`}
-                    onMouseMove={handleMouseMove}
-                    onMouseLeave={handleMouseLeave}
-                    onClick={handleClick}
-                >
-                    <div ref={imageRef} className="relative w-full h-full">
+                <div className="relative w-full max-w-md aspect-[4/3]">
+                    <div className="relative w-full h-full">
                         <Image
                             src="/detective_office.png"
                             alt="탐정 사무실"
@@ -72,17 +37,47 @@ export default function LandingPage() {
                             height={420}
                             priority
                         />
-                        {isHovering && (
-                            <div className="absolute top-[16%] left-[52.2%] pointer-events-none animate-hair-fall">
-                                <Image
-                                    src="/favicon_hair.png"
-                                    alt=""
-                                    width={42}
-                                    height={42}
-                                    className="rounded-full"
-                                />
+                        {/* 얼굴 - hover 시 머리 날아옴 */}
+                        <div
+                            className="group/face absolute top-[15%] left-[52.4%] w-[52px] h-[52px] -translate-x-1/2 cursor-pointer"
+                            onClick={handleFaceClick}
+                        >
+                            <Image
+                                src="/detective_office_head.png"
+                                alt=""
+                                width={52}
+                                height={52}
+                                className="w-full h-full object-cover object-center"
+                                aria-hidden
+                            />
+                            {/* 헤어 - hover 시 랜덤한 곳에서 빠르게 날아옴 */}
+                            <div className="absolute inset-0 w-full h-full pointer-events-none overflow-visible">
+                                <div
+                                    className="hair-fly-in absolute top-0 left-1/2 w-[48px] h-[34px] transition-all duration-550 ease-out opacity-0 group-hover/face:opacity-100"
+                                    style={
+                                        {
+                                            "--hair-x": `${hairStartPos.x}px`,
+                                            "--hair-y": `${hairStartPos.y}px`,
+                                            "--hair-rotate": `${hairStartPos.angle + 360}deg`,
+                                            transform: `translate(calc(-50% + var(--hair-x)), var(--hair-y)) rotate(var(--hair-rotate))`,
+                                        } as React.CSSProperties & {
+                                            "--hair-x"?: string;
+                                            "--hair-y"?: string;
+                                            "--hair-rotate"?: string;
+                                        }
+                                    }
+                                >
+                                    <Image
+                                        src="/detective_office_hair.png"
+                                        alt=""
+                                        width={36}
+                                        height={36}
+                                        className="w-full h-full object-cover object-center"
+                                        aria-hidden
+                                    />
+                                </div>
                             </div>
-                        )}
+                        </div>
                     </div>
                 </div>
 

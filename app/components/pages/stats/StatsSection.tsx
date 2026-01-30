@@ -15,9 +15,11 @@ export default function StatsSection({ players, companies }: StatsSectionProps) 
     const [selectedPlayerName, setSelectedPlayerName] = useState<string | null>(null);
 
     const getProgressColorByRank = (rank: number) => {
-        if (rank <= 3) return "from-[#E0F5D0] to-[#EB9262]";
-        if (rank <= 16) return "from-[#EB9262] to-[#F5C7B0]";
-        return "from-[#FFDDAA] to-[#E0F5D0]";
+        // 나중에 필요하면 쓰기
+        // if (rank <= 3) return "from-[#E0F5D0] to-[#EB9262]";
+        // if (rank <= 16) return "from-[#EB9262] to-[#F5C7B0]";
+        // return "from-[#FFDDAA] to-[#E0F5D0]";
+        return "from-[#EB9262] to-[#F5C7B0]";
     };
 
     const handlePlayerClick = (playerId: string, playerName: string) => {

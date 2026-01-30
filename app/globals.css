@@ -113,3 +113,11 @@ body {
 .animate-hair-fall {
     animation: hairFall 0.6s ease-in-out forwards;
 }
+
+/* ===== 머리카락 날아오는 애니메이션 ===== */
+.group\/face:hover .hair-fly-in,
+[class*="group/face"]:hover .hair-fly-in {
+    --hair-x: 0px !important;
+    --hair-y: 0px !important;
+    --hair-rotate: 0deg !important;
+}
