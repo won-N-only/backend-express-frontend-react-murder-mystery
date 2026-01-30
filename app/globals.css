@@ -115,9 +115,13 @@ body {
 }
 
 /* ===== 머리카락 날아오는 애니메이션 ===== */
+.hair-fly-in {
+    transform: translate(-50%, -150px) rotate(720deg);
+    opacity: 0;
+}
+
 .group\/face:hover .hair-fly-in,
 [class*="group/face"]:hover .hair-fly-in {
-    --hair-x: 0px !important;
-    --hair-y: 0px !important;
-    --hair-rotate: 0deg !important;
+    transform: translate(-50%, 0) rotate(0deg) !important;
+    opacity: 1 !important;
 }
