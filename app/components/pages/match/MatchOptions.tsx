@@ -25,7 +25,7 @@ export default function MatchOptions({
 }: MatchOptionsProps) {
     return (
         <div className="mt-subtitle">
-            <div className="bg-white p-3 border border-head-border">
+            <div className="bg-head-white p-3 border border-head-border">
                 <div className="text-sm font-bold text-head-text">옵션 설정</div>
                 <div className="space-y-2.5 mt-2">
                     <Checkbox

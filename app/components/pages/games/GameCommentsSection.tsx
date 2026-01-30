@@ -85,15 +85,10 @@ function CommentItem({
         <div className="border-l-2 border-head-border pl-3 py-2">
             <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0 flex-1">
-                    <span className="text-sm font-semibold text-head-brown">
-                        {comment.authorName}
-                    </span>
-                    <span className="text-xs text-head-text ml-2">
-                        {new Date(comment.createdAt).toLocaleString("ko-KR")}
-                    </span>
-                    <p className="text-sm text-head-text mt-1 whitespace-pre-wrap">
+                    <p className="text-sm text-head-text whitespace-pre-wrap mb-1">
                         {comment.content}
                     </p>
+                    <span className="text-xs text-head-text">{comment.authorName}님</span>
                 </div>
                 <button
                     type="button"
@@ -218,8 +213,14 @@ export default function GameCommentsSection({ gameId }: GameCommentsSectionProps
     const canComment = players.length > 0;
 
     return (
-        <section className="section-card space-y-4">
+        <section className="space-y-4">
             <h2 className="text-xl font-semibold text-head-text">댓글 {comments.length}개</h2>
+
+            {/* 경고 메시지 */}
+            <p className="text-sm text-head-text">
+                누군가의 소중한 머미일 수 있습니다.{" "}
+                <span className="text-red-600 underline">스포 절대 금지금지</span>.
+            </p>
 
             {!canComment && (
                 <p className="text-sm text-head-text">
@@ -229,7 +230,9 @@ export default function GameCommentsSection({ gameId }: GameCommentsSectionProps
 
             <form onSubmit={handleSubmit} className="space-y-3">
                 <div>
-                    <label className="block text-sm font-medium text-head-text">작성자</label>
+                    <label className="block text-sm font-semibold text-head-text mb-1">
+                        <strong>작성자</strong>
+                    </label>
                     <AuthorSuggestInput
                         className="mt-1"
                         players={players}
@@ -243,18 +246,23 @@ export default function GameCommentsSection({ gameId }: GameCommentsSectionProps
                         placeholder="이름 입력 후 아래에서 선택"
                     />
                 </div>
-                <textarea
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    placeholder="댓글을 입력하세요..."
-                    rows={3}
-                    className="w-full border border-head-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-head-brown"
-                    required
-                />
+                <div>
+                    <label className="block text-sm font-semibold text-head-text mb-1">
+                        <strong>내용</strong>
+                    </label>
+                    <textarea
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        placeholder="댓글을 입력하세요"
+                        rows={3}
+                        className="w-full border border-head-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-head-brown"
+                        required
+                    />
+                </div>
                 <button
                     type="submit"
                     disabled={submitting || !canComment || authorId == null}
-                    className="btn-primary px-4 py-2"
+                    className="bg-head-text text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
                 >
                     {submitting ? "등록 중..." : "댓글 작성"}
                 </button>

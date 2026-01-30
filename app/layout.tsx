@@ -18,13 +18,19 @@ export const metadata: Metadata = {
         images: [
             {
                 url: "/thumbnail.png",
-                width: 630,
+                width: 1200,
                 height: 630,
                 alt: "대머리 - 대구 머더 미스터리",
             },
         ],
         type: "website",
         locale: "ko_KR",
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "대머리",
+        description: "대구 머더 미스터리 모임",
+        images: ["/thumbnail.png"],
     },
 };
 

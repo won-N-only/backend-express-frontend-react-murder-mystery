@@ -75,7 +75,7 @@ export default function AuthorSuggestInput({
             />
             {open && suggestions.length > 0 && (
                 <ul
-                    className="absolute z-10 mt-1 w-full max-h-48 overflow-y-auto rounded-lg border border-head-border bg-white shadow-lg py-1"
+                    className="absolute z-10 mt-1 w-full max-h-48 overflow-y-auto rounded-lg border border-head-border bg-head-white shadow-lg py-1"
                     role="listbox"
                 >
                     {suggestions.map((p) => (

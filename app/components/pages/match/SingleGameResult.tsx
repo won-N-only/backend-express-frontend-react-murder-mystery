@@ -15,7 +15,7 @@ export default function SingleGameResult({ matches, limit }: SingleGameResultPro
                 {displayMatches.map((g) => (
                     <div
                         key={g._id}
-                        className="rounded-xl bg-white/80 shadow px-4 py-3 flex justify-between"
+                        className="rounded-xl bg-head-white/80 shadow px-4 py-3 flex justify-between"
                     >
                         <div>
                             <div className="font-semibold">{g.name}</div>

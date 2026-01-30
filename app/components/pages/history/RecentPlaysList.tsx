@@ -75,7 +75,7 @@ export default function RecentPlaysList({
                                         <button
                                             type="button"
                                             onClick={() => openGameDetail(game.gameId)}
-                                            className="shrink-0 w-fit bg-white border border-head-border text-head-brown px-4 py-1 text-sm font-medium hover:bg-head-brown hover:text-head-white transition-colors"
+                                            className="shrink-0 w-fit bg-head-white border border-head-border text-head-brown px-4 py-1 text-sm font-medium hover:bg-head-brown hover:text-head-white transition-colors"
                                         >
                                             상세보기
                                         </button>
