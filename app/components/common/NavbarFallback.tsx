@@ -18,7 +18,7 @@ export default function NavbarFallback() {
     return (
         <div className="fixed top-0 left-0 right-0 z-40 w-full bg-head-main">
             <nav className="flex items-center justify-center w-full h-[100px] bg-head-main">
-                <div className="mx-auto max-w-[720px] w-full px-4 flex items-center justify-between">
+                <div className="mx-auto max-w-content w-full px-4 flex items-center justify-between">
                     <Link
                         href="/"
                         className="group/icon relative flex-shrink-0 block w-16 h-16 rounded-full overflow-visible"
@@ -60,9 +60,9 @@ export default function NavbarFallback() {
                         aria-expanded={mobileMenuOpen}
                         aria-label={mobileMenuOpen ? "메뉴 닫기" : "메뉴 열기"}
                     >
-                        <span className="block w-6 h-0.5 bg-current rounded mb-1.5" />
-                        <span className="block w-6 h-0.5 bg-current rounded mb-1.5" />
                         <span className="block w-6 h-0.5 bg-current rounded" />
+                        <span className="block w-6 h-0.5 bg-current rounded mt-1.5" />
+                        <span className="block w-6 h-0.5 bg-current rounded mt-1.5" />
                     </button>
                 </div>
             </nav>
