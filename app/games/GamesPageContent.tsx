@@ -23,14 +23,12 @@ export default function GamesPageContent() {
 
     useEffect(() => {
         const id =
-            searchParams.get("gameId") ?? new URLSearchParams(window.location.search).get("gameId");
+            searchParams.get("gameId") ??
+            (typeof window !== "undefined"
+                ? new URLSearchParams(window.location.search).get("gameId")
+                : null);
         if (id) setSelectedGameId(id);
     }, [searchParams]);
-
-    useEffect(() => {
-        const id = new URLSearchParams(window.location.search).get("gameId");
-        if (id) setSelectedGameId(id);
-    }, []);
 
     const closeGameModal = useCallback(() => {
         setSelectedGameId(null);
@@ -57,43 +55,40 @@ export default function GamesPageContent() {
 
     return (
         <>
-            <div className="space-y-section">
-                <PageHeader
-                    title="사건 수색"
-                    description="입맛에 맞는 살인 사건 없나? 당장 추리하고 싶은 사건 뒤지기"
+            <PageHeader title="사건 수색" description="입맛에 맞는 사건 뒤지기" />
+
+            {/* 검색 바: 입력 필드 + 검색 버튼 */}
+            <div className="flex mt-section">
+                <input
+                    type="text"
+                    placeholder="게임 이름, 제작사, 시리즈로 검색..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="flex-1  border border-head-border bg-head-white px-4 py-3 text-gray-500 placeholder:text-head-text focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent"
                 />
+                <button
+                    type="button"
+                    className="shrink-0 font-extrabold bg-head-accent-brown text-white px-4 py-3 text-lg hover:opacity-90 transition-opacity"
+                >
+                    검색
+                </button>
+            </div>
 
-                {/* 검색 바: 입력 필드 + 검색 버튼 */}
-                <div className="flex  ">
-                    <input
-                        type="text"
-                        placeholder="게임 이름, 제작사, 시리즈로 검색..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="flex-1  border border-head-border bg-head-white px-4 py-2.5 text-head-text placeholder:text-head-text focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent"
-                    />
-                    <button
-                        type="button"
-                        className="shrink-0  bg-head-accent-brown text-white px-5 py-2.5 text-sm font-medium hover:opacity-90 transition-opacity"
-                    >
-                        검색
-                    </button>
-                </div>
+            {/* 게임 목록 헤더 */}
+            <div className="mt-section flex items-center justify-between gap-4 flex-wrap">
+                <h2 className="text-2xl font-bold text-head-text">
+                    게임 목록 ({filteredGames.length})
+                </h2>
+                <button
+                    type="button"
+                    onClick={() => setShowAddModal(true)}
+                    className="btn-primary px-3 py-1.5 text-sm"
+                >
+                    게임 추가
+                </button>
+            </div>
 
-                {/* 게임 목록 헤더 */}
-                <div className="flex items-center justify-between gap-4 flex-wrap">
-                    <h2 className="text-xl font-bold text-head-text">
-                        머더 미스터리 목록 ({filteredGames.length})
-                    </h2>
-                    <button
-                        type="button"
-                        onClick={() => setShowAddModal(true)}
-                        className="btn-primary px-3 py-1.5 text-sm"
-                    >
-                        게임 추가
-                    </button>
-                </div>
-
+            <div className="mt-subtitle">
                 {/* 카드 그리드 */}
                 {filteredGames.length === 0 && searchQuery.trim() !== "" ? (
                     <div className="text-center py-12 text-head-text">
@@ -119,6 +114,7 @@ export default function GamesPageContent() {
                     </div>
                 )}
             </div>
+
             <GameModal gameId={selectedGameId} onClose={closeGameModal} />
             <AddGameModal
                 open={showAddModal}
