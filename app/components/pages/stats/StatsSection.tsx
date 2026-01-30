@@ -40,7 +40,7 @@ export default function StatsSection({ players, companies }: StatsSectionProps) 
                 />
 
                 <section className="space-y-4">
-                    <h2 className="text-xl font-semibold text-head-text">대머리 졸업 순위</h2>
+                    <h2 className="text-2xl font-semibold text-head-text">대머리 졸업 순위</h2>
                     <div className="grid gap-4 md:grid-cols-1">
                         {players.map((p, index) => (
                             <div
@@ -60,7 +60,7 @@ export default function StatsSection({ players, companies }: StatsSectionProps) 
                                             {p.completionRate.toFixed(1)}%
                                         </div>
                                         <div className="text-xs text-head-text">
-                                            {p.completedCount}/{p.totalGames} 완료
+                                            {p.completedCount} 개 완료 - 전체 {p.totalGames} 개 중
                                         </div>
                                     </div>
                                 </div>
