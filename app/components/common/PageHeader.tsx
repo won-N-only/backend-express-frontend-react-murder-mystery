@@ -11,10 +11,10 @@ interface PageHeaderProps {
  */
 export default function PageHeader({ title, description }: PageHeaderProps) {
     return (
-        <header>
-            <h1 className="text-3xl font-bold text-head-gray-800">{title}</h1>
+        <header className="pt-section">
+            <h1 className="text-4xl font-bold text-head-text">{title}</h1>
             {description != null && description !== "" && (
-                <p className="text-base text-head-gray-700 mt-1">{description}</p>
+                <p className="text-md font-semibold text-head-text mt-2">{description}</p>
             )}
         </header>
     );
