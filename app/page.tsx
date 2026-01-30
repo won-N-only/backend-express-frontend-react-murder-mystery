@@ -1,19 +1,91 @@
+"use client";
+
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useCallback, useRef, useState } from "react";
+
+const FACE_AREA = {
+    x: 45,
+    xEnd: 60,
+    y: 10,
+    yEnd: 35,
+} as const;
 
 export default function LandingPage() {
+    const [isHovering, setIsHovering] = useState(false);
+    const imageRef = useRef<HTMLDivElement>(null);
+    const router = useRouter();
+
+    const getRelativePosition = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+        if (!imageRef.current) return null;
+        const rect = imageRef.current.getBoundingClientRect();
+        return {
+            x: ((e.clientX - rect.left) / rect.width) * 100,
+            y: ((e.clientY - rect.top) / rect.height) * 100,
+        };
+    }, []);
+
+    const isInFaceArea = useCallback((x: number, y: number) => {
+        return x >= FACE_AREA.x && x <= FACE_AREA.xEnd && y >= FACE_AREA.y && y <= FACE_AREA.yEnd;
+    }, []);
+
+    const handleMouseMove = useCallback(
+        (e: React.MouseEvent<HTMLDivElement>) => {
+            const pos = getRelativePosition(e);
+            if (pos) {
+                setIsHovering((prev) => {
+                    const newValue = isInFaceArea(pos.x, pos.y);
+                    return prev !== newValue ? newValue : prev;
+                });
+            }
+        },
+        [getRelativePosition, isInFaceArea],
+    );
+
+    const handleClick = useCallback(
+        (e: React.MouseEvent<HTMLDivElement>) => {
+            const pos = getRelativePosition(e);
+            if (pos && isInFaceArea(pos.x, pos.y)) {
+                router.push("/brick-breaker");
+            }
+        },
+        [getRelativePosition, isInFaceArea, router],
+    );
+
+    const handleMouseLeave = useCallback(() => {
+        setIsHovering(false);
+    }, []);
+
     return (
         <div className="flex flex-col">
             <div className="flex flex-col items-center px-4 pt-[100px]">
-                <div className="relative w-full max-w-md aspect-[4/3]">
-                    <Image
-                        src="/detective_office.png"
-                        alt="탐정 사무실"
-                        className="object-contain"
-                        width={544}
-                        height={420}
-                        priority
-                    />
+                <div
+                    className={`relative w-full max-w-md aspect-[4/3] ${isHovering ? "cursor-pointer" : "cursor-default"}`}
+                    onMouseMove={handleMouseMove}
+                    onMouseLeave={handleMouseLeave}
+                    onClick={handleClick}
+                >
+                    <div ref={imageRef} className="relative w-full h-full">
+                        <Image
+                            src="/detective_office.png"
+                            alt="탐정 사무실"
+                            className="object-contain"
+                            width={544}
+                            height={420}
+                            priority
+                        />
+                        {isHovering && (
+                            <div className="absolute top-[16%] left-[52.2%] pointer-events-none animate-hair-fall">
+                                <Image
+                                    src="/favicon_hair.png"
+                                    alt=""
+                                    width={42}
+                                    height={42}
+                                    className="rounded-full"
+                                />
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 <p
@@ -22,32 +94,6 @@ export default function LandingPage() {
                 >
                     Don&apos;t worry, we have hair.
                 </p>
-
-                <Link
-                    href="/brick-breaker"
-                    className="mt-section flex flex-col items-center gap-2 transition-opacity hover:opacity-80"
-                    aria-label="머리 깨기 미니게임"
-                >
-                    <div className="flex gap-4">
-                        <Image
-                            src="/favicon_face.png"
-                            alt=""
-                            width={64}
-                            height={64}
-                            className="rounded-full"
-                        />
-                        <Image
-                            src="/favicon_hair.png"
-                            alt=""
-                            width={64}
-                            height={64}
-                            className="rounded-full"
-                        />
-                    </div>
-                    <span className="text-sm font-medium text-head-text/80">
-                        클릭 → 머리 깨기 미니게임
-                    </span>
-                </Link>
 
                 <div className="pt-section text-center text-head-text text-lg font-medium">
                     <p>&quot;머리숱 없는 사람만 가입하나요?&quot;</p>
