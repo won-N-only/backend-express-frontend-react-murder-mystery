@@ -74,15 +74,15 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
             onClick={onClose}
         >
             <div
-                className="bg-head-white rounded-2xl shadow-soft max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+                className="bg-head-white rounded-2xl shadow-soft max-w-content w-full max-h-[90vh] overflow-hidden flex flex-col"
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className="sticky top-0 bg-head-white z-10 px-6 py-4 border-b border-head-gray-200 flex-shrink-0 flex items-center justify-between gap-3">
+                <div className="sticky top-0 bg-head-white z-10 px-6 py-4 border-b border-head-border flex-shrink-0 flex items-center justify-between gap-3">
                     {isLoadingGame ? (
-                        <span className="text-head-gray-500">로딩 중...</span>
+                        <span className="text-head-text">로딩 중...</span>
                     ) : game ? (
                         <>
-                            <h2 className="text-lg font-bold text-head-gray-800 truncate min-w-0 flex-1">
+                            <h2 className="text-lg font-bold text-head-text truncate min-w-0 flex-1">
                                 {game.name}
                             </h2>
                             <Link
@@ -98,7 +98,7 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
                     <button
                         type="button"
                         onClick={onClose}
-                        className="shrink-0 text-head-gray-500 hover:text-head-gray-800 text-2xl leading-none"
+                        className="shrink-0 text-head-text hover:text-head-text text-2xl leading-none"
                     >
                         ×
                     </button>
@@ -115,7 +115,7 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
 
                             {/* 3. 남들한 여부 */}
                             <section className="space-y-4">
-                                <h2 className="font-semibold text-head-gray-800">남들한 여부</h2>
+                                <h2 className="font-semibold text-head-text">남들한 여부</h2>
                                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                                     {players.map((p) => {
                                         const status =
@@ -123,9 +123,9 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
                                         return (
                                             <div
                                                 key={p._id}
-                                                className="flex flex-col gap-2 rounded-lg border border-head-gray-300 bg-head-white p-3 hover:shadow-md transition-shadow"
+                                                className="flex flex-col gap-2 rounded-lg border border-head-border bg-head-white p-3 hover:shadow-md transition-shadow"
                                             >
-                                                <span className="text-sm font-medium text-center text-head-gray-800">
+                                                <span className="text-sm font-medium text-center text-head-text">
                                                     {p.name}
                                                 </span>
                                                 <div className="flex justify-center">

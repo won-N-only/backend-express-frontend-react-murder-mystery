@@ -14,8 +14,8 @@ export interface AddGamePayload {
 }
 
 const inputClass =
-    "w-full border border-head-gray-300 rounded-lg px-3 py-2 text-sm text-head-gray-800 focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent";
-const labelClass = "block text-sm font-medium text-head-gray-700 mb-1";
+    "w-full border border-head-border rounded-lg px-3 py-2 text-sm text-head-text focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent mt-1";
+const labelClass = "block text-sm font-medium text-head-text";
 
 interface AddGameModalProps {
     open: boolean;
@@ -97,22 +97,24 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
             onClick={handleClose}
         >
             <div
-                className="bg-head-white rounded-2xl shadow-soft max-w-lg w-full max-h-[90vh] overflow-hidden flex flex-col"
+                className="bg-head-white rounded-2xl shadow-soft max-w-content w-full max-h-[90vh] overflow-hidden flex flex-col"
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className="sticky top-0 bg-head-white z-10 p-4 border-b border-head-gray-200 flex-shrink-0 flex items-center justify-between">
-                    <h2 className="text-lg font-semibold text-head-gray-800">게임 추가</h2>
+                <div className="sticky top-0 bg-head-white z-10 p-4 border-b border-head-border flex-shrink-0 flex items-center justify-between">
+                    <h2 className="text-lg font-semibold text-head-text">게임 추가</h2>
                     <button
                         type="button"
                         onClick={handleClose}
-                        className="text-head-gray-500 hover:text-head-gray-800 text-2xl leading-none"
+                        className="text-head-text hover:text-head-text text-2xl leading-none"
                     >
                         ×
                     </button>
                 </div>
                 <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-4 space-y-4">
                     {error && (
-                        <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg">{error}</p>
+                        <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg">
+                            {error}
+                        </p>
                     )}
                     <div>
                         <label htmlFor="add-name" className={labelClass}>
@@ -120,6 +122,7 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
                         </label>
                         <input
                             id="add-name"
+                            className={inputClass}
                             type="text"
                             required
                             value={name}
@@ -210,10 +213,18 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
                         />
                     </div>
                     <div className="flex gap-3 pt-2">
-                        <button type="submit" disabled={submitting} className="btn-primary px-4 py-2">
+                        <button
+                            type="submit"
+                            disabled={submitting}
+                            className="btn-primary px-4 py-2"
+                        >
                             {submitting ? "추가 중..." : "추가하기"}
                         </button>
-                        <button type="button" onClick={handleClose} className="px-4 py-2 text-head-gray-600 hover:underline">
+                        <button
+                            type="button"
+                            onClick={handleClose}
+                            className="px-4 py-2 text-head-text hover:underline"
+                        >
                             취소
                         </button>
                     </div>

@@ -82,23 +82,23 @@ function CommentItem({
     };
 
     return (
-        <div className="border-l-2 border-head-gray-200 pl-3 py-2">
+        <div className="border-l-2 border-head-border pl-3 py-2">
             <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0 flex-1">
                     <span className="text-sm font-semibold text-head-brown">
                         {comment.authorName}
                     </span>
-                    <span className="text-xs text-head-gray-500 ml-2">
+                    <span className="text-xs text-head-text ml-2">
                         {new Date(comment.createdAt).toLocaleString("ko-KR")}
                     </span>
-                    <p className="text-sm text-head-gray-800 mt-1 whitespace-pre-wrap">
+                    <p className="text-sm text-head-text mt-1 whitespace-pre-wrap">
                         {comment.content}
                     </p>
                 </div>
                 <button
                     type="button"
                     onClick={() => onDelete(comment._id).then(onMutate)}
-                    className="text-xs text-head-gray-500 hover:text-red-600 shrink-0"
+                    className="text-xs text-head-text hover:text-red-600 shrink-0"
                 >
                     삭제
                 </button>
@@ -130,7 +130,7 @@ function CommentItem({
                         onChange={(e) => setReplyContent(e.target.value)}
                         placeholder="답글 내용"
                         rows={2}
-                        className="w-full text-sm border border-head-gray-300 rounded px-2 py-1"
+                        className="w-full text-sm border border-head-border rounded px-2 py-1"
                         required
                     />
                     <div className="flex gap-2">
@@ -144,7 +144,7 @@ function CommentItem({
                         <button
                             type="button"
                             onClick={() => setShowReplyForm(false)}
-                            className="text-sm text-head-gray-500 hover:underline"
+                            className="text-sm text-head-text hover:underline"
                         >
                             취소
                         </button>
@@ -177,8 +177,8 @@ export default function GameCommentsSection({ gameId }: GameCommentsSectionProps
         fetcher,
     );
     const { data: playersData } = useSWR<{ players: Player[] }>("/api/players", fetcher);
-    const comments = commentsData?.comments ?? [];
-    const players = playersData?.players ?? [];
+    const comments = useMemo(() => commentsData?.comments ?? [], [commentsData?.comments]);
+    const players = useMemo(() => playersData?.players ?? [], [playersData?.players]);
 
     const tree = useMemo(() => buildCommentTree(comments), [comments]);
 
@@ -219,20 +219,19 @@ export default function GameCommentsSection({ gameId }: GameCommentsSectionProps
 
     return (
         <section className="section-card space-y-4">
-            <h2 className="text-xl font-semibold text-head-gray-800">댓글 {comments.length}개</h2>
+            <h2 className="text-xl font-semibold text-head-text">댓글 {comments.length}개</h2>
 
             {!canComment && (
-                <p className="text-sm text-head-gray-500">
+                <p className="text-sm text-head-text">
                     댓글을 쓰려면 먼저 플레이어(대머리)를 등록해주세요.
                 </p>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-3">
                 <div>
-                    <label className="block text-sm font-medium text-head-gray-700 mb-1">
-                        작성자
-                    </label>
+                    <label className="block text-sm font-medium text-head-text">작성자</label>
                     <AuthorSuggestInput
+                        className="mt-1"
                         players={players}
                         value={authorDisplay}
                         selectedId={authorId}
@@ -249,7 +248,7 @@ export default function GameCommentsSection({ gameId }: GameCommentsSectionProps
                     onChange={(e) => setContent(e.target.value)}
                     placeholder="댓글을 입력하세요..."
                     rows={3}
-                    className="w-full border border-head-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-head-brown"
+                    className="w-full border border-head-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-head-brown"
                     required
                 />
                 <button
@@ -263,7 +262,7 @@ export default function GameCommentsSection({ gameId }: GameCommentsSectionProps
 
             <div className="space-y-3">
                 {tree.length === 0 ? (
-                    <p className="text-sm text-head-gray-500">아직 댓글이 없습니다.</p>
+                    <p className="text-sm text-head-text">아직 댓글이 없습니다.</p>
                 ) : (
                     tree.map((node) => (
                         <CommentItem

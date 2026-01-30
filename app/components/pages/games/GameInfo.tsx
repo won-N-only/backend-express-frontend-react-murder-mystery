@@ -25,9 +25,9 @@ export default function GameInfo({ game }: GameInfoProps) {
                     </div>
                 )}
                 <div className="flex-1 min-w-0 space-y-1">
-                    <div className="text-sm text-head-gray-500">#{game.orderNumber}</div>
-                    <h1 className="text-2xl font-bold text-head-gray-800">{game.name}</h1>
-                    <div className="text-xs text-head-gray-500">
+                    <div className="text-sm text-head-text">#{game.orderNumber}</div>
+                    <h1 className="text-2xl font-bold text-head-text">{game.name}</h1>
+                    <div className="text-xs text-head-text">
                         {game.minPlayers}
                         {game.maxPlayers ? `-${game.maxPlayers}` : "+"}인
                         {game.company && ` · ${game.company}`}
@@ -37,8 +37,8 @@ export default function GameInfo({ game }: GameInfoProps) {
             </div>
             {hasDescription && (
                 <section className="rounded-xl bg-head-gray-100 p-4">
-                    <h2 className="text-sm font-semibold text-head-gray-700 mb-2">시놉시스</h2>
-                    <p className="text-sm text-head-gray-800 whitespace-pre-wrap leading-relaxed">
+                    <h2 className="text-sm font-semibold text-head-text">시놉시스</h2>
+                    <p className="text-sm text-head-text whitespace-pre-wrap leading-relaxed mt-2">
                         {game.description}
                     </p>
                 </section>
