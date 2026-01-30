@@ -18,7 +18,7 @@ export default function PlayerListGrid({
     onSelectPlayer,
 }: PlayerListGridProps) {
     return (
-        <div className="pt-5 grid grid-cols-3 md:grid-cols-6 gap-2">
+        <div className="mt-subtitle grid grid-cols-3 md:grid-cols-6 gap-2">
             {players.map((p) => (
                 <button
                     key={p._id}

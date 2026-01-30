@@ -69,7 +69,7 @@ export default function HistoryPage() {
 
             <div className="pt-section text-head-text text-3xl font-bold">게임 이력</div>
             {selectedPlayer && selectedStat && (
-                <div className="pt-5">
+                <div className="mt-subtitle">
                     <section className="section-card">
                         <div className="flex items-start justify-between gap-4 flex-wrap">
                             <div className="flex-1 min-w-0">

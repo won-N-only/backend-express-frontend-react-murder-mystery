@@ -26,7 +26,7 @@ export default function RecentPlaysList({
     };
 
     return (
-        <div className="pt-5">
+        <div className="mt-subtitle">
             <section className="section-card">
                 <div className="flex items-center justify-between">
                     <h2 className="text-head-text font-bold text-2xl">완료한 게임</h2>
