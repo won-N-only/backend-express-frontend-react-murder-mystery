@@ -41,9 +41,13 @@ export default function MatchPage() {
     };
 
     return (
-        <div className="space-y-section">
+        <div>
             <PageHeader title="사건 배당" description="토 달지 마세요. 불만은 사절." />
 
+            <div className="pt-section">
+                <div className="text-head-text text-2xl font-bold">참가자 선택</div>
+                <span className="font-bold">선택된 참가자</span> {selectedPlayers.length}명
+            </div>
             <MatchOptions
                 excludePartySeries={excludePartySeries}
                 excludeSinglePlayer={excludeSinglePlayer}
@@ -55,9 +59,6 @@ export default function MatchPage() {
                 onExcludeTwoPlayerChange={setExcludeTwoPlayer}
                 onNumGroupsChange={setNumGroups}
             />
-            <div>
-                <span className="font-bold">선택된 참가자</span> {selectedPlayers.length}명
-            </div>
             <PlayerListGrid
                 players={players}
                 selectedPlayerIds={selectedPlayers}
@@ -68,13 +69,19 @@ export default function MatchPage() {
                 type="button"
                 onClick={handleMatch}
                 disabled={loading || !selectedPlayers.length}
-                className="w-1/4 block mx-auto btn-primary"
+                className="mt-section w-1/4 block h-12 btn-primary"
             >
                 {loading ? "매칭 중..." : "조합 추천 보기"}
             </button>
 
             {combinations.length > 0 && (
-                <CombinationResult combinations={combinations} players={players} />
+                <div>
+                    <div className="pt-section">
+                        <div className="text-head-text text-2xl font-bold">추천 조합</div>
+                        <div className="line mt-subtitle" aria-hidden />
+                    </div>
+                    <CombinationResult combinations={combinations} players={players} />
+                </div>
             )}
 
             {matches.length > 0 && <SingleGameResult matches={matches} />}
