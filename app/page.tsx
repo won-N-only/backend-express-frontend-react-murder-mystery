@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function LandingPage() {
     return (
@@ -21,6 +22,32 @@ export default function LandingPage() {
                 >
                     Don&apos;t worry, we have hair.
                 </p>
+
+                <Link
+                    href="/brick-breaker"
+                    className="mt-section flex flex-col items-center gap-2 transition-opacity hover:opacity-80"
+                    aria-label="머리 깨기 미니게임"
+                >
+                    <div className="flex gap-4">
+                        <Image
+                            src="/favicon_face.png"
+                            alt=""
+                            width={64}
+                            height={64}
+                            className="rounded-full"
+                        />
+                        <Image
+                            src="/favicon_hair.png"
+                            alt=""
+                            width={64}
+                            height={64}
+                            className="rounded-full"
+                        />
+                    </div>
+                    <span className="text-sm font-medium text-head-text/80">
+                        클릭 → 머리 깨기 미니게임
+                    </span>
+                </Link>
 
                 <div className="pt-section text-center text-head-text text-lg font-medium">
                     <p>&quot;머리숱 없는 사람만 가입하나요?&quot;</p>
