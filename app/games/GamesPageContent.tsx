@@ -64,11 +64,11 @@ export default function GamesPageContent() {
                     placeholder="게임 이름, 제작사, 시리즈로 검색..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="flex-1  border border-head-border bg-head-white px-4 py-3 text-gray-500 placeholder:text-head-text focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent"
+                    className="flex-1 h-[50px] border border-head-border bg-head-white px-4 text-gray-500 placeholder:text-head-text focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent"
                 />
                 <button
                     type="button"
-                    className="shrink-0 font-extrabold bg-head-accent-brown text-white px-4 py-3 text-lg hover:opacity-90 transition-opacity"
+                    className="shrink-0 h-[50px] font-extrabold bg-head-accent-brown text-white px-4 text-lg hover:opacity-90 transition-opacity"
                 >
                     검색
                 </button>
