@@ -15,7 +15,7 @@ const FACE_AREA = {
 
 function getRelativePosition(
     e: React.MouseEvent<HTMLDivElement>,
-    container: HTMLDivElement | null
+    container: HTMLDivElement | null,
 ) {
     if (!container) return null;
     const rect = container.getBoundingClientRect();
@@ -34,16 +34,13 @@ export default function LandingPage() {
     const imageRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
 
-    const handleMouseMove = useCallback(
-        (e: React.MouseEvent<HTMLDivElement>) => {
-            const pos = getRelativePosition(e, imageRef.current);
-            if (pos) {
-                const inFaceArea = isInFaceArea(pos.x, pos.y);
-                setIsHovering((prev) => (prev !== inFaceArea ? inFaceArea : prev));
-            }
-        },
-        []
-    );
+    const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+        const pos = getRelativePosition(e, imageRef.current);
+        if (pos) {
+            const inFaceArea = isInFaceArea(pos.x, pos.y);
+            setIsHovering((prev) => (prev !== inFaceArea ? inFaceArea : prev));
+        }
+    }, []);
 
     const handleClick = useCallback(
         (e: React.MouseEvent<HTMLDivElement>) => {
@@ -52,7 +49,7 @@ export default function LandingPage() {
                 router.push("/brick-breaker");
             }
         },
-        [router]
+        [router],
     );
 
     const handleMouseLeave = useCallback(() => setIsHovering(false), []);
@@ -76,18 +73,12 @@ export default function LandingPage() {
                             priority
                         />
                         {isHovering && (
-                            <div
-                                className="absolute pointer-events-none animate-hair-fall"
-                                style={{
-                                    top: FACE_AREA.hairPosition.top,
-                                    left: FACE_AREA.hairPosition.left,
-                                }}
-                            >
+                            <div className="absolute top-[16%] left-[52.2%] pointer-events-none animate-hair-fall">
                                 <Image
                                     src="/favicon_hair.png"
                                     alt=""
-                                    width={FACE_AREA.hairSize}
-                                    height={FACE_AREA.hairSize}
+                                    width={42}
+                                    height={42}
                                     className="rounded-full"
                                 />
                             </div>
