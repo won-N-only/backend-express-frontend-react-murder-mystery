@@ -1,7 +1,7 @@
 "use client";
 
-import { CANVAS_HEIGHT, CANVAS_WIDTH } from "../constants";
-import { useGameLogic } from "../hooks/useGameLogic";
+import { CANVAS_HEIGHT, CANVAS_WIDTH } from "./constants";
+import { useGameLogic } from "./hooks/useGameLogic";
 
 export default function AvoidBaldGame() {
     const {
@@ -54,6 +54,9 @@ export default function AvoidBaldGame() {
                             <p className="mb-8 text-lg opacity-90">
                                 쏟아지는 탈모의 저주를 피하세요!
                             </p>
+                            <hr className="border-head-gray-500 opacity-40 my-2 text-4xl" />
+                            <p className="text-head-whtie text-4xl font-bold">CLEAR: 200점</p>
+                            <hr className="border-head-gray-500 opacity-40 my-2 text-4xl" />
                             <button
                                 onClick={startGame}
                                 className="bg-head-brown text-white px-10 py-4 text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg"
@@ -127,7 +130,7 @@ export default function AvoidBaldGame() {
                                     onClick={continueGame}
                                     className="bg-head-brown text-white px-6 py-3 text-lg font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg animate-bounce whitespace-nowrap"
                                 >
-                                    계속 하기 (대머리 모드)
+                                    계속 하기
                                 </button>
                             </div>
                         </div>
@@ -141,12 +144,10 @@ export default function AvoidBaldGame() {
                         <h1 className="text-3xl font-black text-head-text mb-2 border-b-4 border-head-brown pb-2">
                             대머리 피하기
                         </h1>
-                        <p className="text-head-text mb-4 leading-relaxed font-medium">
-                            하늘에서 끊임없이 떨어지는 &apos;슬픈 대머리&apos;들을 피해서 풍성한 머리카락을
-                            지켜내세요!
-                            <hr className="border-head-gray-500 opacity-40 my-2 text-4xl" />
-                            CLEAR: 200점
-                        </p>
+                        <div className="text-head-text mb-4 leading-relaxed font-medium">
+                            하늘에서 끊임없이 떨어지는 &apos;슬픈 대머리&apos;들을 피해서 풍성한
+                            머리카락을 지켜내세요!
+                        </div>
 
                         <div className="bg-head-gray-100 p-4 border border-head-border mb-4">
                             <h3 className="font-bold text-head-brown mb-2 text-lg">💡 조작 방법</h3>
