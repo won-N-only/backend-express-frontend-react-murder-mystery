@@ -3,8 +3,10 @@
 import { fetcher } from "@app/lib/fetcher";
 import type { CompletedGame, Game } from "@app/types";
 import { CompletionStatus } from "@app/types";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import useSWR, { mutate } from "swr";
+import GameListModal from "./GameListModal";
+import GameListItem from "./GameListItem";
 
 interface GameCheckModalProps {
     playerId: string | null;
@@ -74,159 +76,69 @@ export default function GameCheckModal({ playerId, playerName, onClose }: GameCh
         }
     };
 
-    useEffect(() => {
-        if (playerId) {
-            document.body.style.overflow = "hidden";
-        } else {
-            document.body.style.overflow = "";
-        }
-        return () => {
-            document.body.style.overflow = "";
-        };
-    }, [playerId]);
-
     if (!playerId) return null;
 
     return (
-        <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
-            onClick={onClose}
+        <GameListModal
+            title={`${playerName}님의 게임 체크`}
+            subtitle="완료한 게임을 체크해주세요"
+            onClose={onClose}
+            searchProps={{
+                value: searchQuery,
+                onChange: setSearchQuery,
+                placeholder: "게임 이름, 제작사, 시리즈로 검색",
+            }}
+            isLoading={isLoadingGames || isLoadingCompleted}
+            isEmpty={filteredGames.length === 0}
+            emptyMessage={searchQuery ? "검색 결과가 없습니다." : "게임이 없습니다."}
         >
-            <div
-                className="bg-head-white rounded-2xl shadow-soft max-w-content w-full max-h-[90vh] overflow-hidden flex flex-col"
-                onClick={(e) => e.stopPropagation()}
-            >
-                <div className="sticky top-0 bg-head-white z-10 p-6 space-y-4 border-b border-head-border flex-shrink-0">
-                    <div className="flex items-start justify-between">
-                        <div>
-                            <h2 className="text-xl font-bold text-head-text">
-                                {playerName}님의 게임 체크
-                            </h2>
-                            <p className="text-sm text-head-text mt-1">
-                                완료한 게임을 체크해주세요
-                            </p>
-                        </div>
-                        <button
-                            onClick={onClose}
-                            className="text-head-text hover:text-head-text text-2xl leading-none"
-                        >
-                            ×
-                        </button>
-                    </div>
-                    <div className="relative">
-                        <input
-                            type="text"
-                            placeholder="게임 이름, 제작사, 시리즈로 검색..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full rounded-lg border border-head-border bg-head-white px-4 py-2.5 pr-10 text-head-text focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent"
-                        />
-                        <svg
-                            className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-head-text"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                            />
-                        </svg>
-                    </div>
-                </div>
+            {filteredGames.map((game) => {
+                const isCompleted = completedGameIds.has(game._id);
+                const isUpdating = updatingGameIds.has(game._id);
+                const subtitle = (
+                    <>
+                        {game.company && <span>{game.company}</span>}
+                        {game.company && game.series && <span> · </span>}
+                        {game.series && <span>{game.series}</span>}
+                    </>
+                );
 
-                <div className="flex-1 overflow-y-auto px-6">
-                    {isLoadingGames || isLoadingCompleted ? (
-                        <div className="text-center py-8 text-head-text">로딩 중...</div>
-                    ) : filteredGames.length === 0 ? (
-                        <div className="text-center py-8 text-head-text">
-                            {searchQuery ? "검색 결과가 없습니다." : "게임이 없습니다."}
-                        </div>
-                    ) : (
-                        <div className="space-y-2">
-                            {filteredGames.map((game) => {
-                                const isCompleted = completedGameIds.has(game._id);
-                                const isUpdating = updatingGameIds.has(game._id);
-                                return (
-                                    <button
-                                        key={game._id}
-                                        type="button"
-                                        onClick={() => updateStatus(game._id, !isCompleted)}
-                                        disabled={isUpdating}
-                                        className={`w-full flex items-center gap-3 p-4 rounded-lg border transition-all text-left ${
-                                            isCompleted
-                                                ? "border-head-border bg-head-brown/5 hover:bg-head-brown/10"
-                                                : "border-head-border bg-head-white hover:shadow-md hover:border-head-border"
-                                        } ${isUpdating ? "opacity-50 cursor-wait" : "cursor-pointer"}`}
-                                    >
-                                        <div className="flex-1 min-w-0">
-                                            <div className="flex items-center gap-2">
-                                                <span className="text-xs font-semibold text-head-text bg-head-gray-100 px-2 py-0.5 rounded">
-                                                    #{game.orderNumber}
-                                                </span>
-                                                <span className="font-medium text-head-text truncate">
-                                                    {game.name}
-                                                </span>
-                                            </div>
-                                            <div className="flex items-center gap-2 text-xs text-head-text mt-1">
-                                                {game.company && (
-                                                    <span className="truncate">{game.company}</span>
-                                                )}
-                                                {game.series && (
-                                                    <>
-                                                        <span>·</span>
-                                                        <span className="truncate">
-                                                            {game.series}
-                                                        </span>
-                                                    </>
-                                                )}
-                                            </div>
-                                        </div>
-                                        <div className="shrink-0 flex items-center gap-2">
-                                            {isUpdating ? (
-                                                <div className="flex items-center gap-2 text-head-text">
-                                                    <svg
-                                                        className="animate-spin h-4 w-4"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        fill="none"
-                                                        viewBox="0 0 24 24"
-                                                    >
-                                                        <circle
-                                                            className="opacity-25"
-                                                            cx="12"
-                                                            cy="12"
-                                                            r="10"
-                                                            stroke="currentColor"
-                                                            strokeWidth="4"
-                                                        />
-                                                        <path
-                                                            className="opacity-75"
-                                                            fill="currentColor"
-                                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                                        />
-                                                    </svg>
-                                                    <span className="text-xs">저장 중...</span>
-                                                </div>
-                                            ) : isCompleted ? (
-                                                <span className="text-xs font-semibold text-head-brown bg-head-brown/10 px-3 py-1 rounded-full">
-                                                    완료
-                                                </span>
-                                            ) : (
-                                                <span className="text-xs font-semibold text-head-text bg-head-gray-100 px-3 py-1 rounded-full">
-                                                    미완료
-                                                </span>
-                                            )}
-                                        </div>
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    )}
-                    <div className="pt-6" aria-hidden />
-                </div>
-            </div>
-        </div>
+                return (
+                    <GameListItem
+                        key={game._id}
+                        orderNumber={game.orderNumber}
+                        title={game.name}
+                        subtitle={subtitle}
+                        action={
+                                                            <button
+                                                            type="button"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation(); // prevent modal close if clicked
+                                                                updateStatus(game._id, !isCompleted);
+                                                            }}
+                                                            disabled={isUpdating}
+                                                                                            className={`h-[30px] w-[80px] font-bold text-sm transition-all ${
+                                                                                                isUpdating
+                                                                                                    ? "opacity-50 cursor-wait"
+                                                                                                    : "cursor-pointer"
+                                                                                            } ${
+                                                                                                isCompleted
+                                                            
+                                                                    ? "bg-head-brown text-white"
+                                                                    : "bg-head-main text-head-text"
+                                                            }`}
+                                                        >
+                                                            {isUpdating
+                                                                ? "저장 중..."
+                                                                : isCompleted
+                                                                  ? "완료"
+                                                                  : "미완료"}
+                                                        </button>
+                            
+                        }
+                    />
+                );
+            })}
+        </GameListModal>
     );
 }
