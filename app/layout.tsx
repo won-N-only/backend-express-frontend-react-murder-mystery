@@ -16,11 +16,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="ko">
-            <body className="min-h-screen bg-head-main text-slate-900">
+            <body className="min-h-screen bg-head-main text-head-text">
                 <SWRProvider>
                     <SelectedPlayerProvider>
                         <Navbar />
-                        <main className="mx-auto max-w-[720px] px-4 pt-[100px] pb-8 bg-transparent">
+                        <main className="mx-auto max-w-content px-4 pt-[100px] section-bottom bg-transparent">
                             {children}
                         </main>
                         <ScrollToTop />
