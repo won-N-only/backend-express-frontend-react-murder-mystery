@@ -19,14 +19,15 @@ export default function HistoryPage() {
     const [showGameCheckModal, setShowGameCheckModal] = useState(false);
     const [selectedGameId, setSelectedGameId] = useState<string | null>(null);
 
-    const { data: playersData } = useSWR<{ players: Player[] }>("/api/players", fetcher);
-    const players = useMemo(() => playersData?.players ?? [], [playersData?.players]);
-
     const { data: statsData } = useSWR<{ stats: { players?: PlayerStat[] } }>(
-        "/api/stats",
+        "/api/stats?type=players",
         fetcher,
     );
     const playerStats = useMemo(() => statsData?.stats?.players ?? [], [statsData?.stats?.players]);
+    const players: Player[] = useMemo(
+        () => playerStats.map((p) => ({ _id: p.playerId, name: p.playerName })),
+        [playerStats],
+    );
 
     const selectedPlayer = useMemo(() => {
         if (!selectedPlayerId) return null;
