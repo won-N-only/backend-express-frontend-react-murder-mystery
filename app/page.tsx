@@ -8,7 +8,7 @@ export default function LandingPage() {
     const router = useRouter();
 
     const handleFaceClick = useCallback(() => {
-        router.push("/brick-breaker");
+        router.push("/mini-games");
     }, [router]);
 
     return (
