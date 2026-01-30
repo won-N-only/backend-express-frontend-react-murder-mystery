@@ -29,7 +29,7 @@ export class MongoGameRepository implements IGameRepository {
         const db = await MongoDatabase.getDb();
         const games = await db
             .collection(MongoGameRepository.COLLECTION_NAME)
-            .find({})
+            .find({ deletedAt: null })
             .sort({ orderNumber: 1 })
             .toArray();
         return games.map(this.toDomain);
@@ -39,7 +39,7 @@ export class MongoGameRepository implements IGameRepository {
         const db = await MongoDatabase.getDb();
         const game = await db
             .collection(MongoGameRepository.COLLECTION_NAME)
-            .findOne({ _id: new ObjectId(id) });
+            .findOne({ _id: new ObjectId(id), deletedAt: null });
         return game ? this.toDomain(game) : null;
     }
 
@@ -49,7 +49,7 @@ export class MongoGameRepository implements IGameRepository {
         const objectIds = ids.map((id) => new ObjectId(id));
         const games = await db
             .collection(MongoGameRepository.COLLECTION_NAME)
-            .find({ _id: { $in: objectIds } })
+            .find({ _id: { $in: objectIds }, deletedAt: null })
             .toArray();
 
         // 입력 순서대로 정렬하여 반환
@@ -61,6 +61,7 @@ export class MongoGameRepository implements IGameRepository {
         const db = await MongoDatabase.getDb();
         const query: any = {
             minPlayers: { $lte: minPlayers },
+            deletedAt: null,
         };
         if (maxPlayers) {
             query.$or = [{ maxPlayers: null }, { maxPlayers: { $gte: maxPlayers } }];
@@ -124,7 +125,7 @@ export class MongoGameRepository implements IGameRepository {
 
         const result = await db
             .collection(MongoGameRepository.COLLECTION_NAME)
-            .findOneAndUpdate({ _id: new ObjectId(id) }, { $set: updateData }, { returnDocument: "after" });
+            .findOneAndUpdate({ _id: new ObjectId(id), deletedAt: null }, { $set: updateData }, { returnDocument: "after" });
         return result ? this.toDomain(result) : null;
     }
 
@@ -132,8 +133,11 @@ export class MongoGameRepository implements IGameRepository {
         const db = await MongoDatabase.getDb();
         const result = await db
             .collection(MongoGameRepository.COLLECTION_NAME)
-            .deleteOne({ _id: new ObjectId(id) });
-        return result.deletedCount === 1;
+            .updateOne(
+                { _id: new ObjectId(id), deletedAt: null },
+                { $set: { deletedAt: new Date(), updatedAt: new Date() } }
+            );
+        return result.modifiedCount === 1;
     }
 
     async getCompanyStats(): Promise<CompanyStat[]> {
@@ -142,6 +146,7 @@ export class MongoGameRepository implements IGameRepository {
             {
                 $match: {
                     company: { $ne: null },
+                    deletedAt: null,
                 },
             },
             {
