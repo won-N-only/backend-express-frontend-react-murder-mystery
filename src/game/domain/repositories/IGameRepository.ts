@@ -14,4 +14,5 @@ export interface IGameRepository {
     update(id: string, game: Partial<Game>): Promise<Game | null>;
     delete(id: string): Promise<boolean>;
     getCompanyStats(): Promise<CompanyStat[]>;
+    getNextOrderNumber(): Promise<number>;
 }

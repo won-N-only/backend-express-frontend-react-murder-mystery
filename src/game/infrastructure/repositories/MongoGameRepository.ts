@@ -3,8 +3,27 @@ import type { CompanyStat, IGameRepository } from "@game/domain/repositories/IGa
 import { MongoDatabase } from "@shared/infrastructure/database/MongoDatabase";
 import { Document, ObjectId } from "mongodb";
 
+const COUNTERS_COLLECTION = "counters";
+const GAME_ORDER_COUNTER_ID = "gameOrder";
+
 export class MongoGameRepository implements IGameRepository {
     private static readonly COLLECTION_NAME = "games";
+
+    async getNextOrderNumber(): Promise<number> {
+        const db = await MongoDatabase.getDb();
+        const result = await db
+            .collection<Document & { _id: string; seq?: number }>(COUNTERS_COLLECTION)
+            .findOneAndUpdate(
+                { _id: GAME_ORDER_COUNTER_ID },
+                { $inc: { seq: 1 } },
+                { upsert: true, returnDocument: "after" },
+            );
+        const seq = result?.seq;
+        if (typeof seq !== "number") {
+            throw new Error("getNextOrderNumber: seq not found");
+        }
+        return seq;
+    }
 
     async findAll(): Promise<Game[]> {
         const db = await MongoDatabase.getDb();

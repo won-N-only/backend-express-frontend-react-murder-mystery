@@ -2,31 +2,30 @@ import { Game } from "@game/domain/entities/Game";
 import type { IGameRepository } from "@game/domain/repositories/IGameRepository";
 
 export interface CreateGameRequest {
-    orderNumber: number;
     name: string;
     minPlayers: number;
     maxPlayers?: number | null;
     company?: string | null;
     series?: string | null;
-    ownerNote?: string[] | null;
     thumbnail?: string | null;
     description?: string | null;
 }
 
 export class CreateGameUseCase {
-    constructor(private gameRepository: IGameRepository) { }
+    constructor(private gameRepository: IGameRepository) {}
 
     async execute(request: CreateGameRequest): Promise<Game> {
+        const orderNumber = await this.gameRepository.getNextOrderNumber();
         const now = new Date();
         const game = new Game(
             undefined,
-            request.orderNumber,
+            orderNumber,
             request.name,
             request.minPlayers,
             request.maxPlayers ?? null,
             request.company ?? null,
             request.series ?? null,
-            request.ownerNote ?? null,
+            null,
             request.thumbnail ?? null,
             request.description ?? null,
             now,
