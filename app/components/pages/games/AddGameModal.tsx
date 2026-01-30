@@ -127,7 +127,6 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
                             required
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className={inputClass}
                             placeholder="머더 미스터리 시리즈 01"
                         />
                     </div>
