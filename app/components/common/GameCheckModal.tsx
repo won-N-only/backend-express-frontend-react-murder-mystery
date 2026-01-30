@@ -2,7 +2,7 @@
 
 import { fetcher } from "@app/lib/fetcher";
 import type { CompletedGame, Game } from "@app/types";
-import { CompletionStatus } from "@completion/domain/valueObjects/CompletionStatus";
+import { CompletionStatus } from "@app/types";
 import { useEffect, useMemo, useState } from "react";
 import useSWR, { mutate } from "swr";
 

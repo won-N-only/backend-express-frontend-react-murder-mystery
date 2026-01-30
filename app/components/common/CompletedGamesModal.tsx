@@ -2,7 +2,7 @@
 
 import { fetcher } from "@app/lib/fetcher";
 import type { CompletedGame } from "@app/types";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import useSWR from "swr";
 
@@ -17,6 +17,7 @@ export default function CompletedGamesModal({
     playerName,
     onClose,
 }: CompletedGamesModalProps) {
+    const router = useRouter();
     const { data: completedGamesData, isLoading } = useSWR<{ completedGames: CompletedGame[] }>(
         playerId ? `/api/stats/players/${playerId}/completed-games` : null,
         fetcher,
@@ -74,10 +75,14 @@ export default function CompletedGamesModal({
                     ) : (
                         <div className="space-y-2">
                             {completedGames.map((game) => (
-                                <Link
+                                <button
                                     key={game.gameId}
-                                    href={`/games/${game.gameId}`}
-                                    className="block rounded-lg border border-head-gray-300 bg-head-white p-4 hover:shadow-md hover:border-head-brown transition-all"
+                                    type="button"
+                                    onClick={() => {
+                                        onClose();
+                                        router.push(`/games?gameId=${game.gameId}`);
+                                    }}
+                                    className="block w-full text-left rounded-lg border border-head-gray-300 bg-head-white p-4 hover:shadow-md hover:border-head-brown transition-all"
                                 >
                                     <div className="flex items-center justify-between">
                                         <div className="flex-1 min-w-0">
@@ -104,7 +109,7 @@ export default function CompletedGamesModal({
                                             </span>
                                         </div>
                                     </div>
-                                </Link>
+                                </button>
                             ))}
                         </div>
                     )}

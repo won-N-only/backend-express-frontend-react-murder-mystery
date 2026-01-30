@@ -1,3 +1,14 @@
+/** API/프론트용 완료 상태 (도메인 enum과 값만 맞춤, import는 여기만) */
+export const CompletionStatus = {
+    NOT_DONE: 0,
+    DONE: 1,
+} as const;
+export type CompletionStatusValue = (typeof CompletionStatus)[keyof typeof CompletionStatus];
+export const CompletionStatusLabel: Record<CompletionStatusValue, string> = {
+    [CompletionStatus.NOT_DONE]: "미완료",
+    [CompletionStatus.DONE]: "완료",
+};
+
 export interface Player {
     _id: string;
     name: string;
@@ -66,4 +77,15 @@ export interface CompletedGame {
     gameName: string;
     orderNumber: number;
     completedAt: Date | null;
+}
+
+/** 게임 댓글 (parentId 있으면 대댓글) */
+export interface Comment {
+    _id: string;
+    gameId: string;
+    authorId: string;
+    authorName: string;
+    content: string;
+    createdAt: string;
+    parentId: string | null;
 }

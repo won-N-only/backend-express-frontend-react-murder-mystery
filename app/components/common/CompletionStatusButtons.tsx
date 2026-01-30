@@ -1,18 +1,16 @@
-import {
-    CompletionStatus,
-    CompletionStatusLabel,
-} from "@completion/domain/valueObjects/CompletionStatus";
+import type { CompletionStatusValue } from "@app/types";
+import { CompletionStatus, CompletionStatusLabel } from "@app/types";
 
 interface CompletionStatusButtonsProps {
-    currentStatus: CompletionStatus;
-    onStatusChange: (status: CompletionStatus) => void;
+    currentStatus: CompletionStatusValue;
+    onStatusChange: (status: CompletionStatusValue) => void;
 }
 
 export default function CompletionStatusButtons({
     currentStatus,
     onStatusChange,
 }: CompletionStatusButtonsProps) {
-    const statuses = [CompletionStatus.DONE, CompletionStatus.NOT_DONE] as const;
+    const statuses: CompletionStatusValue[] = [CompletionStatus.DONE, CompletionStatus.NOT_DONE];
 
     return (
         <div className="flex gap-1">
