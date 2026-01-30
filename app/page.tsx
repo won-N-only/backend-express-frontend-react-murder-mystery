@@ -56,7 +56,7 @@ export default function LandingPage() {
 
     return (
         <div className="flex flex-col">
-            <div className="flex flex-col items-center px-4 pt-[100px]">
+            <div className="flex flex-col items-center px-4 pt-[100px] pb-[100px]">
                 <div
                     className={`relative w-full max-w-md aspect-[4/3] ${isHovering ? "cursor-pointer" : "cursor-default"}`}
                     onMouseMove={handleMouseMove}
