@@ -9,52 +9,53 @@ const FACE_AREA = {
     xEnd: 60,
     y: 10,
     yEnd: 35,
+    hairPosition: { top: "16%", left: "52.2%" },
+    hairSize: 80,
 } as const;
+
+function getRelativePosition(
+    e: React.MouseEvent<HTMLDivElement>,
+    container: HTMLDivElement | null
+) {
+    if (!container) return null;
+    const rect = container.getBoundingClientRect();
+    return {
+        x: ((e.clientX - rect.left) / rect.width) * 100,
+        y: ((e.clientY - rect.top) / rect.height) * 100,
+    };
+}
+
+function isInFaceArea(x: number, y: number): boolean {
+    return x >= FACE_AREA.x && x <= FACE_AREA.xEnd && y >= FACE_AREA.y && y <= FACE_AREA.yEnd;
+}
 
 export default function LandingPage() {
     const [isHovering, setIsHovering] = useState(false);
     const imageRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
 
-    const getRelativePosition = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-        if (!imageRef.current) return null;
-        const rect = imageRef.current.getBoundingClientRect();
-        return {
-            x: ((e.clientX - rect.left) / rect.width) * 100,
-            y: ((e.clientY - rect.top) / rect.height) * 100,
-        };
-    }, []);
-
-    const isInFaceArea = useCallback((x: number, y: number) => {
-        return x >= FACE_AREA.x && x <= FACE_AREA.xEnd && y >= FACE_AREA.y && y <= FACE_AREA.yEnd;
-    }, []);
-
     const handleMouseMove = useCallback(
         (e: React.MouseEvent<HTMLDivElement>) => {
-            const pos = getRelativePosition(e);
+            const pos = getRelativePosition(e, imageRef.current);
             if (pos) {
-                setIsHovering((prev) => {
-                    const newValue = isInFaceArea(pos.x, pos.y);
-                    return prev !== newValue ? newValue : prev;
-                });
+                const inFaceArea = isInFaceArea(pos.x, pos.y);
+                setIsHovering((prev) => (prev !== inFaceArea ? inFaceArea : prev));
             }
         },
-        [getRelativePosition, isInFaceArea],
+        []
     );
 
     const handleClick = useCallback(
         (e: React.MouseEvent<HTMLDivElement>) => {
-            const pos = getRelativePosition(e);
+            const pos = getRelativePosition(e, imageRef.current);
             if (pos && isInFaceArea(pos.x, pos.y)) {
                 router.push("/brick-breaker");
             }
         },
-        [getRelativePosition, isInFaceArea, router],
+        [router]
     );
 
-    const handleMouseLeave = useCallback(() => {
-        setIsHovering(false);
-    }, []);
+    const handleMouseLeave = useCallback(() => setIsHovering(false), []);
 
     return (
         <div className="flex flex-col">
@@ -75,12 +76,18 @@ export default function LandingPage() {
                             priority
                         />
                         {isHovering && (
-                            <div className="absolute top-[16%] left-[52.2%] pointer-events-none animate-hair-fall">
+                            <div
+                                className="absolute pointer-events-none animate-hair-fall"
+                                style={{
+                                    top: FACE_AREA.hairPosition.top,
+                                    left: FACE_AREA.hairPosition.left,
+                                }}
+                            >
                                 <Image
                                     src="/favicon_hair.png"
                                     alt=""
-                                    width={42}
-                                    height={42}
+                                    width={FACE_AREA.hairSize}
+                                    height={FACE_AREA.hairSize}
                                     className="rounded-full"
                                 />
                             </div>
