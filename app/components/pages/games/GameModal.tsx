@@ -5,6 +5,7 @@ import GameCommentsSection from "@app/components/pages/games/GameCommentsSection
 import { fetcher } from "@app/lib/fetcher";
 import type { CompletionStatusValue, Game, Player } from "@app/types";
 import { CompletionStatus } from "@app/types";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
 import useSWR from "swr";
@@ -73,7 +74,7 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
             onClick={onClose}
         >
             <div
-                className="bg-head-white rounded-2xl shadow-lg max-w-content w-full max-h-[90vh] overflow-hidden flex flex-col"
+                className="bg-head-white rounded-none  shadow-lg max-w-content w-full max-h-[90vh] overflow-hidden flex flex-col"
                 onClick={(e) => e.stopPropagation()}
             >
                 {isLoadingGame ? (
@@ -82,72 +83,108 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
                     </div>
                 ) : game ? (
                     <>
-                        {/* 헤더 - 상단 어두운 회색 바 */}
-                        <div className="bg-head-text px-6 py-2 flex-shrink-0">
-                            <span className="text-sm text-white font-semibold">
-                                #{game.orderNumber}
-                            </span>
-                        </div>
-
-                        {/* 게임 정보 헤더 */}
-                        <div className="bg-head-white px-6 py-4 border-b border-head-border flex-shrink-0">
-                            <div className="flex items-start justify-between gap-3">
-                                <div className="flex-1 min-w-0">
-                                    <h2 className="text-xl font-bold text-head-text mb-1">
-                                        {game.name}
-                                    </h2>
-                                    <div className="text-sm text-head-text">
-                                        <span>
-                                            {game.minPlayers}
-                                            {game.maxPlayers ? `-${game.maxPlayers}` : "+"}인
-                                        </span>
+                        {/* 헤더 */}
+                        <div className="bg-head-main px-6 py-5  flex-shrink-0">
+                            <div className="flex items-start gap-4">
+                                {/* 썸네일 */}
+                                {game.thumbnail && (
+                                    <div className="shrink-0 w-[80px] h-[106px] relative  bg-head-gray-200">
+                                        <Image
+                                            src={game.thumbnail}
+                                            alt={game.name}
+                                            fill
+                                            className="object-cover"
+                                            sizes="80px"
+                                            unoptimized={game.thumbnail.startsWith("http")}
+                                        />
                                     </div>
-                                    {(game.company || game.series) && (
-                                        <div className="text-sm text-head-text mt-1">
-                                            {game.company && <span>{game.company}</span>}
-                                            {game.company && game.series && <span> : </span>}
-                                            {game.series && <span>{game.series}</span>}
+                                )}
+
+                                {/* 정보 */}
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex justify-between items-start">
+                                        <div>
+                                            <div className="text-sm font-bold text-head-text opacity-70 mb-1">
+                                                #{game.orderNumber}
+                                            </div>
+                                            <h2 className="text-2xl font-bold text-head-text mb-2 leading-tight">
+                                                {game.name}
+                                            </h2>
+                                            <div className="text-sm font-semibold text-head-text opacity-90">
+                                                <span>
+                                                    {game.minPlayers}
+                                                    {game.maxPlayers ? `-${game.maxPlayers}` : "+"}
+                                                    인
+                                                </span>
+                                                {(game.company || game.series) && (
+                                                    <>
+                                                        <span className="mx-2">·</span>
+                                                        {game.company && (
+                                                            <span>{game.company}</span>
+                                                        )}
+                                                        {game.company && game.series && (
+                                                            <span> : </span>
+                                                        )}
+                                                        {game.series && <span>{game.series}</span>}
+                                                    </>
+                                                )}
+                                            </div>
                                         </div>
-                                    )}
-                                </div>
-                                <div className="flex items-center gap-2 shrink-0">
-                                    <Link
-                                        href={`/games/${gameId}/edit`}
-                                        className="bg-head-text text-white px-4 py-1.5 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
-                                    >
-                                        게임 수정
-                                    </Link>
-                                    <button
-                                        type="button"
-                                        onClick={onClose}
-                                        className="text-head-text hover:text-head-text/80 text-2xl leading-none font-normal"
-                                        aria-label="닫기"
-                                    >
-                                        ×
-                                    </button>
+                                        {/* 액션 버튼 */}
+                                        <div className="flex flex-row-reverse items-start gap-2 p-[30px] py-6">
+                                            <button
+                                                type="button"
+                                                onClick={onClose}
+                                                className="text-head-text opacity-50 text-2xl    hover:opacity-70"
+                                                aria-label="닫기"
+                                            >
+                                                x
+                                            </button>
+                                            <Link
+                                                href={`/games/${gameId}/edit`}
+                                                className="text-md bg-head-brown text-white px-4 py-1 rounded-none font-bold"
+                                            >
+                                                게임 수정
+                                            </Link>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         {/* 콘텐츠 영역 */}
                         <div className="flex-1 overflow-y-auto bg-head-main p-6 space-y-6">
+                            {/* 시놉시스 */}
+                            {game.description && (
+                                <section className="rounded-none  bg-head-white p-6">
+                                    <h2 className="text-xl font-bold text-head-text mb-4">
+                                        시놉시스
+                                    </h2>
+                                    <p className="text-head-text whitespace-pre-wrap leading-relaxed">
+                                        {game.description}
+                                    </p>
+                                </section>
+                            )}
+
                             {/* 댓글 섹션 */}
                             <GameCommentsSection gameId={gameId} />
 
                             {/* 대머리 완료 여부 */}
-                            <section className="space-y-4">
-                                <h2 className="text-xl font-semibold text-head-text">
+                            <section className="rounded-none  bg-head-white p-6">
+                                <h2 className="text-xl font-bold text-head-text mb-4">
                                     대머리 완료 여부
                                 </h2>
+                                <hr className="border-head-gray-500 opacity-40 py-2 my-4" />
                                 <div className="grid grid-cols-4 gap-3">
                                     {players.map((p) => {
                                         const status =
                                             completionMap.get(p._id) ?? CompletionStatus.NOT_DONE;
                                         return (
-                                            <div key={p._id} className="flex flex-col gap-2">
-                                                <span className="text-sm font-medium text-center text-head-text">
+                                            <div key={p._id} className="flex flex-col gap-2 mb-4">
+                                                <span className="text-sm font-bold text-center text-head-text">
                                                     {p.name}
                                                 </span>
+                                                <hr className="border-head-gray-500 opacity-40 " />
                                                 <div className="flex justify-center">
                                                     <CompletionStatusButtons
                                                         currentStatus={status}
