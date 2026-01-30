@@ -5,7 +5,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
     CANVAS_HEIGHT,
     CANVAS_WIDTH,
-    FALLING_HAIR_ROTATION_SPEED,
     FALLING_HAIR_SPEED,
     HEAD_SIZE,
     PADDLE_HIT_WIDTH,
@@ -19,17 +18,25 @@ import {
 } from "./gameLogic";
 import { clearCanvas, drawBall, drawFallingHair, drawHairs, drawPaddle } from "./gameRenderer";
 import type { GameState } from "./types";
+import { useControl } from "./useControl";
 import { useImages } from "./useImages";
-import { useMouseControl } from "./useMouseControl";
 
 export default function BrickBreakerPage() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
     const gameRef = useRef<GameState | null>(null);
     const fallingHairYRef = useRef<number | null>(null);
-    const fallingHairRotationRef = useRef<number>(0);
     const fallingAnimIdRef = useRef<number | null>(null);
 
     const { paddleImgRef, sadHeadImgRef, hairImgRef } = useImages();
+
+    // Canvas context 초기화
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (canvas && !ctxRef.current) {
+            ctxRef.current = canvas.getContext("2d");
+        }
+    }, []);
 
     const [started, setStarted] = useState(false);
     const [score, setScore] = useState(0);
@@ -38,9 +45,8 @@ export default function BrickBreakerPage() {
 
     const startGame = useCallback(() => {
         const canvas = canvasRef.current;
-        if (!canvas) return;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return;
+        const ctx = ctxRef.current;
+        if (!canvas || !ctx) return;
 
         const cw = canvas.width;
         const ch = canvas.height;
@@ -51,22 +57,19 @@ export default function BrickBreakerPage() {
         setGameOver(false);
         setWon(false);
         fallingHairYRef.current = null;
-        fallingHairRotationRef.current = 0;
         setStarted(true);
     }, []);
 
-    useMouseControl(canvasRef, gameRef, started, gameOver, won);
+    useControl(canvasRef, gameRef, started, gameOver, won);
 
     useEffect(() => {
         if (!started || gameOver || won) return;
         const canvas = canvasRef.current;
-        if (!canvas) return;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return;
+        const ctx = ctxRef.current;
+        if (!canvas || !ctx) return;
 
         const cw = canvas.width;
         const ch = canvas.height;
-        const paddleTop = ch - HEAD_SIZE;
         const game = gameRef.current;
         if (!game) return;
 
@@ -111,7 +114,7 @@ export default function BrickBreakerPage() {
             drawPaddle(ctx, paddleX, ch, paddleImgRef.current);
 
             if (justWon && hairImgRef.current) {
-                const hairStopY = ch - HEAD_SIZE - HEAD_SIZE;
+                const hairStopY = ch - HEAD_SIZE;
                 drawFallingHair(ctx, paddleX, ch, hairStopY, 0, hairImgRef.current);
             }
 
@@ -138,7 +141,7 @@ export default function BrickBreakerPage() {
         const paddleX = g.finalPaddleX !== null ? g.finalPaddleX : g.paddleX;
         const headX = paddleX + (PADDLE_HIT_WIDTH - HEAD_SIZE) / 2;
         const headY = ch - HEAD_SIZE;
-        const hairStopY = headY - HEAD_SIZE;
+        const hairStopY = headY;
 
         const drawFinalFrame = (fallingY: number | null, rotationAngle: number = 0) => {
             clearCanvas(ctx, cw, ch);
@@ -158,7 +161,6 @@ export default function BrickBreakerPage() {
         if (won) {
             if (fallingHairYRef.current === null) {
                 fallingHairYRef.current = -HEAD_SIZE;
-                fallingHairRotationRef.current = 0;
             }
 
             const tick = () => {
@@ -168,13 +170,12 @@ export default function BrickBreakerPage() {
                 if (currentY >= hairStopY) {
                     fallingHairYRef.current = hairStopY;
                     fallingAnimIdRef.current = null;
-                    drawFinalFrame(hairStopY, fallingHairRotationRef.current);
+                    drawFinalFrame(hairStopY, 0);
                     return;
                 }
 
                 fallingHairYRef.current = Math.min(currentY + FALLING_HAIR_SPEED, hairStopY);
-                fallingHairRotationRef.current += FALLING_HAIR_ROTATION_SPEED;
-                drawFinalFrame(fallingHairYRef.current, fallingHairRotationRef.current);
+                drawFinalFrame(fallingHairYRef.current, 0);
                 fallingAnimIdRef.current = requestAnimationFrame(tick);
             };
             fallingAnimIdRef.current = requestAnimationFrame(tick);
@@ -203,8 +204,12 @@ export default function BrickBreakerPage() {
                 ref={canvasRef}
                 width={CANVAS_WIDTH}
                 height={CANVAS_HEIGHT}
-                className="max-w-full border-2 border-head-border bg-head-main"
-                style={{ width: "min(800px, 100vw - 2rem)" }}
+                className="max-w-full border-2 border-head-border bg-head-main touch-none"
+                style={{
+                    width: "min(800px, 100vw - 2rem)",
+                    height: "auto",
+                    aspectRatio: `${CANVAS_WIDTH} / ${CANVAS_HEIGHT}`,
+                }}
             />
 
             {!started && (
@@ -240,6 +245,15 @@ export default function BrickBreakerPage() {
                     </button>
                 </div>
             )}
+            <div className="mt-4 w-full max-w-[800px] text-left text-head-text bg-head-white rounded-lg p-4">
+                <h3 className="mb-2 font-bold">게임 설명</h3>
+                <ul className="space-y-1 text-sm">
+                    <li>• 마우스 또는 손가락을 움직여 대머리로 공을 튕겨주세요</li>
+                    <li>• 공이 머리카락에 닿으면 머리카락이 사라지고 점수가 올라갑니다</li>
+                    <li>• 모든 머리카락을 가지면 가발을 얻어요!!</li>
+                    <li>• 공이 바닥에 떨어지면 앞으로 평생을 대머리로 살아야합니다 ㅠㅠ</li>
+                </ul>
+            </div>
         </div>
     );
 }

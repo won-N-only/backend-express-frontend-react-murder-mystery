@@ -62,12 +62,7 @@ export function drawFallingHair(
 ) {
     if (!hairImg) return;
     const headX = paddleX + (PADDLE_HIT_WIDTH - HEAD_SIZE) / 2;
-    const centerX = headX + HEAD_SIZE / 2;
-    const centerY = fallingY + HEAD_SIZE / 2;
 
-    ctx.save();
-    ctx.translate(centerX, centerY);
-    ctx.rotate((rotationAngle * Math.PI) / 180);
-    ctx.drawImage(hairImg, -HEAD_SIZE / 2, -HEAD_SIZE / 2, HEAD_SIZE, HEAD_SIZE);
-    ctx.restore();
+    // 회전 없이 그리기
+    ctx.drawImage(hairImg, headX, fallingY, HEAD_SIZE, HEAD_SIZE);
 }
