@@ -192,67 +192,115 @@ export default function BrickBreakerPage() {
     }, [gameOver, won, started]);
 
     return (
-        <div className="flex flex-col items-center px-4 py-8">
-            <div className="mb-4 flex items-center justify-between gap-4">
-                <Link href="/" className="text-head-text underline hover:text-head-brown">
-                    ← 메인으로
-                </Link>
-                <span className="font-bold text-head-text">점수: {score}</span>
-            </div>
+        <div className="min-h-screen bg-head-main flex flex-col items-center p-2 lg:p-8">
+            <div className="w-full max-w-[1200px] flex flex-col lg:flex-row items-center lg:items-start justify-center gap-6 lg:gap-12">
+                {/* 1. Game Area */}
+                <div className="relative w-full lg:w-auto flex-shrink-0 flex justify-center">
+                    <div className="rounded-none border-4 border-head-brown shadow-2xl bg-head-gray-100 overflow-hidden w-full max-w-[800px]">
+                        <canvas
+                            ref={canvasRef}
+                            width={CANVAS_WIDTH}
+                            height={CANVAS_HEIGHT}
+                            className="block cursor-none touch-none w-full h-auto bg-head-gray-100"
+                            style={{
+                                maxHeight: "75vh",
+                                objectFit: "contain",
+                            }}
+                        />
 
-            <canvas
-                ref={canvasRef}
-                width={CANVAS_WIDTH}
-                height={CANVAS_HEIGHT}
-                className="max-w-full border-2 border-head-border bg-head-main touch-none"
-                style={{
-                    width: "min(800px, 100vw - 2rem)",
-                    height: "auto",
-                    aspectRatio: `${CANVAS_WIDTH} / ${CANVAS_HEIGHT}`,
-                }}
-            />
+                        {/* Start Overlay */}
+                        {!started && (
+                            <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-white text-center p-4 backdrop-blur-sm">
+                                <h2 className="text-4xl lg:text-5xl font-extrabold mb-4 drop-shadow-md">
+                                    벽돌 깨기
+                                </h2>
+                                <p className="mb-8 text-lg opacity-90">
+                                    머리카락을 모두 모아 가발을 완성하세요!
+                                </p>
+                                <button
+                                    onClick={startGame}
+                                    className="bg-head-brown text-white px-10 py-4 text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg"
+                                >
+                                    START
+                                </button>
+                            </div>
+                        )}
 
-            {!started && (
-                <button
-                    type="button"
-                    onClick={startGame}
-                    className="mt-4 rounded-xl bg-head-brown px-6 py-3 font-bold text-white hover:opacity-90"
-                >
-                    시작
-                </button>
-            )}
-            {gameOver && (
-                <div className="mt-4 text-center">
-                    <p className="text-xl font-bold text-head-text">게임 오버</p>
-                    <button
-                        type="button"
-                        onClick={startGame}
-                        className="mt-2 rounded-xl bg-head-brown px-6 py-3 font-bold text-white hover:opacity-90"
-                    >
-                        다시 하기
-                    </button>
+                        {/* Game Over Overlay */}
+                        {gameOver && (
+                            <div className="absolute inset-0 bg-black/75 flex flex-col items-center justify-center text-white text-center p-4 backdrop-blur-sm">
+                                <h2 className="text-5xl font-black mb-2 text-red-500 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
+                                    GAME OVER
+                                </h2>
+                                <p className="text-xl mb-6 font-medium">
+                                    영원히 대머리로 남게 되었습니다...
+                                </p>
+
+                                <button
+                                    onClick={startGame}
+                                    className="bg-head-brown text-white px-10 py-4 text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg"
+                                >
+                                    RETRY
+                                </button>
+                            </div>
+                        )}
+
+                        {/* Win Overlay */}
+                        {won && (
+                            <div className="absolute inset-0 flex flex-col items-center justify-center text-head-text text-center p-6  ">
+                                <h2 className="text-4xl lg:text-5xl font-black mb-6 text-yellow-400 drop-shadow-md">
+                                    CLEAR!
+                                </h2>
+                                <p className="text-lg lg:text-xl mb-8 font-medium">축하합니다!</p>
+                                <button
+                                    onClick={startGame}
+                                    className="bg-head-brown text-white px-10 py-4 text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg"
+                                >
+                                    다시하기
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
-            )}
-            {won && (
-                <div className="mt-4 text-center">
-                    <p className="text-xl font-bold text-head-text">클리어!</p>
-                    <button
-                        type="button"
-                        onClick={startGame}
-                        className="mt-2 rounded-xl bg-head-brown px-6 py-3 font-bold text-white hover:opacity-90"
-                    >
-                        다시 하기
-                    </button>
+
+                {/* 2. Sidebar / Info (Right Side) */}
+                <div className="w-full lg:w-[350px] shrink-0 flex flex-col gap-6">
+                    {/* Game Info Card */}
+                    <div className="bg-head-white border-4 border-head-brown p-6 shadow-lg rounded-none">
+                        <div className="flex justify-between items-start border-b-4 border-head-brown pb-2 mb-4">
+                            <h1 className="text-3xl font-black text-head-text">벽돌 깨기</h1>
+                            <Link
+                                href="/"
+                                className="text-sm font-bold text-head-brown underline hover:no-underline mt-2"
+                            >
+                                ← 메인으로
+                            </Link>
+                        </div>
+
+                        <div className="bg-head-gray-100 p-4 border border-head-border mb-4">
+                            <h3 className="font-bold text-head-brown mb-2 text-lg">💡 게임 설명</h3>
+                            <ul className="text-sm text-head-text space-y-2 list-disc pl-4">
+                                <li>마우스/터치로 대머리를 움직여 공을 튕기세요.</li>
+                                <li>공이 머리카락에 닿으면 점수 획득!</li>
+                                <li>모든 머리카락을 가지면 가발을 얻어요!</li>
+                                <li>
+                                    공이 바닥에 떨어지면 앞으로 평생을 대머리로 살아야합니다 ㅠㅠ
+                                </li>
+                            </ul>{" "}
+                        </div>
+                    </div>
+
+                    {/* Score Card */}
+                    <div className="bg-head-text text-white border-4 border-head-white p-6 shadow-lg rounded-none">
+                        <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                            🏆 기록 보관실
+                        </h3>
+                        <div className="flex justify-between items-end">
+                            <span className="text-gray-300 text-sm">Score</span>
+                            <span className="text-4xl font-black text-yellow-400">{score}</span>
+                        </div>
+                    </div>
                 </div>
-            )}
-            <div className="mt-4 w-full max-w-[800px] text-left text-head-text bg-head-white rounded-lg p-4">
-                <h3 className="mb-2 font-bold">게임 설명</h3>
-                <ul className="space-y-1 text-sm">
-                    <li>• 마우스 또는 손가락을 움직여 대머리로 공을 튕겨주세요</li>
-                    <li>• 공이 머리카락에 닿으면 머리카락이 사라지고 점수가 올라갑니다</li>
-                    <li>• 모든 머리카락을 가지면 가발을 얻어요!!</li>
-                    <li>• 공이 바닥에 떨어지면 앞으로 평생을 대머리로 살아야합니다 ㅠㅠ</li>
-                </ul>
             </div>
         </div>
     );
