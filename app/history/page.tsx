@@ -53,31 +53,35 @@ export default function HistoryPage() {
     }, [selectedStat, playerStats]);
 
     return (
-        <div className="space-y-6">
+        <div className=" ">
             <PageHeader
                 title="전과 기록"
                 description="내가 저지른... 아니, 내가 해결한 수많은 사건들의 흔적."
             />
+            <div className="pt-section text-head-text text-3xl font-bold">
+                어떤 대머리의 이력을 볼까요?
+            </div>
             <PlayerListGrid
                 players={players}
                 selectedPlayerIds={selectedPlayerId ? [selectedPlayerId] : []}
                 onSelectPlayer={setSelectedPlayerId}
             />
 
+            <div className="pt-section text-head-text text-3xl font-bold">게임 이력</div>
             {selectedPlayer && selectedStat && (
-                <div>
+                <div className="pt-5">
                     <section className="section-card">
                         <div className="flex items-start justify-between gap-4 flex-wrap">
                             <div className="flex-1 min-w-0">
-                                <h2 className="text-head-gray-800 font-bold mb-2 text-xl">
+                                <h2 className="text-head-text font-bold text-2xl">
                                     {selectedPlayer.name}님의 졸업률
                                 </h2>
                                 {topPercent != null && (
-                                    <p className="text-head-brown font-semibold text-lg mb-1">
+                                    <p className="text-head-brown font-semibold text-lg mt-2">
                                         상위 {topPercent}%
                                     </p>
                                 )}
-                                <p className="text-head-gray-500 text-sm">
+                                <p className="text-head-text text-sm mt-1">
                                     {selectedStat.completedCount}개 완료 · 전체{" "}
                                     {selectedStat.totalGames}개 중
                                 </p>
@@ -87,7 +91,7 @@ export default function HistoryPage() {
                             </div>
                         </div>
                     </section>
-                    <div className="mt-4 flex justify-end">
+                    <div className="flex justify-end">
                         <button
                             onClick={() => setShowGameCheckModal(true)}
                             className="bg-head-accent-brown text-white px-5 py-1 text-md font-bold shadow-soft hover:opacity-90 transition-opacity"
