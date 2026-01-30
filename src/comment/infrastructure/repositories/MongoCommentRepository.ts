@@ -29,7 +29,7 @@ export class MongoCommentRepository implements ICommentRepository {
         const db = await MongoDatabase.getDb();
         const list = await db
             .collection(MongoCommentRepository.COLLECTION_NAME)
-            .find({ gameId: new ObjectId(gameId) })
+            .find({ gameId: new ObjectId(gameId), deletedAt: null })
             .sort({ createdAt: 1 })
             .toArray();
         return list.map(this.toDomain);
@@ -39,8 +39,11 @@ export class MongoCommentRepository implements ICommentRepository {
         const db = await MongoDatabase.getDb();
         const result = await db
             .collection(MongoCommentRepository.COLLECTION_NAME)
-            .deleteOne({ _id: new ObjectId(id) });
-        return result.deletedCount === 1;
+            .updateOne(
+                { _id: new ObjectId(id), deletedAt: null },
+                { $set: { deletedAt: new Date() } }
+            );
+        return result.modifiedCount === 1;
     }
 
     private toDomain(doc: any): Comment {
