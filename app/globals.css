@@ -53,7 +53,7 @@ body {
     .nav-link-spacer::after {
         content: "";
         display: block;
-        padding-top: 0.25rem;
+        padding-top: 4px;
     }
 
     /** 요소 간 분리선 (목록·카드 내 구분) */
@@ -85,6 +85,10 @@ body {
     }
     .mt-section {
         margin-top: var(--spacing-section);
+    }
+    /** 서브타이틀(헤더 아래) 구간 상단 마진 20px */
+    .mt-subtitle {
+        margin-top: 20px;
     }
     /* 하단 여백: pt로 처리 (::after에 padding-top 적용) */
     .section-bottom::after {
