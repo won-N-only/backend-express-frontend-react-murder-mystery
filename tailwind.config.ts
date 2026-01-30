@@ -14,8 +14,8 @@ const config: Config = {
         /* 메인·구분선 (globals.css :root 참조) */
         "head-main": "var(--color-main)",
         "head-badge": "var(--color-badge-bg)",
+        "head-text": "var(--color-text)",
         "head-border": "var(--color-border)",
-        /* 포인트/버튼 컬러 (블루 통일) */
         "head-brown": "var(--color-primary)",
         "head-brown-dark": "var(--color-primary-dark)",
         "head-accent-brown": "var(--color-accent-brown)",
@@ -34,6 +34,13 @@ const config: Config = {
       },
       boxShadow: {
         soft: "0 2px 8px rgba(0, 0, 0, 0.08)",
+      },
+      maxWidth: {
+        content: "var(--content-max-width)",
+      },
+      /* section: extend.spacing에 var() 쓰면 유틸이 빌드에 안 나오는 경우 있음 → globals.css @layer utilities에 동일 유틸 정의해 둠 */
+      spacing: {
+        section: "var(--spacing-section)",
       },
     },
   },
