@@ -35,8 +35,11 @@ export class MongoGameCompletionRepository implements IGameCompletionRepository 
         const db = await MongoDatabase.getDb();
         const result = await db
             .collection(MongoGameCompletionRepository.COLLECTION_NAME)
-            .deleteOne({ gameId: new ObjectId(gameId), playerId: new ObjectId(playerId) });
-        return result.deletedCount === 1;
+            .updateOne(
+                { gameId: new ObjectId(gameId), playerId: new ObjectId(playerId), deletedAt: null },
+                { $set: { deletedAt: new Date() } }
+            );
+        return result.modifiedCount === 1;
     }
 
     async findByGameId(gameId: string): Promise<GameCompletion[]> {
@@ -44,7 +47,7 @@ export class MongoGameCompletionRepository implements IGameCompletionRepository 
         // $lookup 제거: player 정보가 필요하지 않으므로 단순 find 쿼리로 최적화
         const completions = await db
             .collection(MongoGameCompletionRepository.COLLECTION_NAME)
-            .find({ gameId: new ObjectId(gameId) })
+            .find({ gameId: new ObjectId(gameId), deletedAt: null })
             .toArray();
         return completions.map(this.toDomain);
     }
@@ -55,7 +58,7 @@ export class MongoGameCompletionRepository implements IGameCompletionRepository 
         const objectIds = playerIds.map((id) => new ObjectId(id));
         const completions = await db
             .collection(MongoGameCompletionRepository.COLLECTION_NAME)
-            .find({ gameId: new ObjectId(gameId), playerId: { $in: objectIds } })
+            .find({ gameId: new ObjectId(gameId), playerId: { $in: objectIds }, deletedAt: null })
             .toArray();
         return completions.map(this.toDomain);
     }
@@ -68,6 +71,7 @@ export class MongoGameCompletionRepository implements IGameCompletionRepository 
         const query: any = {
             gameId: { $in: gameObjectIds },
             playerId: { $in: playerObjectIds },
+            deletedAt: null,
         };
         if (status !== undefined) {
             query.status = status;
@@ -81,7 +85,7 @@ export class MongoGameCompletionRepository implements IGameCompletionRepository 
 
     async findByPlayerId(playerId: string, status?: CompletionStatus): Promise<GameCompletion[]> {
         const db = await MongoDatabase.getDb();
-        const query: any = { playerId: new ObjectId(playerId) };
+        const query: any = { playerId: new ObjectId(playerId), deletedAt: null };
         if (status !== undefined) {
             query.status = status;
         }
@@ -111,6 +115,7 @@ export class MongoGameCompletionRepository implements IGameCompletionRepository 
                         status, // equality 조건을 먼저 배치하여 인덱스 효율성 극대화
                         gameId: { $in: gameObjectIds },
                         playerId: { $in: playerObjectIds },
+                        deletedAt: null,
                     },
                 },
                 {
@@ -151,6 +156,7 @@ export class MongoGameCompletionRepository implements IGameCompletionRepository 
                         status, // equality 조건을 먼저 배치하여 인덱스 효율성 극대화
                         gameId: { $in: gameObjectIds },
                         playerId: { $in: playerObjectIds },
+                        deletedAt: null,
                     },
                 },
                 {
