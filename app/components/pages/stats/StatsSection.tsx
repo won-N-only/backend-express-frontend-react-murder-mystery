@@ -33,14 +33,14 @@ export default function StatsSection({ players, companies }: StatsSectionProps) 
 
     return (
         <>
-            <div className="space-y-8">
+            <div className="space-y-section">
                 <PageHeader
                     title="대머리 성적표"
                     description="머리를 얼마나 썼는지 확인해볼까요?"
                 />
 
                 <section className="space-y-4">
-                    <h2 className="text-xl font-semibold text-head-gray-800">대머리 졸업 순위</h2>
+                    <h2 className="text-xl font-semibold text-head-text">대머리 졸업 순위</h2>
                     <div className="grid gap-4 md:grid-cols-1">
                         {players.map((p, index) => (
                             <div
@@ -48,10 +48,10 @@ export default function StatsSection({ players, companies }: StatsSectionProps) 
                                 className="section-card"
                                 onClick={() => handlePlayerClick(p.playerId, p.playerName)}
                             >
-                                <div className="flex items-center justify-between mb-3">
+                                <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-3">
                                         <span className="text-2xl">{index + 1 + "."}</span>
-                                        <span className="font-bold text-lg text-head-gray-800">
+                                        <span className="font-bold text-lg text-head-text">
                                             {p.playerName}
                                         </span>
                                     </div>
@@ -59,12 +59,12 @@ export default function StatsSection({ players, companies }: StatsSectionProps) 
                                         <div className="text-2xl font-bold text-head-brown">
                                             {p.completionRate.toFixed(1)}%
                                         </div>
-                                        <div className="text-xs text-head-gray-500">
+                                        <div className="text-xs text-head-text">
                                             {p.completedCount}/{p.totalGames} 완료
                                         </div>
                                     </div>
                                 </div>
-                                <div className="space-y-2">
+                                <div className="space-y-2 mt-3">
                                     <div className="h-4 rounded-full bg-head-gray-300 overflow-hidden">
                                         <div
                                             className={`h-full rounded-full bg-gradient-to-r ${getProgressColorByRank(
