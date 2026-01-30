@@ -45,8 +45,8 @@ export default function MatchPage() {
             <PageHeader title="사건 배당" description="토 달지 마세요. 불만은 사절." />
 
             <div className="pt-section">
-                <div className="text-head-text text-2xl font-bold">참가자 선택</div>
-                <span className="font-bold">선택된 참가자</span> {selectedPlayers.length}명
+                <div className="text-head-text text-2xl font-bold mb-2">참가자 선택</div>
+                <span className="font-extrabold">선택된 참가자</span> {selectedPlayers.length}명
             </div>
             <MatchOptions
                 excludePartySeries={excludePartySeries}
