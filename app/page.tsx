@@ -31,7 +31,6 @@ function isInFaceArea(x: number, y: number): boolean {
 
 export default function LandingPage() {
     const [isHovering, setIsHovering] = useState(false);
-    const [showMakersBubble, setShowMakersBubble] = useState(false);
     const imageRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
 
@@ -56,10 +55,8 @@ export default function LandingPage() {
     const handleMouseLeave = useCallback(() => setIsHovering(false), []);
 
     return (
-        <div className="flex flex-col min-h-screen">
-            <div
-                className={`flex flex-col items-center px-4 pt-[100px] ${showMakersBubble ? "pb-32" : "pb-8"}`}
-            >
+        <div className="flex flex-col">
+            <div className="flex flex-col items-center px-4 pt-[100px]">
                 <div
                     className={`relative w-full max-w-md aspect-[4/3] ${isHovering ? "cursor-pointer" : "cursor-default"}`}
                     onMouseMove={handleMouseMove}
@@ -115,53 +112,14 @@ export default function LandingPage() {
                     </p>
                 </div>
 
-                <div className="pt-section relative flex justify-center">
-                    <div className="relative">
-                        <div
-                            onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                setShowMakersBubble((prev) => !prev);
-                            }}
-                            className="cursor-pointer hover:opacity-80 transition-opacity relative z-10 inline-block"
-                            role="button"
-                            tabIndex={0}
-                            onKeyDown={(e) => {
-                                if (e.key === "Enter" || e.key === " ") {
-                                    e.preventDefault();
-                                    setShowMakersBubble((prev) => !prev);
-                                }
-                            }}
-                            aria-label="makers 이미지"
-                        >
-                            <Image
-                                src="/makers.png"
-                                alt="makers"
-                                width={70}
-                                height={50}
-                                className="object-contain"
-                            />
-                        </div>
-                        {showMakersBubble && (
-                            <div
-                                className="absolute top-full left-1/2 -translate-x-1/2 mt-2 z-[100] pointer-events-auto"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                }}
-                            >
-                                <div className="relative bg-white rounded-full px-5 py-3 shadow-lg border border-gray-200 min-w-[140px]">
-                                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-0">
-                                        <div className="w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-white"></div>
-                                    </div>
-                                    <p className="text-black text-sm font-medium text-center leading-relaxed">
-                                        <strong>내장지방</strong> <strong>은땅물</strong>
-                                        <br />이 만들었어요
-                                    </p>
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                <div className="pt-section flex justify-center">
+                    <Image
+                        src="/makers.png"
+                        alt="makers"
+                        width={70}
+                        height={50}
+                        className="object-contain"
+                    />
                 </div>
             </div>
         </div>
