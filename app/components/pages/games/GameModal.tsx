@@ -1,10 +1,12 @@
 "use client";
 
 import CompletionStatusButtons from "@app/components/common/CompletionStatusButtons";
+import GameCommentsSection from "@app/components/pages/games/GameCommentsSection";
 import GameInfo from "@app/components/pages/games/GameInfo";
 import { fetcher } from "@app/lib/fetcher";
-import type { Game, Player } from "@app/types";
-import { CompletionStatus } from "@completion/domain/valueObjects/CompletionStatus";
+import type { CompletionStatusValue, Game, Player } from "@app/types";
+import { CompletionStatus } from "@app/types";
+import Link from "next/link";
 import { useEffect } from "react";
 import useSWR from "swr";
 
@@ -25,11 +27,14 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
     const completions = data?.completions ?? [];
     const players: Player[] = playersData?.players ?? [];
 
-    const completionMap = new Map<string, CompletionStatus>(
-        completions.map((c: any) => [c.playerId as string, c.status as CompletionStatus]),
+    const completionMap = new Map<string, CompletionStatusValue>(
+        completions.map((c: { playerId: string; status: CompletionStatusValue }) => [
+            c.playerId,
+            c.status,
+        ]),
     );
 
-    const updateStatus = async (playerId: string, status: CompletionStatus) => {
+    const updateStatus = async (playerId: string, status: CompletionStatusValue) => {
         if (!gameId) return;
         try {
             const response = await fetch(`/api/games/${gameId}/completions`, {
@@ -72,49 +77,71 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
                 className="bg-head-white rounded-2xl shadow-soft max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col"
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className="sticky top-0 bg-head-white z-10 p-6 border-b border-head-gray-200 flex-shrink-0">
-                    <div className="flex items-start justify-between">
-                        {isLoadingGame ? (
-                            <div className="text-head-gray-500">로딩 중...</div>
-                        ) : game ? (
-                            <GameInfo game={game} />
-                        ) : null}
-                        <button
-                            onClick={onClose}
-                            className="text-head-gray-500 hover:text-head-gray-800 text-2xl leading-none"
-                        >
-                            ×
-                        </button>
-                    </div>
+                <div className="sticky top-0 bg-head-white z-10 px-6 py-4 border-b border-head-gray-200 flex-shrink-0 flex items-center justify-between gap-3">
+                    {isLoadingGame ? (
+                        <span className="text-head-gray-500">로딩 중...</span>
+                    ) : game ? (
+                        <>
+                            <h2 className="text-lg font-bold text-head-gray-800 truncate min-w-0 flex-1">
+                                {game.name}
+                            </h2>
+                            <Link
+                                href={`/games/${gameId}/edit`}
+                                className="shrink-0 btn-primary px-3 py-1.5 text-sm"
+                            >
+                                게임 수정
+                            </Link>
+                        </>
+                    ) : (
+                        <span />
+                    )}
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="shrink-0 text-head-gray-500 hover:text-head-gray-800 text-2xl leading-none"
+                    >
+                        ×
+                    </button>
                 </div>
 
-                <div className="flex-1 overflow-y-auto p-6">
+                <div className="flex-1 overflow-y-auto p-6 space-y-6">
                     {game && (
-                        <section className="space-y-4">
-                            <h2 className="font-semibold text-head-gray-800">참가자별 완료 상태</h2>
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                                {players.map((p) => {
-                                    const status =
-                                        completionMap.get(p._id) ?? CompletionStatus.NOT_DONE;
-                                    return (
-                                        <div
-                                            key={p._id}
-                                            className="flex flex-col gap-2 rounded-lg border border-head-gray-300 bg-head-white p-3 hover:shadow-md transition-shadow"
-                                        >
-                                            <span className="text-sm font-medium text-center text-head-gray-800">
-                                                {p.name}
-                                            </span>
-                                            <div className="flex justify-center">
-                                                <CompletionStatusButtons
-                                                    currentStatus={status}
-                                                    onStatusChange={(s) => updateStatus(p._id, s)}
-                                                />
+                        <>
+                            {/* 1. 썸네일 · 시놉시스 */}
+                            <GameInfo game={game} />
+
+                            {/* 2. 댓글 */}
+                            <GameCommentsSection gameId={gameId} />
+
+                            {/* 3. 남들한 여부 */}
+                            <section className="space-y-4">
+                                <h2 className="font-semibold text-head-gray-800">남들한 여부</h2>
+                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                                    {players.map((p) => {
+                                        const status =
+                                            completionMap.get(p._id) ?? CompletionStatus.NOT_DONE;
+                                        return (
+                                            <div
+                                                key={p._id}
+                                                className="flex flex-col gap-2 rounded-lg border border-head-gray-300 bg-head-white p-3 hover:shadow-md transition-shadow"
+                                            >
+                                                <span className="text-sm font-medium text-center text-head-gray-800">
+                                                    {p.name}
+                                                </span>
+                                                <div className="flex justify-center">
+                                                    <CompletionStatusButtons
+                                                        currentStatus={status}
+                                                        onStatusChange={(s) =>
+                                                            updateStatus(p._id, s)
+                                                        }
+                                                    />
+                                                </div>
                                             </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </section>
+                                        );
+                                    })}
+                                </div>
+                            </section>
+                        </>
                     )}
                 </div>
             </div>
