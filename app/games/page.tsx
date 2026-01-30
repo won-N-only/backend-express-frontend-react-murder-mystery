@@ -1,20 +1,46 @@
 "use client";
 
 import PageHeader from "@app/components/common/PageHeader";
+import AddGameModal from "@app/components/pages/games/AddGameModal";
 import GameCard from "@app/components/pages/games/GameCard";
 import GameModal from "@app/components/pages/games/GameModal";
 import { useScrollRestore } from "@app/hooks/useScrollRestore";
 import { fetcher } from "@app/lib/fetcher";
 import type { Game } from "@app/types";
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
 
 export default function GamesPage() {
-    const { data } = useSWR("/api/games", fetcher);
+    const searchParams = useSearchParams();
+
+    const { data, mutate } = useSWR("/api/games", fetcher);
     const games: Game[] = data?.games ?? [];
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedGameId, setSelectedGameId] = useState<string | null>(null);
+    const [showAddModal, setShowAddModal] = useState(false);
+
+    useEffect(() => {
+        const id =
+            searchParams.get("gameId") ?? new URLSearchParams(window.location.search).get("gameId");
+        if (id) setSelectedGameId(id);
+    }, [searchParams]);
+
+    useEffect(() => {
+        const id = new URLSearchParams(window.location.search).get("gameId");
+        if (id) setSelectedGameId(id);
+    }, []);
+
+    const closeGameModal = useCallback(() => {
+        setSelectedGameId(null);
+        if (
+            typeof window !== "undefined" &&
+            new URLSearchParams(window.location.search).get("gameId")
+        ) {
+            window.history.replaceState(null, "", "/games");
+        }
+    }, []);
 
     useScrollRestore([games.length]);
 
@@ -55,9 +81,18 @@ export default function GamesPage() {
                 </div>
 
                 {/* 게임 목록 헤더 */}
-                <h2 className="text-xl font-bold text-head-gray-800">
-                    머더 미스터리 목록 ({filteredGames.length})
-                </h2>
+                <div className="flex items-center justify-between gap-4 flex-wrap">
+                    <h2 className="text-xl font-bold text-head-gray-800">
+                        머더 미스터리 목록 ({filteredGames.length})
+                    </h2>
+                    <button
+                        type="button"
+                        onClick={() => setShowAddModal(true)}
+                        className="btn-primary px-3 py-1.5 text-sm"
+                    >
+                        게임 추가
+                    </button>
+                </div>
 
                 {/* 카드 그리드 */}
                 {filteredGames.length === 0 && searchQuery.trim() !== "" ? (
@@ -84,7 +119,12 @@ export default function GamesPage() {
                     </div>
                 )}
             </div>
-            <GameModal gameId={selectedGameId} onClose={() => setSelectedGameId(null)} />
+            <GameModal gameId={selectedGameId} onClose={closeGameModal} />
+            <AddGameModal
+                open={showAddModal}
+                onClose={() => setShowAddModal(false)}
+                onSuccess={() => mutate()}
+            />
         </>
     );
 }
