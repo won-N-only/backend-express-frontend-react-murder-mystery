@@ -22,6 +22,7 @@
         "paths": {
             "@/*": ["./*"],
             "@app/*": ["./app/*"],
+            "@comment/*": ["./src/comment/*"],
             "@completion/*": ["./src/completion/*"],
             "@game/*": ["./src/game/*"],
             "@player/*": ["./src/player/*"],

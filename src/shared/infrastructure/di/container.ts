@@ -1,3 +1,8 @@
+import { CreateCommentUseCase } from "@comment/application/usecases/CreateCommentUseCase";
+import { DeleteCommentUseCase } from "@comment/application/usecases/DeleteCommentUseCase";
+import { GetCommentsByGameIdUseCase } from "@comment/application/usecases/GetCommentsByGameIdUseCase";
+import type { ICommentRepository } from "@comment/domain/repositories/ICommentRepository";
+import { MongoCommentRepository } from "@comment/infrastructure/repositories/MongoCommentRepository";
 import { DeleteCompletionUseCase } from "@completion/application/usecases/DeleteCompletionUseCase";
 import { GetCompletionsByGameIdUseCase } from "@completion/application/usecases/GetCompletionsByGameIdUseCase";
 import { UpsertCompletionUseCase } from "@completion/application/usecases/UpsertCompletionUseCase";
@@ -43,6 +48,10 @@ let upsertPlayerUseCase: UpsertPlayerUseCase | null = null;
 let upsertCompletionUseCase: UpsertCompletionUseCase | null = null;
 let deleteCompletionUseCase: DeleteCompletionUseCase | null = null;
 let getCompletionsByGameIdUseCase: GetCompletionsByGameIdUseCase | null = null;
+let commentRepository: ICommentRepository | null = null;
+let createCommentUseCase: CreateCommentUseCase | null = null;
+let getCommentsByGameIdUseCase: GetCommentsByGameIdUseCase | null = null;
+let deleteCommentUseCase: DeleteCommentUseCase | null = null;
 
 export function getGameRepository(): IGameRepository {
     if (!gameRepository) {
@@ -204,4 +213,33 @@ export function getGetCompletionsByGameIdUseCase(): GetCompletionsByGameIdUseCas
         getCompletionsByGameIdUseCase = new GetCompletionsByGameIdUseCase(getCompletionRepository());
     }
     return getCompletionsByGameIdUseCase;
+}
+
+// Comment
+export function getCommentRepository(): ICommentRepository {
+    if (!commentRepository) {
+        commentRepository = new MongoCommentRepository();
+    }
+    return commentRepository;
+}
+
+export function getCreateCommentUseCase(): CreateCommentUseCase {
+    if (!createCommentUseCase) {
+        createCommentUseCase = new CreateCommentUseCase(getCommentRepository());
+    }
+    return createCommentUseCase;
+}
+
+export function getGetCommentsByGameIdUseCase(): GetCommentsByGameIdUseCase {
+    if (!getCommentsByGameIdUseCase) {
+        getCommentsByGameIdUseCase = new GetCommentsByGameIdUseCase(getCommentRepository());
+    }
+    return getCommentsByGameIdUseCase;
+}
+
+export function getDeleteCommentUseCase(): DeleteCommentUseCase {
+    if (!deleteCommentUseCase) {
+        deleteCommentUseCase = new DeleteCommentUseCase(getCommentRepository());
+    }
+    return deleteCommentUseCase;
 }
