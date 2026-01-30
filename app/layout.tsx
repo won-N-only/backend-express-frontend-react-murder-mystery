@@ -8,8 +8,23 @@ import "./globals.css";
 
 export const metadata: Metadata = {
     title: "대머리",
+    description: "대구 머더 미스터리 모임",
     icons: {
         icon: "/favicon_face.png",
+    },
+    openGraph: {
+        title: "대머리",
+        description: "대구 머더 미스터리 모임",
+        images: [
+            {
+                url: "/thumbnail.png",
+                width: 630,
+                height: 630,
+                alt: "대머리 - 대구 머더 미스터리",
+            },
+        ],
+        type: "website",
+        locale: "ko_KR",
     },
 };
 
