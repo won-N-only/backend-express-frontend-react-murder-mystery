@@ -18,6 +18,7 @@ export function useScrollRestore(dependencies: any[] = []) {
                 isRestoringRef.current = false;
             }, 100);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- dependencies passed from caller
     }, dependencies);
 
     useEffect(() => {
