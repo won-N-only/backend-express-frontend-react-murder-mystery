@@ -39,13 +39,13 @@ export default function EditGamePage() {
     if (isLoading || !game) {
         return (
             <div className="flex items-center justify-center py-12">
-                <div className="text-slate-500">로딩 중...</div>
+                <div className="text-head-text">로딩 중...</div>
             </div>
         );
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-section">
             <PageHeader title="게임 수정" description={`${game.name} 정보를 수정합니다.`} />
             <GameForm
                 initialGame={game}
@@ -53,7 +53,7 @@ export default function EditGamePage() {
                 isSubmitting={isSubmitting}
                 submitLabel="저장"
             />
-            <p className="text-sm text-head-gray-500">
+            <p className="text-sm text-head-text">
                 <Link href={`/games/${id}`} className="text-head-brown hover:underline">
                     ← 게임 상세로
                 </Link>

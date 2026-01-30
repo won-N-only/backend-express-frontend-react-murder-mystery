@@ -18,7 +18,7 @@ export default function GameDetailPage() {
 
     return (
         <div className="flex items-center justify-center py-12">
-            <div className="text-slate-500">이동 중...</div>
+            <div className="text-head-text">이동 중...</div>
         </div>
     );
 }

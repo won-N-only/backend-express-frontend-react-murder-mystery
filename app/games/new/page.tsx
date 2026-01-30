@@ -31,7 +31,7 @@ export default function NewGamePage() {
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-section">
             <PageHeader title="게임 추가" description="새 머더 미스터리 게임을 등록합니다." />
             <GameForm
                 initialGame={null}
