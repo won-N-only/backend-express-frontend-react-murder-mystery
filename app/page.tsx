@@ -23,16 +23,16 @@ export default function LandingPage() {
                 </p>
 
                 <div className="pt-section text-center text-head-text text-lg font-medium">
+                    <p>&quot;머리숱 없는 사람만 가입하나요?&quot;</p>
                     <p>
-                        &quot;머리숱 없는 사람만 가입하나요?&quot;
                         <br />
                         아아- 오해입니다. 오해예요.
                         <br />
                         우리의 대머리는 대구 머더 미스터리의 줄임말일 뿐,
                         <br />
                         당신의 소중한 머리카락은 건드리지 않습니다. (아마도요..?)
-                    </p>
-                    <p className="pt-section">
+                        <br />
+                        <br />
                         다만, 사건을 파헤치느라 머리를 좀 많이 써야 할 수는 있습니다.
                         <br />
                         평범한 대구 시민인 당신이 천재 탐정이 되거나, 소름 돋는 살인마가 되는 곳!
