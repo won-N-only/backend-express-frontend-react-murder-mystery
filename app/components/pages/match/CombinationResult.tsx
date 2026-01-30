@@ -7,7 +7,7 @@ interface CombinationResultProps {
 
 export default function CombinationResult({ combinations, players }: CombinationResultProps) {
     return (
-        <section className="space-y-4">
+        <section className="space-y-section">
             <h2 className="text-lg font-semibold">추천 조합 {combinations.length}개</h2>
             {combinations.map((combo, idx) => (
                 <div key={idx} className="  space-y-3">
@@ -15,13 +15,13 @@ export default function CombinationResult({ combinations, players }: Combination
                     <div className="grid md:grid-cols-2 gap-3">
                         {combo.groups.map((group, gIdx) => (
                             <div key={gIdx} className="section-card">
-                                <div className="font-semibold text-md mb-1">{group.game.name}</div>
-                                <div className="text-xs text-slate-600 mb-2">
+                                <div className="font-semibold text-md">{group.game.name}</div>
+                                <div className="text-xs text-head-text mt-1">
                                     {group.game.minPlayers}
                                     {group.game.maxPlayers ? `-${group.game.maxPlayers}` : "+"}인
                                     {group.game.company && ` · ${group.game.company}`}
                                 </div>
-                                <div className="border"></div>
+                                <div className="border mt-2"></div>
                                 <div className="flex flex-wrap gap-1 mt-2">
                                     {group.playerNames.map((name) => (
                                         <span
@@ -36,7 +36,7 @@ export default function CombinationResult({ combinations, players }: Combination
                         ))}
                     </div>
                     {combo.unusedPlayers.length > 0 && (
-                        <div className="text-xs text-slate-500 pt-2">
+                        <div className="text-xs text-head-text pt-2">
                             사용 안 됨:{" "}
                             {combo.unusedPlayers
                                 .map((id) => {

@@ -41,7 +41,7 @@ export default function MatchPage() {
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-section">
             <PageHeader title="사건 배당" description="토 달지 마세요. 불만은 사절." />
 
             <MatchOptions

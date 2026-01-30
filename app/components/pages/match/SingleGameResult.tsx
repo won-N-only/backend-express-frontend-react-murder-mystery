@@ -9,7 +9,7 @@ export default function SingleGameResult({ matches, limit }: SingleGameResultPro
     const displayMatches = limit ? matches.slice(0, limit) : matches;
 
     return (
-        <section className="space-y-4">
+        <section className="space-y-section">
             <h2 className="text-lg font-semibold">추천 게임 {matches.length}개</h2>
             <div className="space-y-3">
                 {displayMatches.map((g) => (
@@ -19,7 +19,7 @@ export default function SingleGameResult({ matches, limit }: SingleGameResultPro
                     >
                         <div>
                             <div className="font-semibold">{g.name}</div>
-                            <div className="text-xs text-slate-500">
+                            <div className="text-xs text-head-text">
                                 {g.minPlayers}
                                 {g.maxPlayers ? `-${g.maxPlayers}` : "+"}인
                                 {g.company && ` · ${g.company}`}

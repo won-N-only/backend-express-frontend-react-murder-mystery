@@ -24,9 +24,9 @@ export default function MatchOptions({
     onNumGroupsChange,
 }: MatchOptionsProps) {
     return (
-        <div className="bg-white p-3 border border-head-brown">
-            <div className="text-sm font-bold text-head-gray-800 mb-2">옵션 설정</div>
-            <div className="space-y-2.5">
+        <div className="bg-white p-3 border border-head-border">
+            <div className="text-sm font-bold text-head-text">옵션 설정</div>
+            <div className="space-y-2.5 mt-2">
                 <Checkbox
                     checked={excludePartySeries}
                     onChange={onExcludePartySeriesChange}
@@ -44,9 +44,9 @@ export default function MatchOptions({
                 />
             </div>
             {onNumGroupsChange && (
-                <div className="flex items-center gap-4 pt-2 border-t border-head-gray-300 mt-2">
+                <div className="flex items-center gap-4 pt-2 border-t border-head-border mt-2">
                     <div className="flex items-center gap-2 text-sm">
-                        <span className="text-head-gray-800">조합당 게임 수</span>
+                        <span className="text-head-text">조합당 게임 수</span>
                         <input
                             type="text"
                             inputMode="numeric"
@@ -63,7 +63,7 @@ export default function MatchOptions({
                                     }
                                 }
                             }}
-                            className="w-20 border border-head-gray-300 px-2 py-0.5 text-sm text-center text-head-gray-800 focus:outline-none focus:ring-1"
+                            className="w-20 border border-head-border px-2 py-0.5 text-sm text-center text-head-text focus:outline-none focus:ring-1"
                         />
                     </div>
                 </div>
