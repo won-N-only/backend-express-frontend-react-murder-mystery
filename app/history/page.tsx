@@ -5,6 +5,7 @@ import GameCheckModal from "@app/components/common/GameCheckModal";
 import GraduationChart from "@app/components/common/GraduationChart";
 import PageHeader from "@app/components/common/PageHeader";
 import PlayerListGrid from "@app/components/common/PlayerListGrid";
+import GameModal from "@app/components/pages/games/GameModal";
 import RecentPlaysList from "@app/components/pages/history/RecentPlaysList";
 import { fetcher } from "@app/lib/fetcher";
 import { useSelectedPlayer } from "@app/providers/SelectedPlayerProvider";
@@ -16,6 +17,7 @@ export default function HistoryPage() {
     const { selectedPlayerId, setSelectedPlayerId } = useSelectedPlayer();
     const [showCompletedGamesModal, setShowCompletedGamesModal] = useState(false);
     const [showGameCheckModal, setShowGameCheckModal] = useState(false);
+    const [selectedGameId, setSelectedGameId] = useState<string | null>(null);
 
     const { data: playersData } = useSWR<{ players: Player[] }>("/api/players", fetcher);
     const players = useMemo(() => playersData?.players ?? [], [playersData?.players]);
@@ -53,12 +55,12 @@ export default function HistoryPage() {
     }, [selectedStat, playerStats]);
 
     return (
-        <div className=" ">
+        <div>
             <PageHeader
                 title="전과 기록"
                 description="내가 저지른... 아니, 내가 해결한 수많은 사건들의 흔적."
             />
-            <div className="pt-section text-head-text text-3xl font-bold">
+            <div className="pt-section text-head-text text-2xl font-bold">
                 어떤 대머리의 이력을 볼까요?
             </div>
             <PlayerListGrid
@@ -67,7 +69,7 @@ export default function HistoryPage() {
                 onSelectPlayer={setSelectedPlayerId}
             />
 
-            <div className="pt-section text-head-text text-3xl font-bold">게임 이력</div>
+            <div className="pt-section text-head-text text-2xl font-bold">게임 이력</div>
             {selectedPlayer && selectedStat && (
                 <div className="mt-subtitle">
                     <section className="section-card">
@@ -106,6 +108,7 @@ export default function HistoryPage() {
                 plays={recentPlays}
                 selectedPlayerName={selectedPlayer?.name ?? null}
                 onViewAll={() => setShowCompletedGamesModal(true)}
+                onOpenGameDetail={(gameId) => setSelectedGameId(gameId)}
                 emptyMessage="완료한 게임이 없습니다."
                 emptyHint="대머리를 선택해주세요."
             />
@@ -114,6 +117,10 @@ export default function HistoryPage() {
                 playerId={showCompletedGamesModal ? (selectedPlayer?._id ?? null) : null}
                 playerName={selectedPlayer?.name ?? null}
                 onClose={() => setShowCompletedGamesModal(false)}
+                onOpenGameDetail={(gameId) => {
+                    setShowCompletedGamesModal(false);
+                    setSelectedGameId(gameId);
+                }}
             />
 
             <GameCheckModal
@@ -121,6 +128,8 @@ export default function HistoryPage() {
                 playerName={selectedPlayer?.name ?? null}
                 onClose={() => setShowGameCheckModal(false)}
             />
+
+            <GameModal gameId={selectedGameId} onClose={() => setSelectedGameId(null)} />
         </div>
     );
 }

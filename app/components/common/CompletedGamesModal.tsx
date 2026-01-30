@@ -10,12 +10,15 @@ interface CompletedGamesModalProps {
     playerId: string | null;
     playerName: string | null;
     onClose: () => void;
+    /** 제공 시 게임 클릭 시 이 콜백만 호출(모달 열기). 미제공 시 /games?gameId= 로 이동 */
+    onOpenGameDetail?: (gameId: string) => void;
 }
 
 export default function CompletedGamesModal({
     playerId,
     playerName,
     onClose,
+    onOpenGameDetail,
 }: CompletedGamesModalProps) {
     const router = useRouter();
     const { data: completedGamesData, isLoading } = useSWR<{ completedGames: CompletedGame[] }>(
@@ -79,8 +82,13 @@ export default function CompletedGamesModal({
                                     key={game.gameId}
                                     type="button"
                                     onClick={() => {
-                                        onClose();
-                                        router.push(`/games?gameId=${game.gameId}`);
+                                        if (onOpenGameDetail) {
+                                            onClose();
+                                            onOpenGameDetail(game.gameId);
+                                        } else {
+                                            onClose();
+                                            router.push(`/games?gameId=${game.gameId}`);
+                                        }
                                     }}
                                     className="block w-full text-left rounded-lg border border-head-border bg-head-white p-4 hover:shadow-md hover:border-head-border transition-all"
                                 >

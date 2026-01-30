@@ -8,6 +8,8 @@ interface RecentPlaysListProps {
     plays: CompletedGame[];
     selectedPlayerName: string | null;
     onViewAll: () => void;
+    /** 제공 시 상세보기 클릭 시 이 콜백만 호출(모달 열기). 미제공 시 /games?gameId= 로 이동 */
+    onOpenGameDetail?: (gameId: string) => void;
     emptyMessage?: string;
     emptyHint?: string;
 }
@@ -16,13 +18,18 @@ export default function RecentPlaysList({
     plays,
     selectedPlayerName,
     onViewAll,
+    onOpenGameDetail,
     emptyMessage = "완료한 게임이 없습니다.",
     emptyHint = "대머리를 선택해주세요.",
 }: RecentPlaysListProps) {
     const router = useRouter();
 
-    const openGameModal = (gameId: string) => {
-        router.push(`/games?gameId=${gameId}`);
+    const openGameDetail = (gameId: string) => {
+        if (onOpenGameDetail) {
+            onOpenGameDetail(gameId);
+        } else {
+            router.push(`/games?gameId=${gameId}`);
+        }
     };
 
     return (
@@ -53,7 +60,7 @@ export default function RecentPlaysList({
                                     <div className="flex-1 min-w-0 flex flex-col gap-2">
                                         <button
                                             type="button"
-                                            onClick={() => openGameModal(game.gameId)}
+                                            onClick={() => openGameDetail(game.gameId)}
                                             className="text-head-text font-medium truncate hover:text-head-brown transition-colors block text-left w-full"
                                         >
                                             {game.gameName}
@@ -67,7 +74,7 @@ export default function RecentPlaysList({
                                         )}
                                         <button
                                             type="button"
-                                            onClick={() => openGameModal(game.gameId)}
+                                            onClick={() => openGameDetail(game.gameId)}
                                             className="shrink-0 w-fit bg-white border border-head-border text-head-brown px-4 py-1 text-sm font-medium hover:bg-head-brown hover:text-head-white transition-colors"
                                         >
                                             상세보기
