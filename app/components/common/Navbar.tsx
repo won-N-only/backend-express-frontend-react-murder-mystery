@@ -92,7 +92,7 @@ function NavbarInner() {
                 }`}
             >
                 <nav
-                    className="flex flex-col items-end gap-5 pt-24 px-4 font-bold"
+                    className="flex flex-col items-end gap-5 pt-11 px-4 font-bold"
                     aria-label="메인 메뉴"
                 >
                     <div className="text-3xl font-bold">메뉴</div>
