@@ -58,7 +58,7 @@ export default function GamesPageContent() {
             <PageHeader title="사건 수색" description="입맛에 맞는 사건 뒤지기" />
 
             {/* 검색 바: 입력 필드 + 검색 버튼 */}
-            <div className="flex mt-section">
+            <div className="mt-section flex">
                 <input
                     type="text"
                     placeholder="게임 이름, 제작사, 시리즈로 검색..."
