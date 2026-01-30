@@ -53,7 +53,6 @@ function CommentItem({
     const [showReplyForm, setShowReplyForm] = useState(false);
     const [replyContent, setReplyContent] = useState("");
     const [replyAuthorId, setReplyAuthorId] = useState<string | null>(null);
-    const [replyAuthorDisplay, setReplyAuthorDisplay] = useState("");
     const [submitting, setSubmitting] = useState(false);
 
     const handleSubmitReply = async (e: React.FormEvent) => {
@@ -82,72 +81,31 @@ function CommentItem({
     };
 
     return (
-        <div className="border-l-2 border-head-border pl-3 py-2">
+        <div className="border border-head-border bg-head-gray-50 p-4 mb-2">
             <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0 flex-1">
-                    <p className="text-sm text-head-text whitespace-pre-wrap mb-1">
-                        {comment.content}
-                    </p>
-                    <span className="text-xs text-head-text">{comment.authorName}님</span>
+                    <p className="text-md text-head-text font-semibold">{comment.content}</p>
+
+                    <div className="flex items-center gap-2 mb-2">
+                        <span className="text-xs font-medium text-head-text">
+                            {comment.authorName}
+                        </span>
+                        <span className="text-xs font-medium text-head-text">
+                            {new Date(comment.createdAt).toLocaleDateString("ko-KR")}
+                        </span>
+                    </div>
                 </div>
                 <button
                     type="button"
                     onClick={() => onDelete(comment._id).then(onMutate)}
-                    className="text-xs text-head-text hover:text-red-600 shrink-0"
+                    className="text-xs text-head-gray-400 hover:text-red-600 shrink-0 font-medium"
                 >
                     삭제
                 </button>
             </div>
-            {!showReplyForm ? (
-                <button
-                    type="button"
-                    onClick={() => setShowReplyForm(true)}
-                    className="text-xs text-head-brown hover:underline mt-1"
-                >
-                    답글
-                </button>
-            ) : (
-                <form onSubmit={handleSubmitReply} className="mt-3 space-y-2">
-                    <AuthorSuggestInput
-                        players={players}
-                        value={replyAuthorDisplay}
-                        selectedId={replyAuthorId}
-                        onChange={(id, name) => {
-                            setReplyAuthorId(id);
-                            setReplyAuthorDisplay(name);
-                        }}
-                        placeholder="이름 입력 후 아래에서 선택"
-                        className="text-sm"
-                        inputClassName="py-1"
-                    />
-                    <textarea
-                        value={replyContent}
-                        onChange={(e) => setReplyContent(e.target.value)}
-                        placeholder="답글 내용"
-                        rows={2}
-                        className="w-full text-sm border border-head-border rounded px-2 py-1"
-                        required
-                    />
-                    <div className="flex gap-2">
-                        <button
-                            type="submit"
-                            disabled={submitting || replyAuthorId == null}
-                            className="btn-primary text-sm px-2 py-1"
-                        >
-                            {submitting ? "등록 중..." : "등록"}
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setShowReplyForm(false)}
-                            className="text-sm text-head-text hover:underline"
-                        >
-                            취소
-                        </button>
-                    </div>
-                </form>
-            )}
+
             {replies.length > 0 && (
-                <div className="mt-3 ml-2 space-y-2">
+                <div className="mt-4 pl-4 border-l-2 border-head-border space-y-3">
                     {replies.map((r) => (
                         <CommentItem
                             key={r._id}
@@ -210,29 +168,19 @@ export default function GameCommentsSection({ gameId }: GameCommentsSectionProps
         }
     };
 
-    const canComment = players.length > 0;
-
     return (
-        <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-head-text">댓글 {comments.length}개</h2>
+        <section className="rounded-none bg-head-white p-6 space-y-6">
+            <h2 className="text-xl font-bold text-head-text">댓글 {comments.length}개</h2>
 
             {/* 경고 메시지 */}
-            <p className="text-sm text-head-text">
+            <span className="text-sm text-head-text font-medium">
                 누군가의 소중한 머미일 수 있습니다.{" "}
-                <span className="text-red-600 underline">스포 절대 금지금지</span>.
-            </p>
+                <span className="text-red-600 font-bold">스포 절대 금지금지</span>
+            </span>
 
-            {!canComment && (
-                <p className="text-sm text-head-text">
-                    댓글을 쓰려면 먼저 플레이어(대머리)를 등록해주세요.
-                </p>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-3">
+            <form onSubmit={handleSubmit} className="space-y-4 ">
                 <div>
-                    <label className="block text-sm font-semibold text-head-text mb-1">
-                        <strong>작성자</strong>
-                    </label>
+                    <label className="block text-sm font-bold text-head-text mb-1">* 작성자</label>
                     <AuthorSuggestInput
                         className="mt-1"
                         players={players}
@@ -242,35 +190,37 @@ export default function GameCommentsSection({ gameId }: GameCommentsSectionProps
                             setAuthorId(id);
                             setAuthorDisplay(name);
                         }}
-                        disabled={!canComment}
                         placeholder="이름 입력 후 아래에서 선택"
+                        inputClassName="rounded-none "
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-semibold text-head-text mb-1">
-                        <strong>내용</strong>
-                    </label>
+                    <label className="block text-sm font-bold text-head-text mb-1">* 내용</label>
                     <textarea
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
                         placeholder="댓글을 입력하세요"
                         rows={3}
-                        className="w-full border border-head-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-head-brown"
+                        className="w-full border border-head-brown rounded-none px-3 py-2 text-sm focus:outline-none bg-white"
                         required
                     />
                 </div>
-                <button
-                    type="submit"
-                    disabled={submitting || !canComment || authorId == null}
-                    className="bg-head-text text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
-                >
-                    {submitting ? "등록 중..." : "댓글 작성"}
-                </button>
+                <div className="flex justify-start">
+                    <button
+                        type="submit"
+                        disabled={submitting || authorId == null}
+                        className="bg-head-brown text-white px-6 py-2 rounded-none text-sm font-bold hover:opacity-90 transition-opacity disabled:opacity-50"
+                    >
+                        {submitting ? "등록 중..." : "댓글 작성"}
+                    </button>
+                </div>
             </form>
 
-            <div className="space-y-3">
+            <div className="">
                 {tree.length === 0 ? (
-                    <p className="text-sm text-head-text">아직 댓글이 없습니다.</p>
+                    <p className="text-sm text-head-text opacity-40 text-left py-0.5">
+                        아직 댓글이 없습니다.
+                    </p>
                 ) : (
                     tree.map((node) => (
                         <CommentItem
