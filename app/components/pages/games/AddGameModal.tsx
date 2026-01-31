@@ -14,8 +14,8 @@ export interface AddGamePayload {
 }
 
 const inputClass =
-    "w-full border border-head-border  px-3 py-2 text-sm text-head-text focus:outline-none focus:ring-1 focus:ring-head-brown focus:border-transparent mt-1";
-const labelClass = "block text-sm font-medium text-head-text";
+    "border border-head-border text-head-text focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent  h-[40px]";
+const labelClass = "block text-base font-semibold text-head-text";
 
 interface AddGameModalProps {
     open: boolean;
@@ -93,121 +93,148 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
 
     return (
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
+            className="fixed inset-0 z-50 flex items-center justify-center p-[20px] bg-black/50"
             onClick={handleClose}
         >
             <div
-                className="bg-head-main   shadow-soft max-w-content w-full max-h-[90vh] overflow-hidden flex flex-col"
+                className="  bg-head-main shadow-soft   w-full max-w-[750px]  max-h-[775px]  h-auto   overflow-hidden  flex flex-col"
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className="sticky top-0 bg-head-main z-10 p-4   flex-shrink-0 flex items-center justify-between">
-                    <h2 className="text-lg font-semibold text-head-text">게임 추가</h2>
+                <div className="sticky top-0 bg-head-main z-10 px-[30px] py-[20px] flex-shrink-0 flex items-center justify-between">
+                    <h2 className="text-2xl font-extrabold text-head-text">게임 추가</h2>
                     <button
                         type="button"
                         onClick={handleClose}
                         className="text-head-text hover:text-head-text text-2xl leading-none"
                     >
-                        ×
+                        x
                     </button>
                 </div>
-                <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-4 space-y-4">
+                <form
+                    onSubmit={handleSubmit}
+                    className="flex-1 overflow-y-auto overscroll-contain px-[30px] pb-[20px] space-y-[20px]"
+                >
                     {error && <p className="text-sm text-red-600 bg-red-50 px-3 py-2  ">{error}</p>}
-                    <div>
-                        <label htmlFor="add-name" className={labelClass}>
-                            게임명 *
-                        </label>
-                        <input
-                            id="add-name"
-                            className={inputClass}
-                            type="text"
-                            required
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            placeholder="머더 미스터리 시리즈 01"
-                        />
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label htmlFor="add-minPlayers" className={labelClass}>
-                                최소 인원 *
+                    <div className="space-y-[20px]">
+                        {/* 게임명 */}
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-[10px] sm:gap-[20px]">
+                            <label
+                                htmlFor="add-name"
+                                className={`${labelClass} font-semibold sm:w-[120px]`}
+                            >
+                                * 게임명
                             </label>
                             <input
-                                id="add-minPlayers"
-                                type="number"
-                                min={1}
-                                value={minPlayers}
-                                onChange={(e) => setMinPlayers(Number(e.target.value) || 1)}
-                                className={inputClass}
+                                id="add-name"
+                                className={`${inputClass} w-full sm:w-[570px] px-4 text-sm`}
+                                type="text"
+                                required
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                placeholder="머더 미스터리 시리즈 01"
                             />
                         </div>
-                        <div>
-                            <label htmlFor="add-maxPlayers" className={labelClass}>
-                                최대 인원 (비우면 무제한)
+                        {/* 최소/최대 인원 */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-[20px]">
+                            <div className="flex items-center">
+                                <label
+                                    htmlFor="add-minPlayers"
+                                    className={`${labelClass} mr-4 font-semibold w-[120px] shrink-0`}
+                                >
+                                    * 최소 인원
+                                </label>
+                                <input
+                                    id="add-minPlayers"
+                                    type="number"
+                                    min={1}
+                                    value={minPlayers}
+                                    onChange={(e) => setMinPlayers(Number(e.target.value) || 1)}
+                                    className={`${inputClass} w-full sm:w-[215px] px-4 text-sm`}
+                                />
+                            </div>
+
+                            <div className="flex items-center">
+                                <label
+                                    htmlFor="add-maxPlayers"
+                                    className={`${labelClass} mr-4 font-semibold w-[120px] shrink-0`}
+                                >
+                                    * 최대 인원
+                                </label>
+                                <input
+                                    id="add-maxPlayers"
+                                    type="number"
+                                    min={1}
+                                    value={maxPlayers}
+                                    onChange={(e) => setMaxPlayers(e.target.value)}
+                                    className={`${inputClass} w-full sm:w-[215px] px-4 text-sm`}
+                                    placeholder="6"
+                                />
+                            </div>
+                        </div>
+                        {/* 제작사 */}
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-[20px]">
+                            <label
+                                htmlFor="add-company"
+                                className={`${labelClass} font-semibold sm:w-[120px]`}
+                            >
+                                * 제작사
                             </label>
                             <input
-                                id="add-maxPlayers"
-                                type="number"
-                                min={1}
-                                value={maxPlayers}
-                                onChange={(e) => setMaxPlayers(e.target.value)}
-                                className={inputClass}
-                                placeholder="6"
+                                id="add-company"
+                                type="text"
+                                value={company}
+                                onChange={(e) => setCompany(e.target.value)}
+                                className={`${inputClass} w-full sm:w-[570px] px-4 text-sm`}
+                                placeholder="언더독 게임즈"
                             />
                         </div>
-                    </div>
-                    <div>
-                        <label htmlFor="add-company" className={labelClass}>
-                            제작사
-                        </label>
-                        <input
-                            id="add-company"
-                            type="text"
-                            value={company}
-                            onChange={(e) => setCompany(e.target.value)}
-                            className={inputClass}
-                            placeholder="언더독 게임즈"
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="add-series" className={labelClass}>
-                            시리즈
-                        </label>
-                        <input
-                            id="add-series"
-                            type="text"
-                            value={series}
-                            onChange={(e) => setSeries(e.target.value)}
-                            className={inputClass}
-                            placeholder="미스터리 파티 시리즈"
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="add-thumbnail" className={labelClass}>
-                            썸네일 URL
-                        </label>
-                        <input
-                            id="add-thumbnail"
-                            type="url"
-                            value={thumbnail}
-                            onChange={(e) => setThumbnail(e.target.value)}
-                            className={inputClass}
-                            placeholder="https://..."
-                        />
+                        {/* 시리즈 */}
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-[20px]">
+                            <label
+                                htmlFor="add-series"
+                                className={`${labelClass} font-semibold sm:w-[120px]`}
+                            >
+                                * 시리즈
+                            </label>
+                            <input
+                                id="add-series"
+                                type="text"
+                                value={series}
+                                onChange={(e) => setSeries(e.target.value)}
+                                className={`${inputClass} w-full sm:w-[570px] px-4 text-sm`}
+                                placeholder="미스터리 파티 시리즈"
+                            />
+                        </div>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-[20px]">
+                            <label
+                                htmlFor="add-thumbnail"
+                                className={`${labelClass} font-semibold sm:w-[120px]`}
+                            >
+                                썸네일 URL
+                            </label>
+                            <input
+                                id="add-thumbnail"
+                                type="url"
+                                value={thumbnail}
+                                onChange={(e) => setThumbnail(e.target.value)}
+                                className={`${inputClass} w-full sm:w-[570px] px-4 text-sm`}
+                                placeholder="https://..."
+                            />
+                        </div>
                     </div>
                     <div>
                         <label htmlFor="add-description" className={labelClass}>
-                            시놉시스
+                            * 시놉시스
                         </label>
                         <textarea
                             id="add-description"
-                            rows={4}
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
-                            className={inputClass}
+                            className={`${inputClass} w-full h-[110px] mt-2`}
                             placeholder="게임 소개 또는 시놉시스"
                         />
                     </div>
-                    <div className="flex gap-3 pt-2">
+                    <div className="flex flex-col sm:flex-row gap-[10px] sm:gap-3">
                         <button
                             type="submit"
                             disabled={submitting}
@@ -218,7 +245,7 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
                         <button
                             type="button"
                             onClick={handleClose}
-                            className="px-4 py-2 text-head-text hover:underline"
+                            className="px-4 py-2 text-gray-500 hover:underline"
                         >
                             취소
                         </button>
