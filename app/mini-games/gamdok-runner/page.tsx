@@ -9,25 +9,44 @@ export default function GamdokRunnerPage() {
     const gameRef = useRef<Game | null>(null);
 
     const [started, setStarted] = useState(false);
-    const [gameStage, setGameStage] = useState<'dressUp' | 'running'>('dressUp');
+    const [gameStage, setGameStage] = useState<"dressUp" | "running">("dressUp");
     const [score, setScore] = useState(0);
     const [gameOver, setGameOver] = useState(false);
     const [won, setWon] = useState(false);
     const [lives, setLives] = useState(3); // Changed from health to lives
 
     // Clothing selection states
-    const [selectedShoes, setSelectedShoes] = useState<string | null>('/mini-games/gamdok-runner/shoes/shoes1.png');
-    const [selectedLowerBody, setSelectedLowerBody] = useState<string | null>('/mini-games/gamdok-runner/lower-body/lowerbody1.png');
-    const [selectedUpperBody, setSelectedUpperBody] = useState<string | null>('/mini-games/gamdok-runner/upper-body/upperbody1.png');
+    const [selectedShoes, setSelectedShoes] = useState<string | null>(
+        "/mini-games/gamdok-runner/shoes/shoes1.png",
+    );
+    const [selectedLowerBody, setSelectedLowerBody] = useState<string | null>(
+        "/mini-games/gamdok-runner/lower-body/lowerbody1.png",
+    );
+    const [selectedUpperBody, setSelectedUpperBody] = useState<string | null>(
+        "/mini-games/gamdok-runner/upper-body/upperbody1.png",
+    );
+    const [selectedHair, setSelectedHair] = useState<string | null>(
+        "/mini-games/gamdok-runner/hair/hair1.png",
+    );
 
     // Available clothing items (for selection UI)
-    const availableShoes = ['/mini-games/gamdok-runner/shoes/shoes1.png'];
-    const availableLowerBody = ['/mini-games/gamdok-runner/lower-body/lowerbody1.png'];
+    const availableShoes = ["/mini-games/gamdok-runner/shoes/shoes1.png"];
+    const availableLowerBody = ["/mini-games/gamdok-runner/lower-body/lowerbody1.png"];
     const availableUpperBody = [
-        '/mini-games/gamdok-runner/upper-body/upperbody1.png',
-        '/mini-games/gamdok-runner/upper-body/upperbody2.png',
-        '/mini-games/gamdok-runner/upper-body/upperbody3.png',
-        '/mini-games/gamdok-runner/upper-body/upperbody4.png',
+        "/mini-games/gamdok-runner/upper-body/upperbody1.png",
+        "/mini-games/gamdok-runner/upper-body/upperbody2.png",
+        "/mini-games/gamdok-runner/upper-body/upperbody3.png",
+        "/mini-games/gamdok-runner/upper-body/upperbody4.png",
+    ];
+    const availableHair = [
+        "/mini-games/gamdok-runner/hair/hair1.png",
+        "/mini-games/gamdok-runner/hair/hair2.png",
+        "/mini-games/gamdok-runner/hair/hair3.png",
+        "/mini-games/gamdok-runner/hair/hair4.png",
+        "/mini-games/gamdok-runner/hair/hair5.png",
+        "/mini-games/gamdok-runner/hair/hair6.png",
+        "/mini-games/gamdok-runner/hair/hair7.png",
+        "/mini-games/gamdok-runner/hair/hair8.png",
     ];
 
     const handleGameStateChange = useCallback(
@@ -43,17 +62,18 @@ export default function GamdokRunnerPage() {
 
     const startGame = () => {
         // Only start the running game if in dressUp stage
-        if (gameStage === 'dressUp') {
-            setGameStage('running');
+        if (gameStage === "dressUp") {
+            setGameStage("running");
         }
 
-        if (canvasRef.current && gameStage === 'running') {
+        if (canvasRef.current && gameStage === "running") {
             const gameInstance = new Game(
                 canvasRef.current,
                 handleGameStateChange,
                 selectedShoes,
                 selectedLowerBody,
                 selectedUpperBody,
+                selectedHair, // Pass selected hair
             );
             gameRef.current = gameInstance;
             setStarted(true);
@@ -67,7 +87,7 @@ export default function GamdokRunnerPage() {
     const retryGame = () => {
         setGameOver(false);
         setStarted(false); // Reset started to false to show start overlay again
-        setGameStage('dressUp'); // Go back to dress up stage
+        setGameStage("dressUp"); // Go back to dress up stage
         setScore(0);
         setLives(3);
     };
@@ -93,24 +113,24 @@ export default function GamdokRunnerPage() {
                         <GameCanvas
                             ref={canvasRef}
                             gameRef={gameRef}
-                            isStarted={started && !gameOver && !won && gameStage === 'running'}
+                            isStarted={started && !gameOver && !won && gameStage === "running"}
                         />
 
                         {/* Dress Up Overlay */}
-                        {gameStage === 'dressUp' && (
+                        {gameStage === "dressUp" && (
                             <div
                                 className="absolute inset-0 flex flex-col items-center justify-center text-black text-center p-4"
                                 style={{
                                     backgroundImage: `url('/mini-games/gamdok-runner/room1.png')`,
-                                    backgroundSize: 'cover',
-                                    backgroundPosition: 'center',
+                                    backgroundSize: "cover",
+                                    backgroundPosition: "center",
                                 }}
                             >
                                 <h2 className="text-4xl lg:text-5xl font-extrabold mb-4 drop-shadow-md">
                                     김감독 코디 대작전
                                 </h2>
                                 <p className="mb-8 text-lg opacity-90">
-                                    김감독에게 멋진 옷을 입혀주세요!
+                                    김감독에게 예쁜 옷을 입혀주세요!
                                 </p>
                                 {/* Character Preview */}
                                 <div className="relative w-24 h-24 mb-8">
@@ -140,18 +160,45 @@ export default function GamdokRunnerPage() {
                                             className="absolute inset-0 w-full h-full object-contain"
                                         />
                                     )}
+                                    {selectedHair && (
+                                        <img
+                                            src={selectedHair}
+                                            alt="Hair"
+                                            className="absolute inset-0 w-full h-full object-contain"
+                                        />
+                                    )}
                                 </div>
                                 {/* Clothing Selection UI */}
                                 <div className="flex flex-col gap-4 mb-8">
+                                    <div className="flex flex-wrap justify-center gap-2">
+                                        <span className="font-bold mr-2">헤어:</span>
+                                        {availableHair.map((hair) => (
+                                            <button
+                                                key={hair}
+                                                onClick={() => setSelectedHair(hair)}
+                                                className={`p-2 border-2 ${selectedHair === hair ? "border-yellow-400" : "border-gray-400"} rounded-md`}
+                                            >
+                                                <img
+                                                    src={hair}
+                                                    alt="hair"
+                                                    className="w-8 h-8 object-contain"
+                                                />
+                                            </button>
+                                        ))}
+                                    </div>
                                     <div className="flex flex-wrap justify-center gap-2">
                                         <span className="font-bold mr-2">신발:</span>
                                         {availableShoes.map((shoe) => (
                                             <button
                                                 key={shoe}
                                                 onClick={() => setSelectedShoes(shoe)}
-                                                className={`p-2 border-2 ${selectedShoes === shoe ? 'border-yellow-400' : 'border-gray-400'} rounded-md`}
+                                                className={`p-2 border-2 ${selectedShoes === shoe ? "border-yellow-400" : "border-gray-400"} rounded-md`}
                                             >
-                                                <img src={shoe} alt="shoe" className="w-8 h-8 object-contain" />
+                                                <img
+                                                    src={shoe}
+                                                    alt="shoe"
+                                                    className="w-8 h-8 object-contain"
+                                                />
                                             </button>
                                         ))}
                                     </div>
@@ -161,9 +208,13 @@ export default function GamdokRunnerPage() {
                                             <button
                                                 key={lb}
                                                 onClick={() => setSelectedLowerBody(lb)}
-                                                className={`p-2 border-2 ${selectedLowerBody === lb ? 'border-yellow-400' : 'border-gray-400'} rounded-md`}
+                                                className={`p-2 border-2 ${selectedLowerBody === lb ? "border-yellow-400" : "border-gray-400"} rounded-md`}
                                             >
-                                                <img src={lb} alt="lower body" className="w-8 h-8 object-contain" />
+                                                <img
+                                                    src={lb}
+                                                    alt="lower body"
+                                                    className="w-8 h-8 object-contain"
+                                                />
                                             </button>
                                         ))}
                                     </div>
@@ -173,9 +224,13 @@ export default function GamdokRunnerPage() {
                                             <button
                                                 key={ub}
                                                 onClick={() => setSelectedUpperBody(ub)}
-                                                className={`p-2 border-2 ${selectedUpperBody === ub ? 'border-yellow-400' : 'border-gray-400'} rounded-md`}
+                                                className={`p-2 border-2 ${selectedUpperBody === ub ? "border-yellow-400" : "border-gray-400"} rounded-md`}
                                             >
-                                                <img src={ub} alt="upper body" className="w-8 h-8 object-contain" />
+                                                <img
+                                                    src={ub}
+                                                    alt="upper body"
+                                                    className="w-8 h-8 object-contain"
+                                                />
                                             </button>
                                         ))}
                                     </div>
@@ -190,7 +245,7 @@ export default function GamdokRunnerPage() {
                         )}
 
                         {/* Game Start Overlay (Only shown if gameStage is 'running' and not started yet) */}
-                        {gameStage === 'running' && !started && (
+                        {gameStage === "running" && !started && (
                             <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-white text-center p-4 backdrop-blur-sm">
                                 <h2 className="text-4xl lg:text-5xl font-extrabold mb-4 drop-shadow-md">
                                     김감독 지각 방지 대작전

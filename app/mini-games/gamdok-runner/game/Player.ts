@@ -17,6 +17,7 @@ export class Player {
   shoesImage: HTMLImageElement | null;
   lowerBodyImage: HTMLImageElement | null;
   upperBodyImage: HTMLImageElement | null;
+  hairImage: HTMLImageElement | null; // New property for hair image
 
   constructor(
     x: number,
@@ -26,6 +27,7 @@ export class Player {
     shoesImage: HTMLImageElement | null = null,
     lowerBodyImage: HTMLImageElement | null = null,
     upperBodyImage: HTMLImageElement | null = null,
+    hairImage: HTMLImageElement | null = null, // New: hair image
   ) {
     this.position = { x, y };
     this.velocity = { x: 3, y: 0 };
@@ -41,6 +43,7 @@ export class Player {
     this.shoesImage = shoesImage;
     this.lowerBodyImage = lowerBodyImage;
     this.upperBodyImage = upperBodyImage;
+    this.hairImage = hairImage;
     this.position.y = groundHeight - this.height; // Adjust initial y based on fixed height
   }
 
@@ -67,6 +70,9 @@ export class Player {
     }
     if (this.shoesImage) {
       context.drawImage(this.shoesImage, this.position.x, this.position.y, this.width, this.height);
+    }
+    if (this.hairImage) {
+      context.drawImage(this.hairImage, this.position.x, this.position.y, this.width, this.height);
     }
   }
 

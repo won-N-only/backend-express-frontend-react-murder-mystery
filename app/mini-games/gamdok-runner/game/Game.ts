@@ -40,6 +40,7 @@ export class Game {
   private selectedShoesImage: HTMLImageElement | null = null;
   private selectedLowerBodyImage: HTMLImageElement | null = null;
   private selectedUpperBodyImage: HTMLImageElement | null = null;
+  private selectedHairImage: HTMLImageElement | null = null; // New: Selected hair image
   private assetsLoadedPromise: Promise<void>; // New: Promise that resolves when assets are loaded
 
   public onStateChange: (state: GameState) => void;
@@ -50,11 +51,12 @@ export class Game {
     selectedShoesPath: string | null = null,
     selectedLowerBodyPath: string | null = null,
     selectedUpperBodyPath: string | null = null,
+    selectedHairPath: string | null = null, // New: Selected hair path
   ) {
     this.canvas = canvas;
     this.groundHeight = this.canvas.height - GROUND_HEIGHT;
     this.onStateChange = onStateChange; // Set onStateChange first
-    this.assetsLoadedPromise = this.preloadAssets(selectedShoesPath, selectedLowerBodyPath, selectedUpperBodyPath); // Start preloading
+    this.assetsLoadedPromise = this.preloadAssets(selectedShoesPath, selectedLowerBodyPath, selectedUpperBodyPath, selectedHairPath); // Start preloading
     this.loadNextPattern(); // This can run in parallel
   }
 
@@ -62,6 +64,7 @@ export class Game {
     selectedShoesPath: string | null,
     selectedLowerBodyPath: string | null,
     selectedUpperBodyPath: string | null,
+    selectedHairPath: string | null, // New: Selected hair path
   ): Promise<void> {
     const loadImage = (src: string): Promise<HTMLImageElement> => {
       return new Promise((resolve, reject) => {
@@ -103,6 +106,14 @@ export class Game {
           .catch(error => { console.error('Failed to load upper body image:', error); }),
       );
     }
+    // Load selected hair image
+    if (selectedHairPath) {
+      imagePromises.push(
+        loadImage(selectedHairPath)
+          .then(img => { this.selectedHairImage = img; })
+          .catch(error => { console.error('Failed to load hair image:', error); }),
+      );
+    }
 
     // Load item images
     const itemImageMap = new Map<ItemType, string>([
@@ -131,6 +142,7 @@ export class Game {
       this.selectedShoesImage,
       this.selectedLowerBodyImage,
       this.selectedUpperBodyImage,
+      this.selectedHairImage, // Pass selected hair
     );
   }
 
