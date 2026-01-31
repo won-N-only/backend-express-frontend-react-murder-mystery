@@ -6,10 +6,10 @@ import type { CompanyStat, PlayerStat } from "@app/types";
 import useSWR from "swr";
 
 export default function StatsPage() {
-    const { data } = useSWR("/api/stats", fetcher);
+    const { data, isLoading } = useSWR("/api/stats", fetcher);
     const stats = data?.stats ?? {};
     const players: PlayerStat[] = stats.players ?? [];
     const companies: CompanyStat[] = stats.companies ?? [];
 
-    return <StatsSection players={players} companies={companies} />;
+    return <StatsSection players={players} companies={companies} isLoading={isLoading} />;
 }

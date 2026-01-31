@@ -8,11 +8,20 @@ import { useState } from "react";
 interface StatsSectionProps {
     players: PlayerStat[];
     companies: CompanyStat[];
+    isLoading: boolean;
 }
 
-export default function StatsSection({ players, companies }: StatsSectionProps) {
+export default function StatsSection({ players, companies, isLoading }: StatsSectionProps) {
     const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
     const [selectedPlayerName, setSelectedPlayerName] = useState<string | null>(null);
+
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <span className="text-head-text text-xl">로딩 중이에요 잠시만요 금방 댐 ...</span>
+            </div>
+        );
+    }
 
     const getProgressColorByRank = (rank: number) => {
         // 나중에 필요하면 쓰기
