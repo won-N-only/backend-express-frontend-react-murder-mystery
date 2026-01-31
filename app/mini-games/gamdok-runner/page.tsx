@@ -126,14 +126,14 @@ export default function GamdokRunnerPage() {
                                     backgroundPosition: "center",
                                 }}
                             >
-                                <h2 className="text-4xl lg:text-5xl font-extrabold mb-4 drop-shadow-md">
+                                <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold mb-4 drop-shadow-md">
                                     김감독 코디 대작전
                                 </h2>
-                                <p className="mb-8 text-lg opacity-90">
+                                <p className="mb-4 sm:mb-8 text-sm sm:text-base lg:text-lg opacity-90">
                                     아무리 늦었어도 옷은입어야지
                                 </p>
                                 {/* Character Preview */}
-                                <div className="relative w-24 h-24 mb-8">
+                                <div className="relative w-24 h-24 sm:w-32 sm:h-32 lg:w-48 lg:h-48 mb-8">
                                     <img
                                         src="/mini-games/gamdok-runner/full-body.png"
                                         alt="Base Character"
@@ -169,7 +169,7 @@ export default function GamdokRunnerPage() {
                                     )}
                                 </div>
                                 {/* Clothing Selection UI */}
-                                <div className="flex flex-col gap-4 mb-8">
+                                <div className="flex flex-col gap-4 mb-8 w-full max-w-full max-h-[60vh] overflow-auto px-4">
                                     <div className="mb-4">
                                         <span className="font-bold mr-2">헤어:</span>
                                         <div className="grid grid-cols-4 gap-2">
@@ -182,7 +182,7 @@ export default function GamdokRunnerPage() {
                                                     <img
                                                         src={hair}
                                                         alt="hair"
-                                                        className="w-12 h-12 object-contain"
+                                                        className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
                                                     />
                                                 </button>
                                             ))}
@@ -200,7 +200,7 @@ export default function GamdokRunnerPage() {
                                                     <img
                                                         src={ub}
                                                         alt="upper body"
-                                                        className="w-12 h-12 object-contain"
+                                                        className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
                                                     />
                                                 </button>
                                             ))}
@@ -209,7 +209,7 @@ export default function GamdokRunnerPage() {
                                 </div>
                                 <button
                                     onClick={startGame}
-                                    className="bg-head-brown text-white px-10 py-4 text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg"
+                                    className="bg-head-brown text-white px-6 sm:px-10 py-3 sm:py-4 text-xl sm:text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg"
                                 >
                                     달리기 시작!
                                 </button>
