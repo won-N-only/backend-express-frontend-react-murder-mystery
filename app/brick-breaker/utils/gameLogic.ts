@@ -1,24 +1,22 @@
 import {
-    HAIR_COUNT,
     HAIR_SIZE,
-    HAIR_SPEED_MIN,
-    HAIR_SPEED_MAX,
     HEAD_SIZE,
     BALL_R,
     PADDLE_HIT_WIDTH,
 } from "../constants";
 import type { Hair, GameState } from "../types";
+import { STAGES } from "../constants"; // Import STAGES
 
-export function initHairs(canvasWidth: number, canvasHeight: number): Hair[] {
+export function initHairs(canvasWidth: number, canvasHeight: number, stageConfig: typeof STAGES[0]): Hair[] {
     const hairs: Hair[] = [];
     const boxTop = 40;
     const boxBottom = canvasHeight - HEAD_SIZE - 80;
     const boxLeft = 0;
     const boxRight = canvasWidth - HAIR_SIZE;
 
-    for (let i = 0; i < HAIR_COUNT; i++) {
-        const speedX = HAIR_SPEED_MIN + Math.random() * (HAIR_SPEED_MAX - HAIR_SPEED_MIN);
-        const speedY = HAIR_SPEED_MIN + Math.random() * (HAIR_SPEED_MAX - HAIR_SPEED_MIN);
+    for (let i = 0; i < stageConfig.hairCount; i++) {
+        const speedX = stageConfig.hairSpeedMin + Math.random() * (stageConfig.hairSpeedMax - stageConfig.hairSpeedMin);
+        const speedY = stageConfig.hairSpeedMin + Math.random() * (stageConfig.hairSpeedMax - stageConfig.hairSpeedMin);
         const dirX = Math.random() > 0.5 ? 1 : -1;
         const dirY = Math.random() > 0.5 ? 1 : -1;
 
@@ -40,16 +38,19 @@ export function initHairs(canvasWidth: number, canvasHeight: number): Hair[] {
 export function createInitialGameState(
     canvasWidth: number,
     canvasHeight: number,
-    hairs: Hair[]
+    hairs: Hair[],
+    stageConfig: typeof STAGES[0]
 ): GameState {
     const paddleX0 = (canvasWidth - PADDLE_HIT_WIDTH) / 2;
     const paddleTop = canvasHeight - HEAD_SIZE;
 
+    const ballSpeed = stageConfig.ballSpeed;
+
     return {
         ballX: canvasWidth / 2,
         ballY: paddleTop - 80,
-        ballDx: 4,
-        ballDy: -4,
+        ballDx: ballSpeed,
+        ballDy: -ballSpeed,
         paddleX: paddleX0,
         hairs,
         animId: null,

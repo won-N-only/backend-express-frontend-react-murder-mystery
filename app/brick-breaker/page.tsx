@@ -8,6 +8,7 @@ import {
     FALLING_HAIR_SPEED,
     HEAD_SIZE,
     PADDLE_HIT_WIDTH,
+    STAGES,
 } from "./constants";
 import { useControl } from "./hooks/useControl";
 import { useImages } from "./hooks/useImages";
@@ -48,28 +49,45 @@ export default function BrickBreakerPage() {
     const [score, setScore] = useState(0);
     const [gameOver, setGameOver] = useState(false);
     const [won, setWon] = useState(false);
+    const [stage, setStage] = useState(0);
+    const [stageClear, setStageClear] = useState(false);
 
-    const startGame = useCallback(() => {
-        const canvas = canvasRef.current;
-        const ctx = ctxRef.current;
-        if (!canvas || !ctx) return;
+    const initializeStage = useCallback(
+        (stageIdx: number) => {
+            const canvas = canvasRef.current;
+            const ctx = ctxRef.current;
+            if (!canvas || !ctx) return;
 
-        const cw = canvas.width;
-        const ch = canvas.height;
-        const hairs = initHairs(cw, ch);
-        gameRef.current = createInitialGameState(cw, ch, hairs);
+            if (stageIdx >= STAGES.length) {
+                setWon(true); // All stages cleared
+                return;
+            }
 
-        setScore(0);
-        setGameOver(false);
-        setWon(false);
-        fallingHairYRef.current = null;
-        setStarted(true);
-    }, []);
+            const stageConfig = STAGES[stageIdx];
+            const cw = canvas.width;
+            const ch = canvas.height;
+            const hairs = initHairs(cw, ch, stageConfig); // Pass stageConfig
+            gameRef.current = createInitialGameState(cw, ch, hairs, stageConfig); // Pass stageConfig
 
-    useControl(canvasRef, gameRef, started, gameOver, won);
+            setScore(0);
+            setGameOver(false);
+            setWon(false);
+            setStage(stageIdx); // Set current stage
+            setStageClear(false); // Clear stage clear overlay
+            fallingHairYRef.current = null;
+            setStarted(true); // Start the game loop
+        },
+        [],
+    );
+
+    const startNextStage = useCallback(() => {
+        initializeStage(stage + 1);
+    }, [initializeStage, stage]);
+
+    useControl(canvasRef, gameRef, started && !stageClear, gameOver, won);
 
     useEffect(() => {
-        if (!started || gameOver || won) return;
+        if (!started || gameOver || won || stageClear) return;
         const canvas = canvasRef.current;
         const ctx = ctxRef.current;
         if (!canvas || !ctx) return;
@@ -78,6 +96,7 @@ export default function BrickBreakerPage() {
         const ch = canvas.height;
         const game = gameRef.current;
         if (!game) return;
+
 
         const tick = () => {
             const g = gameRef.current;
@@ -109,7 +128,12 @@ export default function BrickBreakerPage() {
             const justWon = g.aliveCount === 0;
             if (justWon) {
                 g.stopped = true;
-                setWon(true);
+                if (stage < STAGES.length - 1) { // If there are more stages
+                    setStageClear(true);
+                } else { // All stages cleared
+                    setWon(true);
+                }
+                return;
             }
 
             clearCanvas(ctx, cw, ch);
@@ -224,10 +248,29 @@ export default function BrickBreakerPage() {
                                     머리카락을 모두 모아 가발을 완성하세요!
                                 </p>
                                 <button
-                                    onClick={startGame}
+                                    onClick={() => initializeStage(0)}
                                     className="bg-head-brown text-white px-10 py-4 text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg"
                                 >
                                     START
+                                </button>
+                            </div>
+                        )}
+
+                        {/* Stage Clear Overlay */}
+                        {stageClear && (
+                            <div className="absolute inset-0 bg-black/75 flex flex-col items-center justify-center text-white text-center p-4 backdrop-blur-sm">
+                                <h2 className="text-5xl font-black mb-2 text-green-400 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
+                                    STAGE {stage + 1} CLEAR!
+                                </h2>
+                                <p className="text-xl mb-6 font-medium">
+                                    다음 단계로 나아가세요!
+                                </p>
+
+                                <button
+                                    onClick={startNextStage}
+                                    className="bg-head-brown text-white px-10 py-4 text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg"
+                                >
+                                    NEXT STAGE
                                 </button>
                             </div>
                         )}
@@ -243,7 +286,7 @@ export default function BrickBreakerPage() {
                                 </p>
 
                                 <button
-                                    onClick={startGame}
+                                    onClick={() => initializeStage(stage)}
                                     className="bg-head-brown text-white px-10 py-4 text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg"
                                 >
                                     RETRY
@@ -251,15 +294,15 @@ export default function BrickBreakerPage() {
                             </div>
                         )}
 
-                        {/* Win Overlay */}
+                        {/* Win Overlay (Final Win) */}
                         {won && (
                             <div className="absolute inset-0 flex flex-col items-center justify-center text-head-text text-center p-6  ">
                                 <h2 className="text-4xl lg:text-5xl font-black mb-6 text-yellow-400 drop-shadow-md">
-                                    CLEAR!
+                                    ALL STAGES CLEAR!
                                 </h2>
                                 <p className="text-lg lg:text-xl mb-8 font-medium">축하합니다!</p>
                                 <button
-                                    onClick={startGame}
+                                    onClick={() => initializeStage(0)}
                                     className="bg-head-brown text-white px-10 py-4 text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg"
                                 >
                                     다시하기
