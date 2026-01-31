@@ -86,12 +86,19 @@ export const useGameLogic = () => {
             speedBase = 6 + scoreRef.current / 600;
             sizeMin = 40;
             sizeMax = 80;
-        } else {
-            const difficultyMultiplier = Math.floor(scoreRef.current / 500);
-            currentSpawnRate = Math.max(8, INITIAL_SPAWN_RATE - difficultyMultiplier * 3);
-            speedBase = 4 + scoreRef.current / 500;
-            sizeMin = 30;
-            sizeMax = 40 + Math.min(30, Math.floor(scoreRef.current / 1000) * 5);
+        } else { // scoreRef.current < 2000
+            if (scoreRef.current < 200) { // New tier for very early game
+                currentSpawnRate = Math.max(10, INITIAL_SPAWN_RATE - 30); // More frequent spawns
+                speedBase = 6; // Faster initial speed
+                sizeMin = 40; // Larger initial obstacles
+                sizeMax = 60;
+            } else { // Original logic for 200 <= scoreRef.current < 2000
+                const difficultyMultiplier = Math.floor(scoreRef.current / 500);
+                currentSpawnRate = Math.max(8, INITIAL_SPAWN_RATE - difficultyMultiplier * 3);
+                speedBase = 4 + scoreRef.current / 500;
+                sizeMin = 30;
+                sizeMax = 40 + Math.min(30, Math.floor(scoreRef.current / 1000) * 5);
+            }
         }
 
         // 장애물 생성
