@@ -12,6 +12,11 @@ export const FALLING_HAIR_ROTATION_SPEED = 8;
 export const CANVAS_WIDTH = 800;
 export const CANVAS_HEIGHT = 500;
 
+export const HAIR_SPAWN_TOP_OFFSET = 40;
+export const HAIR_SPAWN_BOTTOM_OFFSET = 80;
+export const BALL_INITIAL_Y_OFFSET_FROM_PADDLE = 80;
+export const PADDLE_HIT_DX_MULTIPLIER = 10;
+
 export const STAGES = [
     {
         level: 1,
