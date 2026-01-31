@@ -137,7 +137,7 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
                                                 className="text-head-text opacity-50 text-2xl    hover:opacity-70"
                                                 aria-label="닫기"
                                             >
-                                                x
+                                                ×
                                             </button>
                                             <Link
                                                 href={`/games/${gameId}/edit`}

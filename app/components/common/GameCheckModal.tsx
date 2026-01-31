@@ -5,8 +5,8 @@ import type { CompletedGame, Game } from "@app/types";
 import { CompletionStatus } from "@app/types";
 import { useMemo, useState } from "react";
 import useSWR, { mutate } from "swr";
-import GameListModal from "./GameListModal";
 import GameListItem from "./GameListItem";
+import GameListModal from "./GameListModal";
 
 interface GameCheckModalProps {
     playerId: string | null;
@@ -110,31 +110,23 @@ export default function GameCheckModal({ playerId, playerName, onClose }: GameCh
                         title={game.name}
                         subtitle={subtitle}
                         action={
-                                                            <button
-                                                            type="button"
-                                                            onClick={(e) => {
-                                                                e.stopPropagation(); // prevent modal close if clicked
-                                                                updateStatus(game._id, !isCompleted);
-                                                            }}
-                                                            disabled={isUpdating}
-                                                                                            className={`h-[30px] w-[80px] font-bold text-sm transition-all ${
-                                                                                                isUpdating
-                                                                                                    ? "opacity-50 cursor-wait"
-                                                                                                    : "cursor-pointer"
-                                                                                            } ${
-                                                                                                isCompleted
-                                                            
-                                                                    ? "bg-head-brown text-white"
-                                                                    : "bg-head-main text-head-text"
-                                                            }`}
-                                                        >
-                                                            {isUpdating
-                                                                ? "저장 중..."
-                                                                : isCompleted
-                                                                  ? "완료"
-                                                                  : "미완료"}
-                                                        </button>
-                            
+                            <button
+                                type="button"
+                                onClick={(e) => {
+                                    e.stopPropagation(); // prevent modal close if clicked
+                                    updateStatus(game._id, !isCompleted);
+                                }}
+                                disabled={isUpdating}
+                                className={`h-[30px] w-[80px] font-bold text-sm transition-all ${
+                                    isUpdating ? "opacity-50 cursor-wait" : "cursor-pointer"
+                                } ${
+                                    isCompleted
+                                        ? "bg-head-brown text-white"
+                                        : "bg-head-main text-head-text"
+                                }`}
+                            >
+                                {isUpdating ? "저장 중..." : isCompleted ? "완료" : "미완료"}
+                            </button>
                         }
                     />
                 );

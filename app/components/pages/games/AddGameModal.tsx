@@ -107,7 +107,7 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
                         onClick={handleClose}
                         className="text-head-text hover:text-head-text text-2xl leading-none"
                     >
-                        x
+                        ×
                     </button>
                 </div>
                 <form
