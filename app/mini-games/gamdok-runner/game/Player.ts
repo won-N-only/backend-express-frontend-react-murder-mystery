@@ -13,42 +13,54 @@ export class Player {
   isFalling: boolean; // New state for falling into a hole
   slideTimer: number;
   groundHeight: number;
+  image: HTMLImageElement | null; // New property for player image
 
-  constructor(x: number, y: number, groundHeight: number) {
+  constructor(x: number, y: number, groundHeight: number, image: HTMLImageElement | null = null) {
     this.position = { x, y };
     this.velocity = { x: 3, y: 0 };
-    this.width = 50;
-    this.height = 50;
-    this.originalHeight = 50;
+    this.width = 80; // Fixed width for the player
+    this.height = 80; // Fixed height for the player
+    this.originalHeight = 80; // Fixed original height
     this.isJumping = false;
     this.isSliding = false;
     this.isFalling = false; // Initialize new state
     this.slideTimer = 0;
     this.groundHeight = groundHeight;
+    this.image = image;
+    this.position.y = groundHeight - this.height; // Adjust initial y based on fixed height
   }
 
   draw(context: CanvasRenderingContext2D) {
     if (this.isFalling && this.height <= 0) {
       return; // Don't draw if fallen and shrunk
     }
-    context.fillStyle = this.isSliding ? 'purple' : 'blue';
-    context.fillRect(this.position.x, this.position.y, this.width, this.height);
+
+    if (this.image) {
+      // Draw image
+      context.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
+    } else {
+      // Fallback to drawing a colored rectangle
+      context.fillStyle = this.isSliding ? 'purple' : 'blue';
+      context.fillRect(this.position.x, this.position.y, this.width, this.height);
+    }
   }
 
   jump() {
     if (!this.isJumping && !this.isSliding && !this.isFalling) {
       this.isJumping = true;
-      this.velocity.y = -15;
+      this.velocity.y = -13; // Revert to base jump force
     }
   }
 
   slide() {
     if (!this.isJumping && !this.isSliding && !this.isFalling) {
       this.isSliding = true;
-      this.slideTimer = 60; // 1 second at 60fps
+      this.slideTimer = 50; // Revert to base slide duration
       this.height = this.originalHeight / 2;
       this.position.y += this.originalHeight / 2;
     }
+    this.height = this.originalHeight / 2;
+    this.position.y += this.originalHeight / 2;
   }
 
   unslide() {

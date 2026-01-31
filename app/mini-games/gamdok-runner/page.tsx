@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import GameCanvas from "./components/GameCanvas";
 import { Game } from "./game/Game";
@@ -16,9 +15,9 @@ export default function GamdokRunnerPage() {
     const [lives, setLives] = useState(3); // Changed from health to lives
 
     const handleGameStateChange = useCallback(
-        (newState: { score: number; lives: number; isGameOver: boolean }) => { // Changed from health to lives
+        (newState: { score: number; lives: number; isGameOver: boolean }) => {
             setScore(newState.score);
-            setLives(newState.lives); // Changed from setHealth to setLives
+            setLives(newState.lives);
             if (newState.isGameOver) {
                 setGameOver(true);
             }
@@ -34,7 +33,7 @@ export default function GamdokRunnerPage() {
             setGameOver(false);
             setWon(false);
             setScore(0);
-            setLives(3); // Changed from setHealth to setLives
+            setLives(3);
         }
     };
 
@@ -74,7 +73,10 @@ export default function GamdokRunnerPage() {
                                     김감독 지각 방지 대작전
                                 </h2>
                                 <p className="mb-8 text-lg opacity-90">
-                                    김감독이 회사에 늦지 않게 도와주세요!
+                                    김감독이 모임에 늦지 않게 도와주세요!
+                                </p>
+                                <p className="mb-8 text-lg opacity-90">
+                                    space로 점프하고 shift로 슬라이딩
                                 </p>
                                 <button
                                     onClick={startGame}
