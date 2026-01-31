@@ -19,7 +19,13 @@ import {
     updateBallPosition,
     updateHairsAndCheckCollisions,
 } from "./utils/gameLogic";
-import { clearCanvas, drawBall, drawFallingHair, drawHairs, drawPaddle } from "./utils/gameRenderer";
+import {
+    clearCanvas,
+    drawBall,
+    drawFallingHair,
+    drawHairs,
+    drawPaddle,
+} from "./utils/gameRenderer";
 
 export default function BrickBreakerPage() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -193,10 +199,10 @@ export default function BrickBreakerPage() {
 
     return (
         <div className="min-h-screen bg-head-main flex flex-col items-center p-2 lg:p-8">
-            <div className="w-full max-w-[1200px] flex flex-col lg:flex-row items-center lg:items-start justify-center gap-6 lg:gap-12">
+            <div className="w-full max-w-[1200px] flex flex-col lg:flex-row items-stretch lg:items-start justify-center gap-4 lg:gap-6">
                 {/* 1. Game Area */}
                 <div className="relative w-full lg:w-auto flex-shrink-0 flex justify-center">
-                    <div className="rounded-none border-4 border-head-brown shadow-2xl bg-head-gray-100 overflow-hidden w-full max-w-[800px]">
+                    <div className="rounded-none   shadow-2xl bg-head-gray-100 overflow-hidden w-full max-w-[800px]">
                         <canvas
                             ref={canvasRef}
                             width={CANVAS_WIDTH}
@@ -264,10 +270,10 @@ export default function BrickBreakerPage() {
                 </div>
 
                 {/* 2. Sidebar / Info (Right Side) */}
-                <div className="w-full lg:w-[350px] shrink-0 flex flex-col gap-6">
+                <div className="w-full lg:w-[350px] shrink-0  ">
                     {/* Game Info Card */}
-                    <div className="bg-head-white border-4 border-head-brown p-6 shadow-lg rounded-none">
-                        <div className="flex justify-between items-start border-b-4 border-head-brown pb-2 mb-4">
+                    <div className="bg-head-white shadow-xl border border-head-border flex flex-col h-full w-full">
+                        <div className="flex justify-between items-start  -b-4   p-6">
                             <h1 className="text-3xl font-black text-head-text">벽돌 깨기</h1>
                             <Link
                                 href="/"
@@ -277,7 +283,7 @@ export default function BrickBreakerPage() {
                             </Link>
                         </div>
 
-                        <div className="bg-head-gray-100 p-4 border border-head-border mb-4">
+                        <div className="bg-head-gray-100 p-4   mb-4">
                             <h3 className="font-bold text-head-brown mb-2 text-lg">💡 게임 설명</h3>
                             <ul className="text-sm text-head-text space-y-2 list-disc pl-4">
                                 <li>마우스/터치로 대머리를 움직여 공을 튕기세요.</li>
@@ -288,16 +294,16 @@ export default function BrickBreakerPage() {
                                 </li>
                             </ul>{" "}
                         </div>
-                    </div>
 
-                    {/* Score Card */}
-                    <div className="bg-head-text text-white border-4 border-head-white p-6 shadow-lg rounded-none">
-                        <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                            🏆 기록 보관실
-                        </h3>
-                        <div className="flex justify-between items-end">
-                            <span className="text-gray-300 text-sm">Score</span>
-                            <span className="text-4xl font-black text-yellow-400">{score}</span>
+                        {/* Score Card */}
+                        <div className="bg-head-text text-white p-6  mt-auto">
+                            <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                                🏆 기록 보관실
+                            </h3>
+                            <div className="flex justify-between items-end">
+                                <span className="text-gray-300 text-sm">Score</span>
+                                <span className="text-4xl font-black text-yellow-400">{score}</span>
+                            </div>
                         </div>
                     </div>
                 </div>

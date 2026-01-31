@@ -11,7 +11,7 @@ export default function MiniGamesPage() {
                 {/* 벽돌 깨기 카드 */}
                 <Link
                     href="/brick-breaker"
-                    className="bg-head-white border-4 border-head-brown p-6 hover:shadow-2xl transition-transform hover:-translate-y-1 group"
+                    className="bg-head-white  p-6 hover:shadow-2xl transition-transform hover:-translate-y-1 group"
                 >
                     <div className="h-40 bg-head-gray-100 mb-4 flex items-center justify-center text-4xl group-hover:scale-110 transition-transform"></div>
                     <h2 className="text-2xl font-bold text-head-text mb-2">벽돌 깨기</h2>
@@ -21,7 +21,7 @@ export default function MiniGamesPage() {
                 {/* 대머리 피하기 카드 */}
                 <Link
                     href="/avoid-bald"
-                    className="bg-head-white border-4 border-head-brown p-6 hover:shadow-2xl transition-transform hover:-translate-y-1 group"
+                    className="bg-head-white  p-6 hover:shadow-2xl transition-transform hover:-translate-y-1 group"
                 >
                     <div className="h-40 bg-head-gray-100 mb-4 flex items-center justify-center text-4xl group-hover:scale-110 transition-transform"></div>
                     <h2 className="text-2xl font-bold text-head-text mb-2">대머리 피하기</h2>

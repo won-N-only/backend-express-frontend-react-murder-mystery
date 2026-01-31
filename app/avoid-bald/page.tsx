@@ -29,7 +29,7 @@ export default function AvoidBaldGame() {
             <div className="w-full max-w-[1200px] flex flex-col lg:flex-row items-center lg:items-start justify-center gap-6 lg:gap-12">
                 {/* 1. Game Area */}
                 <div className="relative w-full lg:w-auto flex-shrink-0 flex justify-center">
-                    <div className="rounded-none border-4 border-head-brown shadow-2xl bg-head-gray-100 overflow-hidden w-full max-w-[600px]">
+                    <div className="rounded-none   shadow-2xl bg-head-gray-100 overflow-hidden w-full max-w-[600px]">
                         <canvas
                             ref={canvasRef}
                             width={CANVAS_WIDTH}
@@ -134,8 +134,8 @@ export default function AvoidBaldGame() {
                 {/* 2. Sidebar / Description (Right Side) */}
                 <div className="w-full lg:w-[350px] shrink-0 flex flex-col gap-6">
                     {/* Game Info Card */}
-                    <div className="bg-head-white border-4 border-head-brown p-6 shadow-lg rounded-none">
-                        <h1 className="text-3xl font-black text-head-text mb-2 border-b-4 border-head-brown pb-2">
+                    <div className="bg-head-white   p-6 shadow-lg rounded-none">
+                        <h1 className="text-3xl font-black text-head-text mb-2   pb-2">
                             대머리 피하기
                         </h1>
                         <div className="text-head-text mb-4 leading-relaxed font-medium">
@@ -143,7 +143,7 @@ export default function AvoidBaldGame() {
                             머리카락을 지켜내세요!
                         </div>
 
-                        <div className="bg-head-gray-100 p-4 border border-head-border mb-4">
+                        <div className="bg-head-gray-100 p-4   mb-4">
                             <h3 className="font-bold text-head-brown mb-2 text-lg">💡 조작 방법</h3>
                             <ul className="text-sm text-head-text space-y-2">
                                 <li className="flex items-center gap-2">
@@ -167,7 +167,7 @@ export default function AvoidBaldGame() {
                     </div>
 
                     {/* Score Card */}
-                    <div className="bg-head-text text-white border-4 border-head-white p-6 shadow-lg rounded-none">
+                    <div className="bg-head-text text-white   p-6 shadow-lg rounded-none">
                         <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
                             🏆 기록 보관실
                         </h3>
