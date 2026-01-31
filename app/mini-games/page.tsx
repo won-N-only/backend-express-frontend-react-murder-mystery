@@ -1,8 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect } from "react";
 
 export default function MiniGamesPage() {
+    useEffect(() => {
+        // Scroll to the top when the component mounts
+        window.scrollTo(0, 0);
+    }, []);
     return (
         <div className="min-h-screen bg-head-main flex flex-col items-center p-4 lg:p-8">
             <h1 className="text-3xl font-black text-head-text mb-8">대머리 미니게임</h1>
