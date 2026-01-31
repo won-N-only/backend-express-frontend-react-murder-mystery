@@ -52,7 +52,7 @@ export default function AvoidBaldGame() {
                                 대머리 피하기
                             </h2>
                             <p className="mb-8 text-lg opacity-90">
-                                쏟아지는 탈모의 저주를 피하세요!
+                                쏟아지는 대머리 친구들을 피하세요!
                             </p>
                             <hr className="border-head-gray-500 opacity-40 my-2 text-4xl" />
                             <p className="text-head-whtie text-4xl font-bold">CLEAR: 200점</p>

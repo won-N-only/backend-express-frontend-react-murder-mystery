@@ -45,7 +45,7 @@ export default function EditGamePage() {
     }
 
     return (
-        <div className="space-y-section">
+        <div>
             <PageHeader title="게임 수정" description={`${game.name} 정보를 수정합니다.`} />
             <GameForm
                 initialGame={game}

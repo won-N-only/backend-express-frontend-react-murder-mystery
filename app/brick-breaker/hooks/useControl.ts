@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
-import { PADDLE_HIT_WIDTH } from "./constants";
-import type { GameState } from "./types";
+import { PADDLE_HIT_WIDTH } from "../constants";
+import type { GameState } from "../types";
 
 /**
  * 마우스와 터치 이벤트를 모두 지원하는 컨트롤 훅

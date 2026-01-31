@@ -9,17 +9,17 @@ import {
     HEAD_SIZE,
     PADDLE_HIT_WIDTH,
 } from "./constants";
+import { useControl } from "./hooks/useControl";
+import { useImages } from "./hooks/useImages";
+import type { GameState } from "./types";
 import {
     checkPaddleCollision,
     createInitialGameState,
     initHairs,
     updateBallPosition,
     updateHairsAndCheckCollisions,
-} from "./gameLogic";
-import { clearCanvas, drawBall, drawFallingHair, drawHairs, drawPaddle } from "./gameRenderer";
-import type { GameState } from "./types";
-import { useControl } from "./useControl";
-import { useImages } from "./useImages";
+} from "./utils/gameLogic";
+import { clearCanvas, drawBall, drawFallingHair, drawHairs, drawPaddle } from "./utils/gameRenderer";
 
 export default function BrickBreakerPage() {
     const canvasRef = useRef<HTMLCanvasElement>(null);

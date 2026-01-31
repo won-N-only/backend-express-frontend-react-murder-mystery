@@ -1,5 +1,5 @@
-import { BALL_R, HAIR_SIZE, HEAD_SIZE, PADDLE_HIT_WIDTH } from "./constants";
-import type { GameState } from "./types";
+import { BALL_R, HAIR_SIZE, HEAD_SIZE, PADDLE_HIT_WIDTH } from "../constants";
+import type { GameState } from "../types";
 
 export function clearCanvas(ctx: CanvasRenderingContext2D, width: number, height: number) {
     ctx.fillStyle = "#f1f0ec";

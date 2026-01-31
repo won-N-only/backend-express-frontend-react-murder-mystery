@@ -61,7 +61,8 @@ export default function LandingPage() {
                     Don&apos;t worry, we have hair.
                 </p>
 
-                <div className="pt-section text-center text-head-text text-lg font-medium">
+                <div className="pt-section text-center text-head-text text-sm sm:text-base md:text-lg font-medium">
+                    {" "}
                     <p>&quot;머리숱 없는 사람만 가입하나요?&quot;</p>
                     <p>
                         <br />

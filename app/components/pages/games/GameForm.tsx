@@ -1,6 +1,7 @@
 "use client";
 
 import type { Game } from "@app/types";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export interface GameFormData {
@@ -68,8 +69,8 @@ interface GameFormProps {
 }
 
 const inputClass =
-    "w-full border border-head-border px-3 py-2 text-sm text-head-text focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent mt-1";
-const labelClass = "block text-sm font-medium text-head-text";
+    "border border-head-border text-head-text focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent  h-[40px]";
+const labelClass = "block text-base font-semibold text-head-text";
 
 /**
  * 게임 수정  페이지
@@ -81,6 +82,7 @@ export default function GameForm({
     submitLabel,
 }: GameFormProps) {
     const [form, setForm] = useState<GameFormData>(() => gameToFormData(initialGame ?? null));
+    const router = useRouter();
 
     useEffect(() => {
         if (initialGame) setForm(gameToFormData(initialGame));
@@ -91,143 +93,152 @@ export default function GameForm({
         await onSubmit(formDataToPayload(form));
     };
 
-    const isEdit = !!initialGame;
+    const handleCancel = () => {
+        router.back();
+    };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4 section-card">
-            <div className={`grid gap-4 ${isEdit ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"}`}>
-                {!isEdit && (
-                    <div>
-                        <label htmlFor="orderNumber" className={labelClass}>
-                            순번
-                        </label>
-                        <input
-                            id="orderNumber"
-                            type="number"
-                            min={1}
-                            value={form.orderNumber}
-                            onChange={(e) =>
-                                setForm((p) => ({ ...p, orderNumber: Number(e.target.value) || 1 }))
-                            }
-                            className={inputClass}
-                        />
-                    </div>
-                )}
-                <div>
-                    <label htmlFor="name" className={labelClass}>
-                        게임명 *
+        <form
+            onSubmit={handleSubmit}
+            className="bg-head-main   w-full max-w-[750px] mx-auto py-[30px] space-y-[20px]"
+        >
+            <div className="space-y-[20px]">
+                {/* 게임명 */}
+                <div className="flex flex-col sm:flex-row sm:items-center gap-[10px] sm:gap-[20px]">
+                    <label htmlFor="name" className={`${labelClass} font-semibold sm:w-[120px]`}>
+                        * 게임명
                     </label>
                     <input
                         id="name"
+                        className={`${inputClass} w-full sm:w-[570px] px-4 text-sm`}
                         type="text"
                         required
                         value={form.name}
                         onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
-                        className={inputClass}
                         placeholder="머더 미스터리 시리즈 01"
                     />
                 </div>
-            </div>
+                {/* 최소/최대 인원 */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-[20px]">
+                    <div className="flex items-center">
+                        <label
+                            htmlFor="minPlayers"
+                            className={`${labelClass} mr-5 font-semibold w-[120px] shrink-0`}
+                        >
+                            * 최소 인원
+                        </label>
+                        <input
+                            id="minPlayers"
+                            type="number"
+                            min={1}
+                            value={form.minPlayers}
+                            onChange={(e) =>
+                                setForm((p) => ({
+                                    ...p,
+                                    minPlayers: Number(e.target.value) || 1,
+                                }))
+                            }
+                            className={`${inputClass} w-full sm:w-[215px] px-4 text-sm`}
+                        />
+                    </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label htmlFor="minPlayers" className={labelClass}>
-                        최소 인원 *
+                    <div className="flex items-center">
+                        <label
+                            htmlFor="maxPlayers"
+                            className={`${labelClass} mr-2 font-semibold w-[120px] shrink-0`}
+                        >
+                            * 최대 인원
+                        </label>
+                        <input
+                            id="maxPlayers"
+                            type="number"
+                            min={1}
+                            value={form.maxPlayers}
+                            onChange={(e) => setForm((p) => ({ ...p, maxPlayers: e.target.value }))}
+                            className={`${inputClass} w-full sm:w-[215px] px-4 text-sm`}
+                            placeholder="6"
+                        />
+                    </div>
+                </div>
+                {/* 제작사 */}
+                <div className="flex flex-col sm:flex-row sm:items-center gap-[20px]">
+                    <label htmlFor="company" className={`${labelClass} font-semibold sm:w-[120px]`}>
+                        * 제작사
                     </label>
                     <input
-                        id="minPlayers"
-                        type="number"
-                        min={1}
-                        value={form.minPlayers}
-                        onChange={(e) =>
-                            setForm((p) => ({ ...p, minPlayers: Number(e.target.value) || 1 }))
-                        }
-                        className={inputClass}
+                        id="company"
+                        type="text"
+                        value={form.company}
+                        onChange={(e) => setForm((p) => ({ ...p, company: e.target.value }))}
+                        className={`${inputClass} w-full sm:w-[570px] px-4 text-sm`}
+                        placeholder="언더독 게임즈"
                     />
                 </div>
-                <div>
-                    <label htmlFor="maxPlayers" className={labelClass}>
-                        최대 인원 (비우면 무제한)
+                {/* 시리즈 */}
+                <div className="flex flex-col sm:flex-row sm:items-center gap-[20px]">
+                    <label htmlFor="series" className={`${labelClass} font-semibold sm:w-[120px]`}>
+                        * 시리즈
                     </label>
                     <input
-                        id="maxPlayers"
-                        type="number"
-                        min={1}
-                        value={form.maxPlayers}
-                        onChange={(e) => setForm((p) => ({ ...p, maxPlayers: e.target.value }))}
-                        className={inputClass}
-                        placeholder="6"
+                        id="series"
+                        type="text"
+                        value={form.series}
+                        onChange={(e) => setForm((p) => ({ ...p, series: e.target.value }))}
+                        className={`${inputClass} w-full sm:w-[570px] px-4 text-sm`}
+                        placeholder="미스터리 파티 시리즈"
                     />
                 </div>
-            </div>
-
-            <div>
-                <label htmlFor="company" className={labelClass}>
-                    제작사
-                </label>
-                <input
-                    id="company"
-                    type="text"
-                    value={form.company}
-                    onChange={(e) => setForm((p) => ({ ...p, company: e.target.value }))}
-                    className={inputClass}
-                    placeholder="언더독 게임즈"
-                />
-            </div>
-            <div>
-                <label htmlFor="series" className={labelClass}>
-                    시리즈
-                </label>
-                <input
-                    id="series"
-                    type="text"
-                    value={form.series}
-                    onChange={(e) => setForm((p) => ({ ...p, series: e.target.value }))}
-                    className={inputClass}
-                    placeholder="미스터리 파티 시리즈"
-                />
-            </div>
-            <div>
-                <label htmlFor="thumbnail" className={labelClass}>
-                    썸네일 URL
-                </label>
-                <input
-                    id="thumbnail"
-                    type="url"
-                    value={form.thumbnail}
-                    onChange={(e) => setForm((p) => ({ ...p, thumbnail: e.target.value }))}
-                    className={inputClass}
-                    placeholder="https://..."
-                />
+                <div className="flex flex-col sm:flex-row sm:items-center gap-[20px]">
+                    <label
+                        htmlFor="thumbnail"
+                        className={`${labelClass} font-semibold sm:w-[120px]`}
+                    >
+                        썸네일 URL
+                    </label>
+                    <input
+                        id="thumbnail"
+                        type="url"
+                        value={form.thumbnail}
+                        onChange={(e) => setForm((p) => ({ ...p, thumbnail: e.target.value }))}
+                        className={`${inputClass} w-full sm:w-[570px] px-4 text-sm`}
+                        placeholder="https://..."
+                    />
+                </div>
             </div>
             <div>
                 <label htmlFor="description" className={labelClass}>
-                    시놉시스
+                    * 시놉시스
                 </label>
                 <textarea
                     id="description"
-                    rows={5}
                     value={form.description}
                     onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))}
-                    className={inputClass}
+                    className={`${inputClass} w-full h-[110px] mt-2`}
                     placeholder="게임 소개 또는 시놉시스"
                 />
             </div>
             <div>
                 <label htmlFor="ownerNote" className={labelClass}>
-                    메모 (한 줄씩 또는 쉼표 구분)
+                    소유자 (한 줄씩 또는 쉼표 구분)
                 </label>
                 <textarea
                     id="ownerNote"
-                    rows={2}
                     value={form.ownerNote}
                     onChange={(e) => setForm((p) => ({ ...p, ownerNote: e.target.value }))}
-                    className={inputClass}
+                    className={`${inputClass} w-full h-[80px] mt-2`}
+                    placeholder="소유자 메모"
                 />
             </div>
-            <div className="flex gap-3 pt-2">
+            <div className="flex flex-col sm:flex-row gap-[10px] sm:gap-3">
                 <button type="submit" disabled={isSubmitting} className="btn-primary px-4 py-2">
                     {isSubmitting ? "저장 중..." : submitLabel}
+                </button>
+                <button
+                    type="button"
+                    onClick={handleCancel}
+                    className="px-4 py-2 text-gray-500 hover:underline"
+                >
+                    취소
                 </button>
             </div>
         </form>

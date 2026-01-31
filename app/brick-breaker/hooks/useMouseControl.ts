@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
-import { PADDLE_HIT_WIDTH } from "./constants";
-import type { GameState } from "./types";
+import { PADDLE_HIT_WIDTH } from "../constants";
+import type { GameState } from "../types";
 
 export function useMouseControl(
     canvasRef: React.RefObject<HTMLCanvasElement>,

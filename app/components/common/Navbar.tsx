@@ -51,7 +51,7 @@ function NavbarInner() {
                         />
                     </Link>
 
-                    <div className="hidden md:flex items-center gap-6 lg:gap-8">
+                    <div className="hidden md:flex items-center gap-4 lg:gap-6">
                         {NAV_ITEMS.map((item) => (
                             <Link
                                 key={item.href}

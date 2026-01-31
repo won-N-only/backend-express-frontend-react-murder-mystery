@@ -1,5 +1,13 @@
-import { HAIR_COUNT, HAIR_SIZE, HAIR_SPEED_MIN, HAIR_SPEED_MAX, HEAD_SIZE, BALL_R, PADDLE_HIT_WIDTH } from "./constants";
-import type { Hair, GameState } from "./types";
+import {
+    HAIR_COUNT,
+    HAIR_SIZE,
+    HAIR_SPEED_MIN,
+    HAIR_SPEED_MAX,
+    HEAD_SIZE,
+    BALL_R,
+    PADDLE_HIT_WIDTH,
+} from "../constants";
+import type { Hair, GameState } from "../types";
 
 export function initHairs(canvasWidth: number, canvasHeight: number): Hair[] {
     const hairs: Hair[] = [];
