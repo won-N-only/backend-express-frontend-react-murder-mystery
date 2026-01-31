@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import GameCanvas from "./components/GameCanvas";
 import { Game } from "./game/Game";
 
@@ -150,12 +151,13 @@ export default function GamdokRunnerPage() {
                                                     onClick={() => setSelectedHair(hair)}
                                                     className={`p-2 border-2 bg-head-main ${selectedHair === hair ? "border-yellow-400" : "border-gray-400"} rounded-md`}
                                                 >
-                                                    <img
-                                                        src={hair}
-                                                        alt="hair"
-                                                        className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
-                                                    />
-                                                </button>
+                                                                                                    <Image
+                                                                                                        src={hair}
+                                                                                                        alt="hair"
+                                                                                                        className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
+                                                                                                        width={48}
+                                                                                                        height={48}
+                                                                                                    />                                                </button>
                                             ))}
                                         </div>
                                         <div className="flex flex-wrap justify-center gap-2 mt-6">
@@ -174,12 +176,13 @@ export default function GamdokRunnerPage() {
                                                     onClick={() => setSelectedUpperBody(ub)}
                                                     className={`p-2 border-2 bg-head-main ${selectedUpperBody === ub ? "border-yellow-400" : "border-gray-400"} rounded-md`}
                                                 >
-                                                    <img
-                                                        src={ub}
-                                                        alt="upper body"
-                                                        className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
-                                                    />
-                                                </button>
+                                                                                                    <Image
+                                                                                                        src={ub}
+                                                                                                        alt="upper body"
+                                                                                                        className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
+                                                                                                        width={48}
+                                                                                                        height={48}
+                                                                                                    />                                                </button>
                                             ))}
                                         </div>
                                     </div>
@@ -250,37 +253,47 @@ export default function GamdokRunnerPage() {
 
                                 {/* Combined Avatar Preview */}
                                 <div className="relative w-56 h-56 mx-auto mb-4 border border-gray-300 bg-white p-2">
-                                    <img
+                                    <Image
                                         src="/mini-games/gamdok-runner/full-body.png"
                                         alt="Base Character"
                                         className="absolute inset-0 w-full h-full object-contain"
+                                        width={192}
+                                        height={192}
                                     />
                                     {selectedLowerBody && (
-                                        <img
+                                        <Image
                                             src={selectedLowerBody}
                                             alt="Lower Body"
                                             className="absolute inset-0 w-full h-full object-contain"
+                                            width={128}
+                                            height={128}
                                         />
                                     )}
                                     {selectedUpperBody && (
-                                        <img
+                                        <Image
                                             src={selectedUpperBody}
                                             alt="Upper Body"
                                             className="absolute inset-0 w-full h-full object-contain"
+                                            width={128}
+                                            height={128}
                                         />
                                     )}
                                     {selectedShoes && (
-                                        <img
+                                        <Image
                                             src={selectedShoes}
                                             alt="Shoes"
                                             className="absolute inset-0 w-full h-full object-contain"
+                                            width={128}
+                                            height={128}
                                         />
                                     )}
                                     {selectedHair && (
-                                        <img
+                                        <Image
                                             src={selectedHair}
                                             alt="Hair"
                                             className="absolute inset-0 w-full h-full object-contain"
+                                            width={192}
+                                            height={192}
                                         />
                                     )}
                                     {selectedUpperBody ===
