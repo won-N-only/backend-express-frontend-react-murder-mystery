@@ -167,7 +167,7 @@ export const useGameLogic = () => {
             scoreRef.current
         );
         requestRef.current = requestAnimationFrame(update);
-    }, [gameState, gameClear, gameOver]);
+    }, [gameState, gameClear, gameOver, gameEndingClear]);
 
     const startGame = useCallback(() => {
         // 최고 점수에 따라 시작 모드 결정
