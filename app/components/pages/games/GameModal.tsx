@@ -7,7 +7,7 @@ import type { CompletionStatusValue, Game, Player } from "@app/types";
 import { CompletionStatus } from "@app/types";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 
 interface GameModalProps {
@@ -15,6 +15,9 @@ interface GameModalProps {
     onClose: () => void;
 }
 
+/**
+ * 게임 상세 모달
+ */
 export default function GameModal({ gameId, onClose }: GameModalProps) {
     const {
         data,
@@ -26,6 +29,8 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
     const game: Game | undefined = data?.game;
     const completions = data?.completions ?? [];
     const players: Player[] = playersData?.players ?? [];
+
+    const [isEditing, setIsEditing] = useState(false);
 
     const completionMap = new Map<string, CompletionStatusValue>(
         completions.map((c: { playerId: string; status: CompletionStatusValue }) => [
@@ -170,9 +175,17 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
 
                             {/* 대머리 완료 여부 */}
                             <section className="rounded-none  bg-head-white p-6">
-                                <h2 className="text-xl font-bold text-head-text mb-4">
-                                    대머리 완료 여부
-                                </h2>
+                                <div className="flex justify-between items-center mb-4">
+                                    <h2 className="text-xl font-bold text-head-text">
+                                        대머리 완료 여부
+                                    </h2>
+                                    <button
+                                        onClick={() => setIsEditing(!isEditing)}
+                                        className="text-md bg-head-brown text-white px-4 py-1 rounded-none font-bold"
+                                    >
+                                        {isEditing ? "완료" : "수정"}
+                                    </button>
+                                </div>
                                 <hr className="border-head-gray-500 opacity-40 py-2 my-4" />
                                 <div className="grid grid-cols-4 gap-3">
                                     {players.map((p) => {
@@ -190,6 +203,7 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
                                                         onStatusChange={(s) =>
                                                             updateStatus(p._id, s)
                                                         }
+                                                        isEditable={isEditing}
                                                     />
                                                 </div>
                                             </div>

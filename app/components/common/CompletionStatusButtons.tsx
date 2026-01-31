@@ -4,11 +4,13 @@ import { CompletionStatus, CompletionStatusLabel } from "@app/types";
 interface CompletionStatusButtonsProps {
     currentStatus: CompletionStatusValue;
     onStatusChange: (status: CompletionStatusValue) => void;
+    isEditable: boolean;
 }
 
 export default function CompletionStatusButtons({
     currentStatus,
     onStatusChange,
+    isEditable,
 }: CompletionStatusButtonsProps) {
     const statuses: CompletionStatusValue[] = [CompletionStatus.DONE, CompletionStatus.NOT_DONE];
 
@@ -19,6 +21,7 @@ export default function CompletionStatusButtons({
                     key={s}
                     type="button"
                     onClick={() => onStatusChange(s)}
+                    disabled={!isEditable}
                     className={`px-3 py-0.5 text-md font-medium transition-colors ${
                         currentStatus === s
                             ? "bg-head-brown text-white"
