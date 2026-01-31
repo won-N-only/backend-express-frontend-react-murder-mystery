@@ -4,6 +4,13 @@ export interface Position {
   y: number;
 }
 
+export enum ItemType {
+  GAME_OVER = 'GAME_OVER',
+  SPEED_UP = 'SPEED_UP',
+  SPEED_DOWN = 'SPEED_DOWN',
+  LIFE_UP = 'LIFE_UP',
+}
+
 export type GameState = {
   score: number;
   lives: number;

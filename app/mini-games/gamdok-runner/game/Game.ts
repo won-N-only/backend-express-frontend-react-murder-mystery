@@ -1,6 +1,6 @@
 import { GROUND_HEIGHT } from '../constants';
 import { OBSTACLE_PATTERNS, ObstacleType } from '../constants/patterns';
-import { GameState } from '../types';
+import { GameState, ItemType } from '../types';
 import { random } from '../utils';
 import { Hole } from './Hole';
 import { Item } from './Item';
@@ -14,6 +14,13 @@ export class Game {
   private holes: Hole[] = [];
   private canvas: HTMLCanvasElement;
   private gameSpeed = 3;
+  private globalGameSpeedMultiplier = 1.0;
+  private globalSpeedIncrementInterval = 60; // 1 seconds at 60 FPS
+  private globalSpeedIncrementAmount = 0.03;
+  private globalSpeedIncrementTimer = this.globalSpeedIncrementInterval;
+  private tempSpeedMultiplier = 1.0; // Multiplier for temporary speed changes (from items)
+  private tempSpeedTimer = 0;        // Timer for temporary speed effect duration
+  private tempSpeedDuration = 300;   // 5 seconds at 60 FPS
   private obstacleInterval = 40;
   private obstacleSpawnTimer = this.obstacleInterval;
   private itemInterval = 200;
@@ -33,7 +40,7 @@ export class Game {
   constructor(canvas: HTMLCanvasElement, onStateChange: (state: GameState) => void) {
     this.canvas = canvas;
     this.groundHeight = this.canvas.height - GROUND_HEIGHT;
-    this.player = new Player(50, this.groundHeight - 50, this.groundHeight);
+    this.player = new Player(150, this.groundHeight - 50, this.groundHeight);
     this.onStateChange = onStateChange;
     this.loadNextPattern();
   }
@@ -65,21 +72,39 @@ export class Game {
 
     this.score += 1;
 
+    // Gradually increase global game speed multiplier
+    this.globalSpeedIncrementTimer--;
+    if (this.globalSpeedIncrementTimer <= 0) {
+      this.globalGameSpeedMultiplier += this.globalSpeedIncrementAmount;
+      this.globalSpeedIncrementTimer = this.globalSpeedIncrementInterval;
+    }
+
+    // Update temporary speed effect timer
+    if (this.tempSpeedTimer > 0) {
+      this.tempSpeedTimer--;
+      if (this.tempSpeedTimer <= 0) {
+        this.tempSpeedMultiplier = 1.0; // Reset speed after effect
+      }
+    }
+
     this.obstacleSpawnTimer--;
     if (this.obstacleSpawnTimer <= 0) {
       this.spawnFromPattern();
-      this.obstacleSpawnTimer = this.obstacleInterval;
+      const dynamicObstacleInterval = Math.max(20, this.obstacleInterval / (this.globalGameSpeedMultiplier * this.tempSpeedMultiplier));
+      this.obstacleSpawnTimer = dynamicObstacleInterval;
     }
 
     this.itemSpawnTimer--;
     if (this.itemSpawnTimer <= 0) {
       this.spawnItem();
-      this.itemSpawnTimer = this.itemInterval + random(-50, 50);
+      const dynamicItemInterval = Math.max(50, (this.itemInterval + random(-50, 50)) / (this.globalGameSpeedMultiplier * this.tempSpeedMultiplier));
+      this.itemSpawnTimer = dynamicItemInterval;
     }
 
-    this.obstacles.forEach(o => o.position.x -= this.gameSpeed);
-    this.items.forEach(i => i.position.x -= this.gameSpeed);
-    this.holes.forEach(h => h.position.x -= this.gameSpeed);
+    const effectiveGameSpeed = this.gameSpeed * this.globalGameSpeedMultiplier * this.tempSpeedMultiplier;
+    this.obstacles.forEach(o => o.position.x -= effectiveGameSpeed);
+    this.items.forEach(i => i.position.x -= effectiveGameSpeed);
+    this.holes.forEach(h => h.position.x -= effectiveGameSpeed);
 
     this.obstacles = this.obstacles.filter(o => o.position.x + o.width > 0);
     this.items = this.items.filter(i => i.position.x + i.width > 0);
@@ -166,7 +191,9 @@ export class Game {
 
   spawnItem() {
     const y = random(this.groundHeight - 150, this.groundHeight - 80);
-    this.items.push(new Item(this.canvas.width, y, 20, 20));
+    const itemTypes = Object.values(ItemType);
+    const randomItemType = itemTypes[Math.floor(Math.random() * itemTypes.length)];
+    this.items.push(new Item(this.canvas.width, y, 20, 20, randomItemType));
   }
 
   checkCollisions() {
@@ -196,6 +223,22 @@ export class Game {
         this.player.position.y + this.player.height > item.position.y
       ) {
         this.items.splice(index, 1);
+        switch (item.type) {
+          case ItemType.GAME_OVER:
+            this.isGameOver = true;
+            break;
+          case ItemType.SPEED_UP:
+            this.tempSpeedMultiplier = 1.5; // Increase speed by 50%
+            this.tempSpeedTimer = this.tempSpeedDuration;
+            break;
+          case ItemType.SPEED_DOWN:
+            this.tempSpeedMultiplier = 0.5; // Decrease speed by 50%
+            this.tempSpeedTimer = this.tempSpeedDuration;
+            break;
+          case ItemType.LIFE_UP:
+            this.lives = Math.min(3, this.lives + 1); // Cap lives at 3
+            break;
+        }
         this.score += 100;
       }
     });

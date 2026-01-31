@@ -40,7 +40,7 @@ export default function MiniGamesPage() {
                 </Link>
 
                 {/* 김감독 러너 카드 */}
-                <Link
+                {/* <Link
                     href="/mini-games/gamdok-runner"
                     className="bg-head-white  p-6 hover:shadow-2xl transition-transform hover:-translate-y-1 group"
                 >
@@ -51,9 +51,9 @@ export default function MiniGamesPage() {
                         김감독 지각 방지 대작전
                     </h2>
                     <p className="text-head-text opacity-80">
-                        김감독을 회사까지 지각 없이 보내세요!
+                        김감독을 모임까지 지각 없이 보내세요!
                     </p>
-                </Link>
+                </Link> */}
             </div>
         </div>
     );
