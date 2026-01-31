@@ -181,39 +181,7 @@ export default function GamdokRunnerPage() {
                                                 <img
                                                     src={hair}
                                                     alt="hair"
-                                                    className="w-8 h-8 object-contain"
-                                                />
-                                            </button>
-                                        ))}
-                                    </div>
-                                    <div className="flex flex-wrap justify-center gap-2">
-                                        <span className="font-bold mr-2">신발:</span>
-                                        {availableShoes.map((shoe) => (
-                                            <button
-                                                key={shoe}
-                                                onClick={() => setSelectedShoes(shoe)}
-                                                className={`p-2 border-2 bg-head-main ${selectedShoes === shoe ? "border-yellow-400" : "border-gray-400"} rounded-md`}
-                                            >
-                                                <img
-                                                    src={shoe}
-                                                    alt="shoe"
-                                                    className="w-8 h-8 object-contain"
-                                                />
-                                            </button>
-                                        ))}
-                                    </div>
-                                    <div className="flex flex-wrap justify-center gap-2">
-                                        <span className="font-bold mr-2">하의:</span>
-                                        {availableLowerBody.map((lb) => (
-                                            <button
-                                                key={lb}
-                                                onClick={() => setSelectedLowerBody(lb)}
-                                                className={`p-2 border-2 bg-head-main ${selectedLowerBody === lb ? "border-yellow-400" : "border-gray-400"} rounded-md`}
-                                            >
-                                                <img
-                                                    src={lb}
-                                                    alt="lower body"
-                                                    className="w-8 h-8 object-contain"
+                                                    className="w-12 h-12 object-contain"
                                                 />
                                             </button>
                                         ))}
@@ -229,7 +197,7 @@ export default function GamdokRunnerPage() {
                                                 <img
                                                     src={ub}
                                                     alt="upper body"
-                                                    className="w-8 h-8 object-contain"
+                                                    className="w-12 h-12 object-contain"
                                                 />
                                             </button>
                                         ))}
@@ -243,6 +211,124 @@ export default function GamdokRunnerPage() {
                                 </button>
                             </div>
                         )}
+
+                        {/* Game Start Overlay (Only shown if gameStage is 'running' and not started yet) */}
+                        {gameStage === "running" && !started && (
+                            <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-white text-center p-4 backdrop-blur-sm">
+                                <h2 className="text-4xl lg:text-5xl font-extrabold mb-4 drop-shadow-md">
+                                    김감독 지각 방지 대작전
+                                </h2>
+                                <p className="mb-8 text-lg opacity-90">
+                                    김감독이 모임에 늦지 않게 도와주세요!
+                                </p>
+                                <p className="mb-8 text-lg opacity-90">
+                                    space로 점프하고 shift로 슬라이딩
+                                </p>
+                                <button
+                                    onClick={startGame}
+                                    className="bg-head-brown text-white px-10 py-4 text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg"
+                                >
+                                    START
+                                </button>
+                            </div>
+                        )}
+
+                        {/* Game Over Overlay */}
+                        {gameOver && (
+                            <div className="absolute inset-0 bg-black/75 flex flex-col items-center justify-center text-white text-center p-4 backdrop-blur-sm">
+                                <h2 className="text-5xl font-black mb-2 text-red-500 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
+                                    GAME OVER
+                                </h2>
+                                <p className="text-xl mb-6 font-medium">
+                                    김감독은 결국 지각하고 말았습니다...
+                                </p>
+
+                                <button
+                                    onClick={retryGame}
+                                    className="bg-head-brown text-white px-10 py-4 text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg"
+                                >
+                                    RETRY
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* 2. Sidebar / Info (Right Side) */}
+                <div className="w-full lg:w-[350px] shrink-0  ">
+                    {/* Game Info Card */}
+                    <div className="bg-head-white shadow-xl border border-head-border flex flex-col h-full w-full">
+                        <div className="flex justify-between items-start p-6">
+                            <h1 className="text-3xl font-black text-head-text">김감독 러너</h1>
+                        </div>
+                        {gameStage === "dressUp" && (
+                            <div className="bg-head-gray-100 p-4 mx-4 mb-4">
+                                <h3 className="font-bold text-head-brown mb-2 text-lg">
+                                    👗 선택된 코디
+                                </h3>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p className="text-sm font-medium">신발</p>
+                                        {selectedShoes && (
+                                            <img src={selectedShoes} alt="Selected Shoes" className="w-16 h-16 object-contain border border-gray-300 bg-white" />
+                                        )}
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-medium">하의</p>
+                                        {selectedLowerBody && (
+                                            <img src={selectedLowerBody} alt="Selected Lower Body" className="w-16 h-16 object-contain border border-gray-300 bg-white" />
+                                        )}
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-medium">상의</p>
+                                        {selectedUpperBody && (
+                                            <img src={selectedUpperBody} alt="Selected Upper Body" className="w-16 h-16 object-contain border border-gray-300 bg-white" />
+                                        )}
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-medium">헤어</p>
+                                        {selectedHair && (
+                                            <img src={selectedHair} alt="Selected Hair" className="w-16 h-16 object-contain border border-gray-300 bg-white" />
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        <div className="bg-head-gray-100 p-4 mx-4 mb-4   ">
+                            <h3 className="font-bold text-head-brown mb-2 text-lg">💡 게임 설명</h3>
+                            <ul className="text-sm text-head-text space-y-2 list-disc pl-4">
+                                <li>장애물을 피해 목적지까지 달리세요.</li>
+                                <li>
+                                    <kbd>Space</kbd> 키를 눌러 점프하세요.
+                                </li>
+                                <li>
+                                    <kbd>Shift</kbd> 키를 눌러 슬라이드하세요.
+                                </li>
+                                <li>장애물에 부딪히면 체력이 감소합니다.</li>
+                                <li>구멍에 빠지면 게임오버!</li>
+                            </ul>{" "}
+                        </div>
+
+                        {/* Score Card */}
+                        <div className="bg-head-text text-white p-6  mt-auto">
+                            <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                                🏆 기록
+                            </h3>
+                            <div className="flex justify-between items-end mb-2">
+                                <span className="text-gray-300 text-sm">Score</span>
+                                <span className="text-4xl font-black text-yellow-400">{score}</span>
+                            </div>
+                            <div className="flex justify-between items-end">
+                                <span className="text-gray-300 text-sm">Lives</span>
+                                <span className="text-2xl font-bold text-green-400">{lives}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
 
                         {/* Game Start Overlay (Only shown if gameStage is 'running' and not started yet) */}
                         {gameStage === "running" && !started && (
