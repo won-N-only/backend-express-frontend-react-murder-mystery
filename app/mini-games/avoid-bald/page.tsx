@@ -114,6 +114,9 @@ export default function AvoidBaldGame() {
                                 <span className="text-red-400 font-bold mt-2 block">
                                     당신은 마음마저 대머리가 되었습니다.!!
                                 </span>
+                                <p className="text-head-whtie text-xl font-bold mt-2">
+                                    진짜 진짜 엔딩: 800점
+                                </p>
                             </p>
 
                             <Image
@@ -130,6 +133,35 @@ export default function AvoidBaldGame() {
                                     className="bg-head-brown text-white px-6 py-3 text-lg font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg animate-bounce whitespace-nowrap"
                                 >
                                     계속 하기
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Game Ending Clear Overlay (New) */}
+                    {gameState === "endingClear" && (
+                        <div className="absolute inset-0 bg-black/85 flex flex-col items-center justify-center text-white text-center p-6 backdrop-blur-md">
+                            <h2 className="text-4xl lg:text-5xl font-black mb-6 text-yellow-400 drop-shadow-md">
+                                ENDING CLEAR!
+                            </h2>
+                            <p className="text-lg lg:text-xl mb-6 font-medium leading-relaxed max-w-lg break-keep">
+                                축하합니다! 당신은 누구보다 재빠른 대머리가 되었습니다!
+                            </p>
+
+                            <Image
+                                src="/favicon_face.png"
+                                alt="Happy Head"
+                                width={128}
+                                height={128}
+                                className="w-32 h-32 mb-8 animate-pulse"
+                            />
+
+                            <div className="flex gap-4 flex-col sm:flex-row">
+                                <button
+                                    onClick={startGame}
+                                    className="bg-head-brown text-white px-6 py-3 text-lg font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg animate-bounce whitespace-nowrap"
+                                >
+                                    다시 시작
                                 </button>
                             </div>
                         </div>

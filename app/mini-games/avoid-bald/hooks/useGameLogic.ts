@@ -57,7 +57,16 @@ export const useGameLogic = () => {
 
     const gameClear = useCallback(() => {
         setGameState("clear");
-        const currentScore = 200;
+        const currentScore = Math.floor(scoreRef.current / 10);
+        setFinalScore(currentScore);
+        if (currentScore > highScore) {
+            setHighScore(currentScore);
+        }
+    }, [highScore]);
+
+    const gameEndingClear = useCallback(() => {
+        setGameState("endingClear");
+        const currentScore = Math.floor(scoreRef.current / 10);
         setFinalScore(currentScore);
         if (currentScore > highScore) {
             setHighScore(currentScore);
@@ -71,6 +80,10 @@ export const useGameLogic = () => {
         scoreRef.current += 1.5;
 
         // 승리 조건
+        if (!isSkinUnlockedRef.current && scoreRef.current >= 8000) {
+            gameEndingClear();
+            return;
+        }
         if (!isSkinUnlockedRef.current && scoreRef.current >= 2000) {
             gameClear();
             return;
@@ -78,9 +91,16 @@ export const useGameLogic = () => {
 
         // 난이도 조절
         const isHardMode = scoreRef.current >= 2000;
+        const isEndingMode = scoreRef.current >= 8000;
+
         let currentSpawnRate, speedBase, sizeMin, sizeMax;
 
-        if (isHardMode) {
+        if (isEndingMode) { // Even harder mode for ending clear
+            currentSpawnRate = Math.max(1, 10 - Math.floor((scoreRef.current - 8000) / 1000));
+            speedBase = 10 + scoreRef.current / 300;
+            sizeMin = 60;
+            sizeMax = 130;
+        } else if (isHardMode) {
             currentSpawnRate = Math.max(3, 15 - Math.floor((scoreRef.current - 2000) / 800));
             speedBase = 6 + scoreRef.current / 400;
             sizeMin = 50;
@@ -150,17 +170,33 @@ export const useGameLogic = () => {
     }, [gameState, gameClear, gameOver]);
 
     const startGame = useCallback(() => {
-        // 최고 점수가 200점 이상이면 하드 모드(2000점)로 시작
-        const isHardStart = highScore >= 200;
-        scoreRef.current = isHardStart ? 2000 : 0;
+        // 최고 점수에 따라 시작 모드 결정
+        let initialScore = 0;
+        let unlockSkin = false;
+        let playerStartingSkin = "/thumbnail.png";
+
+        if (highScore >= 800) {
+            initialScore = 8000; // 800점 엔딩 클리어 모드
+            unlockSkin = true;
+            playerStartingSkin = "/sad_head.png";
+        } else if (highScore >= 200) {
+            initialScore = 2000; // 200점 하드 모드
+            unlockSkin = true;
+            playerStartingSkin = "/sad_head.png";
+        } else {
+            initialScore = 0; // 일반 모드
+            unlockSkin = false;
+            playerStartingSkin = "/thumbnail.png";
+        }
+
+        scoreRef.current = initialScore;
         frameCountRef.current = 0;
         obstaclesRef.current = [];
         playerRef.current.x = CANVAS_WIDTH / 2 - PLAYER_SIZE / 2;
 
-        // 하드 모드 시작 시 스킨 해금 상태로 시작 (즉시 클리어 화면 뜨는 것 방지)
-        setIsSkinUnlocked(isHardStart);
-        isSkinUnlockedRef.current = isHardStart;
-        setPlayerSkin(isHardStart ? "/sad_head.png" : "/thumbnail.png");
+        setIsSkinUnlocked(unlockSkin);
+        isSkinUnlockedRef.current = unlockSkin;
+        setPlayerSkin(playerStartingSkin);
 
         setGameState("playing");
     }, [highScore]);

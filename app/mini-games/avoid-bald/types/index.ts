@@ -7,4 +7,4 @@ export interface GameObject {
     image?: HTMLImageElement;
 }
 
-export type GameState = "start" | "playing" | "gameover" | "clear";
+export type GameState = "start" | "playing" | "gameover" | "clear" | "endingClear";
