@@ -191,7 +191,7 @@ export default function BrickBreakerPage() {
                         {!started && (
                             <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-white text-center p-4 backdrop-blur-sm">
                                 <h2 className="text-4xl lg:text-5xl font-extrabold mb-4 drop-shadow-md">
-                                    벽돌 깨기
+                                    가발 깨기
                                 </h2>
                                 <p className="mb-8 text-lg opacity-90">
                                     머리카락을 모두 모아 가발을 완성하세요!
@@ -264,7 +264,7 @@ export default function BrickBreakerPage() {
                     {/* Game Info Card */}
                     <div className="bg-head-white shadow-xl border border-head-border flex flex-col h-full w-full">
                         <div className="flex justify-between items-start p-6">
-                            <h1 className="text-3xl font-black text-head-text">벽돌 깨기</h1>
+                            <h1 className="text-3xl font-black text-head-text">가발 깨기</h1>
                             <Link
                                 href="/"
                                 className="text-sm font-bold text-head-brown underline hover:no-underline mt-2"

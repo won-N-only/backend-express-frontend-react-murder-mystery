@@ -13,7 +13,7 @@ export default function MiniGamesPage() {
             <h1 className="text-3xl font-black text-head-text mb-8">대머리 미니게임</h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-[800px] justify-center">
-                {/* 벽돌 깨기 카드 */}
+                {/* 가발 깨기 카드 */}
                 <Link
                     href="/mini-games/brick-breaker"
                     className="bg-head-white  p-6 hover:shadow-2xl transition-transform hover:-translate-y-1 group"
