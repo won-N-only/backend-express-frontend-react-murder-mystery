@@ -98,7 +98,14 @@ export default function GamdokRunnerPage() {
 
                         {/* Dress Up Overlay */}
                         {gameStage === 'dressUp' && (
-                            <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-white text-center p-4 backdrop-blur-sm">
+                            <div
+                                className="absolute inset-0 flex flex-col items-center justify-center text-black text-center p-4"
+                                style={{
+                                    backgroundImage: `url('/mini-games/gamdok-runner/room1.png')`,
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'center',
+                                }}
+                            >
                                 <h2 className="text-4xl lg:text-5xl font-extrabold mb-4 drop-shadow-md">
                                     김감독 코디 대작전
                                 </h2>
