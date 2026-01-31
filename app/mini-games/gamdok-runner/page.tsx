@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { useCallback, useEffect, useRef, useState } from "react";
 import GameCanvas from "./components/GameCanvas";
 import { Game } from "./game/Game";
 
@@ -127,12 +127,14 @@ export default function GamdokRunnerPage() {
                                     backgroundPosition: "center",
                                 }}
                             >
-                                <h2 className="text-4xl lg:text-5xl font-extrabold mb-4 drop-shadow-md">
-                                    김감독 코디 대작전
-                                </h2>
-                                <p className="mb-2 text-lg opacity-90">
-                                    아무리 늦었어도 옷은입어야지
-                                </p>
+                                <div className="flex flex-col items-center justify-center bg-head-main opacity-60 p-3 rounded-xl">
+                                    <h2 className="text-4xl lg:text-5xl font-extrabold mb-4 drop-shadow-md">
+                                        김감독 코디 대작전
+                                    </h2>
+                                    <p className="mb-2 text-lg opacity-90">
+                                        아무리 늦었어도 옷은입어야지
+                                    </p>
+                                </div>{" "}
                                 <div className="flex flex-col gap-4 mb-8 w-full max-w-full max-h-[60vh] overflow-auto px-4">
                                     <div className="mb-4">
                                         <div className="flex flex-wrap justify-center gap-2">
@@ -151,13 +153,14 @@ export default function GamdokRunnerPage() {
                                                     onClick={() => setSelectedHair(hair)}
                                                     className={`p-2 border-2 bg-head-main ${selectedHair === hair ? "border-yellow-400" : "border-gray-400"} rounded-md`}
                                                 >
-                                                                                                    <Image
-                                                                                                        src={hair}
-                                                                                                        alt="hair"
-                                                                                                        className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
-                                                                                                        width={48}
-                                                                                                        height={48}
-                                                                                                    />                                                </button>
+                                                    <Image
+                                                        src={hair}
+                                                        alt="hair"
+                                                        className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
+                                                        width={48}
+                                                        height={48}
+                                                    />{" "}
+                                                </button>
                                             ))}
                                         </div>
                                         <div className="flex flex-wrap justify-center gap-2 mt-6">
@@ -176,13 +179,14 @@ export default function GamdokRunnerPage() {
                                                     onClick={() => setSelectedUpperBody(ub)}
                                                     className={`p-2 border-2 bg-head-main ${selectedUpperBody === ub ? "border-yellow-400" : "border-gray-400"} rounded-md`}
                                                 >
-                                                                                                    <Image
-                                                                                                        src={ub}
-                                                                                                        alt="upper body"
-                                                                                                        className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
-                                                                                                        width={48}
-                                                                                                        height={48}
-                                                                                                    />                                                </button>
+                                                    <Image
+                                                        src={ub}
+                                                        alt="upper body"
+                                                        className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
+                                                        width={48}
+                                                        height={48}
+                                                    />{" "}
+                                                </button>
                                             ))}
                                         </div>
                                     </div>

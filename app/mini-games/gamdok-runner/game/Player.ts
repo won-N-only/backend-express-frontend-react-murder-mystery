@@ -79,14 +79,14 @@ export class Player {
   jump() {
     if (!this.isJumping && !this.isSliding && !this.isFalling) {
       this.isJumping = true;
-      this.velocity.y = -13; // Revert to base jump force
+      this.velocity.y = -14; // Revert to base jump force
     }
   }
 
   slide() {
     if (!this.isJumping && !this.isSliding && !this.isFalling) {
       this.isSliding = true;
-      this.slideTimer = 45; // Revert to base slide duration
+      this.slideTimer = 50; // Revert to base slide duration
       this.height = this.originalHeight / 2;
       this.position.y += this.originalHeight / 2;
     }

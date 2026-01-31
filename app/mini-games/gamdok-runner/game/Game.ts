@@ -117,7 +117,7 @@ export class Game {
 
     // Load item images
     const itemImageMap = new Map<ItemType, string>([
-      [ItemType.GAME_OVER, '/mini-games/gamdok-runner/items/alarm.png'],
+      [ItemType.GAME_OVER, '/mini-games/gamdok-runner/items/leze.png'],
       [ItemType.SPEED_UP, '/mini-games/gamdok-runner/items/shoes.png'],
       [ItemType.SPEED_DOWN, '/mini-games/gamdok-runner/items/cookie.png'],
       [ItemType.LIFE_UP, '/mini-games/gamdok-runner/items/coffee.png'],
@@ -135,7 +135,7 @@ export class Game {
 
     // Instantiate player AFTER all relevant images are loaded
     this.player = new Player(
-      150,
+      120,
       this.groundHeight - 50,
       this.groundHeight,
       this.playerImage,
