@@ -176,7 +176,7 @@ export default function GamdokRunnerPage() {
                                             <button
                                                 key={hair}
                                                 onClick={() => setSelectedHair(hair)}
-                                                className={`p-2 border-2 ${selectedHair === hair ? "border-yellow-400" : "border-gray-400"} rounded-md`}
+                                                className={`p-2 border-2 bg-head-main ${selectedHair === hair ? "border-yellow-400" : "border-gray-400"} rounded-md`}
                                             >
                                                 <img
                                                     src={hair}
@@ -192,7 +192,7 @@ export default function GamdokRunnerPage() {
                                             <button
                                                 key={shoe}
                                                 onClick={() => setSelectedShoes(shoe)}
-                                                className={`p-2 border-2 ${selectedShoes === shoe ? "border-yellow-400" : "border-gray-400"} rounded-md`}
+                                                className={`p-2 border-2 bg-head-main ${selectedShoes === shoe ? "border-yellow-400" : "border-gray-400"} rounded-md`}
                                             >
                                                 <img
                                                     src={shoe}
@@ -208,7 +208,7 @@ export default function GamdokRunnerPage() {
                                             <button
                                                 key={lb}
                                                 onClick={() => setSelectedLowerBody(lb)}
-                                                className={`p-2 border-2 ${selectedLowerBody === lb ? "border-yellow-400" : "border-gray-400"} rounded-md`}
+                                                className={`p-2 border-2 bg-head-main ${selectedLowerBody === lb ? "border-yellow-400" : "border-gray-400"} rounded-md`}
                                             >
                                                 <img
                                                     src={lb}
@@ -224,7 +224,7 @@ export default function GamdokRunnerPage() {
                                             <button
                                                 key={ub}
                                                 onClick={() => setSelectedUpperBody(ub)}
-                                                className={`p-2 border-2 ${selectedUpperBody === ub ? "border-yellow-400" : "border-gray-400"} rounded-md`}
+                                                className={`p-2 border-2 bg-head-main ${selectedUpperBody === ub ? "border-yellow-400" : "border-gray-400"} rounded-md`}
                                             >
                                                 <img
                                                     src={ub}
