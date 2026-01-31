@@ -142,8 +142,7 @@ export default function AvoidBaldGame() {
                             하늘에서 끊임없이 떨어지는 &apos;슬픈 대머리&apos;들을 피해서 풍성한
                             머리카락을 지켜내세요!
                         </div>
-
-                        <div className="bg-head-gray-100 p-4   mb-4">
+                        <div className="bg-head-gray-100 p-4 mx-4 mb-4   ">
                             <h3 className="font-bold text-head-brown mb-2 text-lg">💡 조작 방법</h3>
                             <ul className="text-sm text-head-text space-y-2">
                                 <li className="flex items-center gap-2">

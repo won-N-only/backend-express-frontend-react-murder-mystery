@@ -2,14 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import {
-    CANVAS_HEIGHT,
-    CANVAS_WIDTH,
-    FALLING_HAIR_SPEED,
-    HEAD_SIZE,
-    PADDLE_HIT_WIDTH,
-    STAGES,
-} from "./constants";
+import { CANVAS_HEIGHT, CANVAS_WIDTH, STAGES } from "./constants";
 import { useControl } from "./hooks/useControl";
 import { useFallingHairAnimation } from "./hooks/useFallingHairAnimation";
 import { useImages } from "./hooks/useImages";
@@ -21,13 +14,7 @@ import {
     updateBallPosition,
     updateHairsAndCheckCollisions,
 } from "./utils/gameLogic";
-import {
-    clearCanvas,
-    drawBall,
-    drawFallingHair,
-    drawHairs,
-    drawPaddle,
-} from "./utils/gameRenderer";
+import { clearCanvas, drawBall, drawHairs, drawPaddle } from "./utils/gameRenderer";
 
 export default function BrickBreakerPage() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -51,38 +38,35 @@ export default function BrickBreakerPage() {
     const [stage, setStage] = useState(0);
     const [stageClear, setStageClear] = useState(false);
 
-    const initializeStage = useCallback(
-        (stageIdx: number) => {
-            const canvas = canvasRef.current;
-            const ctx = ctxRef.current;
-            if (!canvas || !ctx) return;
+    const initializeStage = useCallback((stageIdx: number) => {
+        const canvas = canvasRef.current;
+        const ctx = ctxRef.current;
+        if (!canvas || !ctx) return;
 
-            if (stageIdx >= STAGES.length) {
-                setWon(true); // All stages cleared
-                return;
-            }
+        if (stageIdx >= STAGES.length) {
+            setWon(true); // All stages cleared
+            return;
+        }
 
-            const stageConfig = STAGES[stageIdx];
-            const cw = canvas.width;
-            const ch = canvas.height;
-            const hairs = initHairs(cw, ch, stageConfig); // Pass stageConfig
-            gameRef.current = createInitialGameState(cw, ch, hairs, stageConfig); // Pass stageConfig
+        const stageConfig = STAGES[stageIdx];
+        const cw = canvas.width;
+        const ch = canvas.height;
+        const hairs = initHairs(cw, ch, stageConfig); // Pass stageConfig
+        gameRef.current = createInitialGameState(cw, ch, hairs, stageConfig); // Pass stageConfig
 
-            // Ensure previous animation frame is cancelled if exists
-            if (gameRef.current?.animId != null) {
-                cancelAnimationFrame(gameRef.current.animId);
-            }
-            gameRef.current.stopped = false; // Ensure game is not stopped
+        // Ensure previous animation frame is cancelled if exists
+        if (gameRef.current?.animId != null) {
+            cancelAnimationFrame(gameRef.current.animId);
+        }
+        gameRef.current.stopped = false; // Ensure game is not stopped
 
-            setScore(0);
-            setGameOver(false);
-            setWon(false);
-            setStage(stageIdx); // Set current stage
-            setStageClear(false); // Clear stage clear overlay
-            setStarted(true); // Start the game loop
-        },
-        [],
-    );
+        setScore(0);
+        setGameOver(false);
+        setWon(false);
+        setStage(stageIdx); // Set current stage
+        setStageClear(false); // Clear stage clear overlay
+        setStarted(true); // Start the game loop
+    }, []);
 
     const startNextStage = useCallback(() => {
         initializeStage(stage + 1);
@@ -115,7 +99,6 @@ export default function BrickBreakerPage() {
         const game = gameRef.current;
         if (!game) return;
 
-
         const tick = () => {
             const g = gameRef.current;
             if (!g || g.stopped) return;
@@ -146,9 +129,11 @@ export default function BrickBreakerPage() {
             const justWon = g.aliveCount === 0;
             if (justWon) {
                 g.stopped = true;
-                if (stage < STAGES.length - 1) { // If there are more stages
+                if (stage < STAGES.length - 1) {
+                    // If there are more stages
                     setStageClear(true);
-                } else { // All stages cleared
+                } else {
+                    // All stages cleared
                     setWon(true);
                 }
                 return;
@@ -226,9 +211,7 @@ export default function BrickBreakerPage() {
                                 <h2 className="text-5xl font-black mb-2 text-green-400 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
                                     STAGE {stage + 1} CLEAR!
                                 </h2>
-                                <p className="text-xl mb-6 font-medium">
-                                    다음 단계로 나아가세요!
-                                </p>
+                                <p className="text-xl mb-6 font-medium">다음 단계로 나아가세요!</p>
 
                                 <button
                                     onClick={startNextStage}
@@ -280,7 +263,7 @@ export default function BrickBreakerPage() {
                 <div className="w-full lg:w-[350px] shrink-0  ">
                     {/* Game Info Card */}
                     <div className="bg-head-white shadow-xl border border-head-border flex flex-col h-full w-full">
-                        <div className="flex justify-between items-start  -b-4   p-6">
+                        <div className="flex justify-between items-start p-6">
                             <h1 className="text-3xl font-black text-head-text">벽돌 깨기</h1>
                             <Link
                                 href="/"
@@ -290,7 +273,7 @@ export default function BrickBreakerPage() {
                             </Link>
                         </div>
 
-                        <div className="bg-head-gray-100 p-4   mb-4">
+                        <div className="bg-head-gray-100 p-4 mx-4 mb-4   ">
                             <h3 className="font-bold text-head-brown mb-2 text-lg">💡 게임 설명</h3>
                             <ul className="text-sm text-head-text space-y-2 list-disc pl-4">
                                 <li>마우스/터치로 대머리를 움직여 공을 튕기세요.</li>

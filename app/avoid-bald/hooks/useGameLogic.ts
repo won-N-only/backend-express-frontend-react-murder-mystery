@@ -2,9 +2,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
     CANVAS_HEIGHT,
     CANVAS_WIDTH,
-    INITIAL_SPAWN_RATE,
     OBSTACLE_SIZE,
-    PLAYER_SIZE,
+    PLAYER_SIZE
 } from "../constants";
 import { GameObject, GameState } from "../types";
 import { drawGame } from "../utils/renderer";
@@ -69,7 +68,8 @@ export const useGameLogic = () => {
         if (gameState !== "playing") return;
 
         frameCountRef.current++;
-        scoreRef.current++;
+        // 1프레임에 2점씩 
+        scoreRef.current += 2;
 
         // 승리 조건
         if (!isSkinUnlockedRef.current && scoreRef.current >= 2000) {
@@ -82,23 +82,15 @@ export const useGameLogic = () => {
         let currentSpawnRate, speedBase, sizeMin, sizeMax;
 
         if (isHardMode) {
-            currentSpawnRate = Math.max(8, 12 - Math.floor((scoreRef.current - 2000) / 1000));
-            speedBase = 6 + scoreRef.current / 600;
-            sizeMin = 40;
-            sizeMax = 80;
+            currentSpawnRate = Math.max(3, 10 - Math.floor((scoreRef.current - 2000) / 1000));
+            speedBase = 6 + scoreRef.current / 400;
+            sizeMin = 50;
+            sizeMax = 110;
         } else { // scoreRef.current < 2000
-            if (scoreRef.current < 200) { // New tier for very early game
-                currentSpawnRate = Math.max(10, INITIAL_SPAWN_RATE - 30); // More frequent spawns
-                speedBase = 6; // Faster initial speed
-                sizeMin = 40; // Larger initial obstacles
-                sizeMax = 60;
-            } else { // Original logic for 200 <= scoreRef.current < 2000
-                const difficultyMultiplier = Math.floor(scoreRef.current / 500);
-                currentSpawnRate = Math.max(8, INITIAL_SPAWN_RATE - difficultyMultiplier * 3);
-                speedBase = 4 + scoreRef.current / 500;
-                sizeMin = 30;
-                sizeMax = 40 + Math.min(30, Math.floor(scoreRef.current / 1000) * 5);
-            }
+            currentSpawnRate = 20; // More frequent spawns
+            speedBase = 6; // Faster initial speed
+            sizeMin = 40; // Larger initial obstacles
+            sizeMax = 60;
         }
 
         // 장애물 생성
