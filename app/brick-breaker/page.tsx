@@ -11,6 +11,7 @@ import {
     STAGES,
 } from "./constants";
 import { useControl } from "./hooks/useControl";
+import { useFallingHairAnimation } from "./hooks/useFallingHairAnimation";
 import { useImages } from "./hooks/useImages";
 import type { GameState } from "./types";
 import {
@@ -32,8 +33,6 @@ export default function BrickBreakerPage() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
     const gameRef = useRef<GameState | null>(null);
-    const fallingHairYRef = useRef<number | null>(null);
-    const fallingAnimIdRef = useRef<number | null>(null);
 
     const { paddleImgRef, sadHeadImgRef, hairImgRef } = useImages();
 
@@ -69,12 +68,17 @@ export default function BrickBreakerPage() {
             const hairs = initHairs(cw, ch, stageConfig); // Pass stageConfig
             gameRef.current = createInitialGameState(cw, ch, hairs, stageConfig); // Pass stageConfig
 
+            // Ensure previous animation frame is cancelled if exists
+            if (gameRef.current?.animId != null) {
+                cancelAnimationFrame(gameRef.current.animId);
+            }
+            gameRef.current.stopped = false; // Ensure game is not stopped
+
             setScore(0);
             setGameOver(false);
             setWon(false);
             setStage(stageIdx); // Set current stage
             setStageClear(false); // Clear stage clear overlay
-            fallingHairYRef.current = null;
             setStarted(true); // Start the game loop
         },
         [],
@@ -85,6 +89,20 @@ export default function BrickBreakerPage() {
     }, [initializeStage, stage]);
 
     useControl(canvasRef, gameRef, started && !stageClear, gameOver, won);
+
+    const { startFallingHairAnimation } = useFallingHairAnimation({
+        canvasRef,
+        ctxRef,
+        paddleX: gameRef.current?.finalPaddleX ?? gameRef.current?.paddleX ?? 0,
+        canvasHeight: CANVAS_HEIGHT,
+        canvasWidth: CANVAS_WIDTH,
+        sadHeadImg: sadHeadImgRef.current,
+        paddleImg: paddleImgRef.current,
+        hairImg: hairImgRef.current,
+        gameOver,
+        won,
+        hairs: gameRef.current?.hairs || [],
+    });
 
     useEffect(() => {
         if (!started || gameOver || won || stageClear) return;
@@ -143,11 +161,6 @@ export default function BrickBreakerPage() {
             const paddleX = g.finalPaddleX !== null ? g.finalPaddleX : g.paddleX;
             drawPaddle(ctx, paddleX, ch, paddleImgRef.current);
 
-            if (justWon && hairImgRef.current) {
-                const hairStopY = ch - HEAD_SIZE;
-                drawFallingHair(ctx, paddleX, ch, hairStopY, 0, hairImgRef.current);
-            }
-
             g.animId = requestAnimationFrame(tick);
         };
         game.animId = requestAnimationFrame(tick);
@@ -155,71 +168,22 @@ export default function BrickBreakerPage() {
         return () => {
             if (gameRef.current?.animId != null) cancelAnimationFrame(gameRef.current.animId);
         };
-    }, [started, gameOver, won]);
-
-    useEffect(() => {
-        if (!started || (!gameOver && !won)) return;
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return;
-        const g = gameRef.current;
-        if (!g) return;
-
-        const cw = canvas.width;
-        const ch = canvas.height;
-        const paddleX = g.finalPaddleX !== null ? g.finalPaddleX : g.paddleX;
-        const headX = paddleX + (PADDLE_HIT_WIDTH - HEAD_SIZE) / 2;
-        const headY = ch - HEAD_SIZE;
-        const hairStopY = headY;
-
-        const drawFinalFrame = (fallingY: number | null, rotationAngle: number = 0) => {
-            clearCanvas(ctx, cw, ch);
-            drawHairs(ctx, g.hairs, hairImgRef.current);
-
-            const headImg =
-                gameOver && sadHeadImgRef.current ? sadHeadImgRef.current : paddleImgRef.current;
-            if (headImg) {
-                ctx.drawImage(headImg, headX, headY, HEAD_SIZE, HEAD_SIZE);
-            }
-            if (won && hairImgRef.current) {
-                const drawY = fallingY !== null ? fallingY : hairStopY;
-                drawFallingHair(ctx, paddleX, ch, drawY, rotationAngle, hairImgRef.current);
-            }
-        };
-
-        if (won) {
-            if (fallingHairYRef.current === null) {
-                fallingHairYRef.current = -HEAD_SIZE;
-            }
-
-            const tick = () => {
-                const currentY = fallingHairYRef.current;
-                if (currentY === null) return;
-
-                if (currentY >= hairStopY) {
-                    fallingHairYRef.current = hairStopY;
-                    fallingAnimIdRef.current = null;
-                    drawFinalFrame(hairStopY, 0);
-                    return;
-                }
-
-                fallingHairYRef.current = Math.min(currentY + FALLING_HAIR_SPEED, hairStopY);
-                drawFinalFrame(fallingHairYRef.current, 0);
-                fallingAnimIdRef.current = requestAnimationFrame(tick);
-            };
-            fallingAnimIdRef.current = requestAnimationFrame(tick);
-
-            return () => {
-                if (fallingAnimIdRef.current != null) {
-                    cancelAnimationFrame(fallingAnimIdRef.current);
-                    fallingAnimIdRef.current = null;
-                }
-            };
-        }
-
-        drawFinalFrame(null);
-    }, [gameOver, won, started]);
+    }, [
+        started,
+        gameOver,
+        won,
+        stageClear,
+        stage,
+        initializeStage,
+        startFallingHairAnimation,
+        paddleImgRef,
+        sadHeadImgRef,
+        hairImgRef,
+        setGameOver,
+        setStageClear,
+        setWon,
+        setScore,
+    ]);
 
     return (
         <div className="min-h-screen bg-head-main flex flex-col items-center p-2 lg:p-8">
