@@ -170,37 +170,41 @@ export default function GamdokRunnerPage() {
                                 </div>
                                 {/* Clothing Selection UI */}
                                 <div className="flex flex-col gap-4 mb-8">
-                                    <div className="flex flex-wrap justify-center gap-2">
+                                    <div className="mb-4">
                                         <span className="font-bold mr-2">헤어:</span>
-                                        {availableHair.map((hair) => (
-                                            <button
-                                                key={hair}
-                                                onClick={() => setSelectedHair(hair)}
-                                                className={`p-2 border-2 bg-head-main ${selectedHair === hair ? "border-yellow-400" : "border-gray-400"} rounded-md`}
-                                            >
-                                                <img
-                                                    src={hair}
-                                                    alt="hair"
-                                                    className="w-12 h-12 object-contain"
-                                                />
-                                            </button>
-                                        ))}
+                                        <div className="grid grid-cols-4 gap-2">
+                                            {availableHair.map((hair) => (
+                                                <button
+                                                    key={hair}
+                                                    onClick={() => setSelectedHair(hair)}
+                                                    className={`p-2 border-2 bg-head-main ${selectedHair === hair ? "border-yellow-400" : "border-gray-400"} rounded-md`}
+                                                >
+                                                    <img
+                                                        src={hair}
+                                                        alt="hair"
+                                                        className="w-12 h-12 object-contain"
+                                                    />
+                                                </button>
+                                            ))}
+                                        </div>
                                     </div>
-                                    <div className="flex flex-wrap justify-center gap-2">
+                                    <div>
                                         <span className="font-bold mr-2">상의:</span>
-                                        {availableUpperBody.map((ub) => (
-                                            <button
-                                                key={ub}
-                                                onClick={() => setSelectedUpperBody(ub)}
-                                                className={`p-2 border-2 bg-head-main ${selectedUpperBody === ub ? "border-yellow-400" : "border-gray-400"} rounded-md`}
-                                            >
-                                                <img
-                                                    src={ub}
-                                                    alt="upper body"
-                                                    className="w-12 h-12 object-contain"
-                                                />
-                                            </button>
-                                        ))}
+                                        <div className="flex flex-wrap justify-center gap-2">
+                                            {availableUpperBody.map((ub) => (
+                                                <button
+                                                    key={ub}
+                                                    onClick={() => setSelectedUpperBody(ub)}
+                                                    className={`p-2 border-2 bg-head-main ${selectedUpperBody === ub ? "border-yellow-400" : "border-gray-400"} rounded-md`}
+                                                >
+                                                    <img
+                                                        src={ub}
+                                                        alt="upper body"
+                                                        className="w-12 h-12 object-contain"
+                                                    />
+                                                </button>
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
                                 <button
