@@ -132,37 +132,56 @@ export default function GamdokRunnerPage() {
                                 <p className="mb-2 text-lg opacity-90">
                                     아무리 늦었어도 옷은입어야지
                                 </p>
-                                {/* Clothing Selection UI */}
-                                <div className="flex flex-col gap-4 mb-8">
-                                    <div className="flex flex-wrap justify-center gap-2">
-                                        {availableHair.map((hair) => (
+                                <div className="flex flex-col gap-4 mb-8 w-full max-w-full max-h-[60vh] overflow-auto px-4">
+                                    <div className="mb-4">
+                                        <div className="flex flex-wrap justify-center gap-2">
+                                            {/* None option for hair */}
                                             <button
-                                                key={hair}
-                                                onClick={() => setSelectedHair(hair)}
-                                                className={`p-2 border-2 bg-head-main ${selectedHair === hair ? "border-yellow-400" : "border-gray-400"} rounded-md`}
+                                                onClick={() => setSelectedHair(null)}
+                                                className={`p-2 border-2 bg-head-main ${selectedHair === null ? "border-yellow-400" : "border-gray-400"} rounded-md flex items-center justify-center`}
                                             >
-                                                <img
-                                                    src={hair}
-                                                    alt="hair"
-                                                    className="w-12 h-12 object-contain"
-                                                />
+                                                <span className="text-white text-lg font-bold">
+                                                    X
+                                                </span>
                                             </button>
-                                        ))}
-                                    </div>
-                                    <div className="flex flex-wrap justify-center gap-2">
-                                        {availableUpperBody.map((ub) => (
+                                            {availableHair.map((hair) => (
+                                                <button
+                                                    key={hair}
+                                                    onClick={() => setSelectedHair(hair)}
+                                                    className={`p-2 border-2 bg-head-main ${selectedHair === hair ? "border-yellow-400" : "border-gray-400"} rounded-md`}
+                                                >
+                                                    <img
+                                                        src={hair}
+                                                        alt="hair"
+                                                        className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
+                                                    />
+                                                </button>
+                                            ))}
+                                        </div>
+                                        <div className="flex flex-wrap justify-center gap-2 mt-6">
+                                            {/* None option for upper body */}
                                             <button
-                                                key={ub}
-                                                onClick={() => setSelectedUpperBody(ub)}
-                                                className={`p-2 border-2 bg-head-main ${selectedUpperBody === ub ? "border-yellow-400" : "border-gray-400"} rounded-md`}
+                                                onClick={() => setSelectedUpperBody(null)}
+                                                className={`p-2 border-2 bg-head-main ${selectedUpperBody === null ? "border-yellow-400" : "border-gray-400"} rounded-md flex items-center justify-center`}
                                             >
-                                                <img
-                                                    src={ub}
-                                                    alt="upper body"
-                                                    className="w-12 h-12 object-contain"
-                                                />
+                                                <span className="text-white text-lg font-bold">
+                                                    X
+                                                </span>
                                             </button>
-                                        ))}
+                                            {availableUpperBody.map((ub) => (
+                                                <button
+                                                    key={ub}
+                                                    onClick={() => setSelectedUpperBody(ub)}
+                                                    className={`p-2 border-2 bg-head-main ${selectedUpperBody === ub ? "border-yellow-400" : "border-gray-400"} rounded-md`}
+                                                >
+                                                    <img
+                                                        src={ub}
+                                                        alt="upper body"
+                                                        className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
+                                                    />
+                                                </button>
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
                                 <button
@@ -230,7 +249,7 @@ export default function GamdokRunnerPage() {
                                 </h3>
 
                                 {/* Combined Avatar Preview */}
-                                <div className="relative w-32 h-32 mx-auto mb-4 border border-gray-300 bg-white p-2">
+                                <div className="relative w-56 h-56 mx-auto mb-4 border border-gray-300 bg-white p-2">
                                     <img
                                         src="/mini-games/gamdok-runner/full-body.png"
                                         alt="Base Character"
@@ -264,7 +283,8 @@ export default function GamdokRunnerPage() {
                                             className="absolute inset-0 w-full h-full object-contain"
                                         />
                                     )}
-                                    {selectedUpperBody === "/mini-games/gamdok-runner/upper-body/upperbody4.png" && (
+                                    {selectedUpperBody ===
+                                        "/mini-games/gamdok-runner/upper-body/upperbody4.png" && (
                                         <div className="absolute top-[-10%] left-1/2 transform -translate-x-1/2 p-2 bg-white text-black text-xs sm:text-sm rounded-lg shadow-lg z-20 w-32 sm:w-40">
                                             <p>이 날씨에 패딩 좀 더운디...</p>
                                             <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0 border-x-8 border-x-transparent border-t-8 border-t-white -mb-2"></div>
