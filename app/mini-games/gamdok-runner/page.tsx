@@ -264,17 +264,13 @@ export default function GamdokRunnerPage() {
                                             className="absolute inset-0 w-full h-full object-contain"
                                         />
                                     )}
+                                    {selectedUpperBody === "/mini-games/gamdok-runner/upper-body/upperbody4.png" && (
+                                        <div className="absolute top-[10%] left-1/2 transform -translate-x-1/2 p-2 bg-white text-black text-xs sm:text-sm rounded-lg shadow-lg z-20 w-32 sm:w-40">
+                                            <p>이 날씨에 패딩 좀 더운디...</p>
+                                            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0 border-x-8 border-x-transparent border-t-8 border-t-white -mb-2"></div>
+                                        </div>
+                                    )}
                                 </div>
-                                {selectedUpperBody ===
-                                    "/mini-games/gamdok-runner/upper-body/upperbody4.png" && (
-                                    <div
-                                        className="absolute left-1/2 transform -translate-x-1/2 -top-4 sm:-top-8 p-2 bg-white text-black text-xs sm:text-sm rounded-lg shadow-lg z-10 w-32 sm:w-40"
-                                        style={{ marginTop: "-4rem" }}
-                                    >
-                                        <p>이 날씨에 패딩 좀 더운디...</p>
-                                        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0 border-x-8 border-x-transparent border-t-8 border-t-white -mb-2"></div>
-                                    </div>
-                                )}
                                 {/* Clothing Selection UI */}
                             </div>
                         )}
