@@ -55,12 +55,10 @@ export class Player {
   slide() {
     if (!this.isJumping && !this.isSliding && !this.isFalling) {
       this.isSliding = true;
-      this.slideTimer = 50; // Revert to base slide duration
+      this.slideTimer = 45; // Revert to base slide duration
       this.height = this.originalHeight / 2;
       this.position.y += this.originalHeight / 2;
     }
-    this.height = this.originalHeight / 2;
-    this.position.y += this.originalHeight / 2;
   }
 
   unslide() {
