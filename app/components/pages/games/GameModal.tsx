@@ -95,7 +95,6 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
                                             fill
                                             className="object-cover"
                                             sizes="80px"
-                                            unoptimized={game.thumbnail.startsWith("http")}
                                         />
                                     </div>
                                 )}

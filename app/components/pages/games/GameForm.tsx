@@ -68,9 +68,12 @@ interface GameFormProps {
 }
 
 const inputClass =
-    "w-full border border-head-border rounded-lg px-3 py-2 text-sm text-head-text focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent mt-1";
+    "w-full border border-head-border px-3 py-2 text-sm text-head-text focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent mt-1";
 const labelClass = "block text-sm font-medium text-head-text";
 
+/**
+ * 게임 수정  페이지
+ */
 export default function GameForm({
     initialGame,
     onSubmit,
