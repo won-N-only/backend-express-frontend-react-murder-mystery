@@ -26,28 +26,30 @@ export default function LandingPage() {
                         />
                         {/* 얼굴 - hover 시 머리 날아옴 */}
                         <div
-                            className="group/face absolute top-[15%] left-[52.4%] w-[52px] h-[52px] -translate-x-1/2 cursor-pointer"
+                            className="group/face absolute top-[15%] left-[52.4%] w-[9.6%] -translate-x-1/2 cursor-pointer aspect-square"
                             onClick={handleFaceClick}
                         >
                             <Image
                                 src="/detective_office_head.png"
                                 alt=""
-                                width={52}
-                                height={52}
-                                className="w-full h-full object-cover object-center"
+                                fill
+                                sizes="52px"
+                                className="object-cover object-center"
                                 aria-hidden
                             />
                             {/* 헤어 - hover 시 머리 위에서 돌면서 얹힘 */}
                             <div className="absolute inset-0 w-full h-full pointer-events-none overflow-visible">
-                                <div className="hair-fly-in absolute top-0.4 left-1/2 w-[48px] h-[36px] transition-all duration-700 ease-out opacity-0 group-hover/face:opacity-100">
-                                    <Image
-                                        src="/detective_office_hair.png"
-                                        alt=""
-                                        width={36}
-                                        height={36}
-                                        className="w-full h-full object-cover object-center"
-                                        aria-hidden
-                                    />
+                                <div className="hair-fly-in absolute top-0.4 left-1/2 w-[92%] h-[70%] transition-all duration-700 ease-out opacity-0 group-hover/face:opacity-100">
+                                    <div className="relative w-full h-full">
+                                        <Image
+                                            src="/detective_office_hair.png"
+                                            alt=""
+                                            fill
+                                            sizes="36px"
+                                            className="object-cover object-center"
+                                            aria-hidden
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>
