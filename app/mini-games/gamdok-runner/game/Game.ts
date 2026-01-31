@@ -37,19 +37,32 @@ export class Game {
 
   private playerImage: HTMLImageElement | null = null;
   private itemImages: Map<ItemType, HTMLImageElement> = new Map();
+  private selectedShoesImage: HTMLImageElement | null = null;
+  private selectedLowerBodyImage: HTMLImageElement | null = null;
+  private selectedUpperBodyImage: HTMLImageElement | null = null;
   private assetsLoadedPromise: Promise<void>; // New: Promise that resolves when assets are loaded
 
   public onStateChange: (state: GameState) => void;
 
-  constructor(canvas: HTMLCanvasElement, onStateChange: (state: GameState) => void) {
+  constructor(
+    canvas: HTMLCanvasElement,
+    onStateChange: (state: GameState) => void,
+    selectedShoesPath: string | null = null,
+    selectedLowerBodyPath: string | null = null,
+    selectedUpperBodyPath: string | null = null,
+  ) {
     this.canvas = canvas;
     this.groundHeight = this.canvas.height - GROUND_HEIGHT;
     this.onStateChange = onStateChange; // Set onStateChange first
-    this.assetsLoadedPromise = this.preloadAssets(); // Start preloading
+    this.assetsLoadedPromise = this.preloadAssets(selectedShoesPath, selectedLowerBodyPath, selectedUpperBodyPath); // Start preloading
     this.loadNextPattern(); // This can run in parallel
   }
 
-  private async preloadAssets(): Promise<void> {
+  private async preloadAssets(
+    selectedShoesPath: string | null,
+    selectedLowerBodyPath: string | null,
+    selectedUpperBodyPath: string | null,
+  ): Promise<void> {
     const loadImage = (src: string): Promise<HTMLImageElement> => {
       return new Promise((resolve, reject) => {
         const img = new Image();
@@ -59,15 +72,37 @@ export class Game {
       });
     };
 
-    // Load player image
-    try {
-      this.playerImage = await loadImage('/mini-games/gamdok-runner/full-body.png');
-    } catch (error) {
-      console.error('Failed to load player image: /mini-games/gamdok-runner/full-body.png', error);
-    }
-    // Instantiate player AFTER image is loaded
-    this.player = new Player(150, this.groundHeight - 50, this.groundHeight, this.playerImage);
+    const imagePromises: Promise<void>[] = [];
 
+    // Load player base image
+    imagePromises.push(
+      loadImage('/mini-games/gamdok-runner/full-body.png')
+        .then(img => { this.playerImage = img; })
+        .catch(error => { console.error('Failed to load player image:', error); }),
+    );
+
+    // Load selected clothing images
+    if (selectedShoesPath) {
+      imagePromises.push(
+        loadImage(selectedShoesPath)
+          .then(img => { this.selectedShoesImage = img; })
+          .catch(error => { console.error('Failed to load shoes image:', error); }),
+      );
+    }
+    if (selectedLowerBodyPath) {
+      imagePromises.push(
+        loadImage(selectedLowerBodyPath)
+          .then(img => { this.selectedLowerBodyImage = img; })
+          .catch(error => { console.error('Failed to load lower body image:', error); }),
+      );
+    }
+    if (selectedUpperBodyPath) {
+      imagePromises.push(
+        loadImage(selectedUpperBodyPath)
+          .then(img => { this.selectedUpperBodyImage = img; })
+          .catch(error => { console.error('Failed to load upper body image:', error); }),
+      );
+    }
 
     // Load item images
     const itemImageMap = new Map<ItemType, string>([
@@ -77,19 +112,26 @@ export class Game {
       [ItemType.LIFE_UP, '/mini-games/gamdok-runner/items/coffee.png'],
     ]);
 
-    const itemImagePromises: Promise<void>[] = [];
-    itemImageMap.forEach(async (src, type) => {
-      itemImagePromises.push(
+    itemImageMap.forEach((src, type) => {
+      imagePromises.push(
         loadImage(src)
-          .then(img => {
-            this.itemImages.set(type, img);
-          })
-          .catch(error => {
-            console.error(`Failed to load image for item type ${type}: ${src}`, error);
-          }),
+          .then(img => { this.itemImages.set(type, img); })
+          .catch(error => { console.error(`Failed to load image for item type ${type}: ${src}`, error); }),
       );
     });
-    await Promise.all(itemImagePromises);
+
+    await Promise.all(imagePromises);
+
+    // Instantiate player AFTER all relevant images are loaded
+    this.player = new Player(
+      150,
+      this.groundHeight - 50,
+      this.groundHeight,
+      this.playerImage,
+      this.selectedShoesImage,
+      this.selectedLowerBodyImage,
+      this.selectedUpperBodyImage,
+    );
   }
 
 

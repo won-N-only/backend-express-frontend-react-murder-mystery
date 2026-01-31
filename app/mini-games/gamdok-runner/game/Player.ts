@@ -14,8 +14,19 @@ export class Player {
   slideTimer: number;
   groundHeight: number;
   image: HTMLImageElement | null; // New property for player image
+  shoesImage: HTMLImageElement | null;
+  lowerBodyImage: HTMLImageElement | null;
+  upperBodyImage: HTMLImageElement | null;
 
-  constructor(x: number, y: number, groundHeight: number, image: HTMLImageElement | null = null) {
+  constructor(
+    x: number,
+    y: number,
+    groundHeight: number,
+    image: HTMLImageElement | null = null,
+    shoesImage: HTMLImageElement | null = null,
+    lowerBodyImage: HTMLImageElement | null = null,
+    upperBodyImage: HTMLImageElement | null = null,
+  ) {
     this.position = { x, y };
     this.velocity = { x: 3, y: 0 };
     this.width = 80; // Fixed width for the player
@@ -27,6 +38,9 @@ export class Player {
     this.slideTimer = 0;
     this.groundHeight = groundHeight;
     this.image = image;
+    this.shoesImage = shoesImage;
+    this.lowerBodyImage = lowerBodyImage;
+    this.upperBodyImage = upperBodyImage;
     this.position.y = groundHeight - this.height; // Adjust initial y based on fixed height
   }
 
@@ -35,13 +49,24 @@ export class Player {
       return; // Don't draw if fallen and shrunk
     }
 
+    // Draw base player image
     if (this.image) {
-      // Draw image
       context.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
     } else {
       // Fallback to drawing a colored rectangle
       context.fillStyle = this.isSliding ? 'purple' : 'blue';
       context.fillRect(this.position.x, this.position.y, this.width, this.height);
+    }
+
+    // Draw clothing layers
+    if (this.lowerBodyImage) {
+      context.drawImage(this.lowerBodyImage, this.position.x, this.position.y, this.width, this.height);
+    }
+    if (this.upperBodyImage) {
+      context.drawImage(this.upperBodyImage, this.position.x, this.position.y, this.width, this.height);
+    }
+    if (this.shoesImage) {
+      context.drawImage(this.shoesImage, this.position.x, this.position.y, this.width, this.height);
     }
   }
 

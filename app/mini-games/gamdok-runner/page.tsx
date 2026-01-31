@@ -9,10 +9,26 @@ export default function GamdokRunnerPage() {
     const gameRef = useRef<Game | null>(null);
 
     const [started, setStarted] = useState(false);
+    const [gameStage, setGameStage] = useState<'dressUp' | 'running'>('dressUp');
     const [score, setScore] = useState(0);
     const [gameOver, setGameOver] = useState(false);
     const [won, setWon] = useState(false);
     const [lives, setLives] = useState(3); // Changed from health to lives
+
+    // Clothing selection states
+    const [selectedShoes, setSelectedShoes] = useState<string | null>('/mini-games/gamdok-runner/shoes/shoes1.png');
+    const [selectedLowerBody, setSelectedLowerBody] = useState<string | null>('/mini-games/gamdok-runner/lower-body/lowerbody1.png');
+    const [selectedUpperBody, setSelectedUpperBody] = useState<string | null>('/mini-games/gamdok-runner/upper-body/upperbody1.png');
+
+    // Available clothing items (for selection UI)
+    const availableShoes = ['/mini-games/gamdok-runner/shoes/shoes1.png'];
+    const availableLowerBody = ['/mini-games/gamdok-runner/lower-body/lowerbody1.png'];
+    const availableUpperBody = [
+        '/mini-games/gamdok-runner/upper-body/upperbody1.png',
+        '/mini-games/gamdok-runner/upper-body/upperbody2.png',
+        '/mini-games/gamdok-runner/upper-body/upperbody3.png',
+        '/mini-games/gamdok-runner/upper-body/upperbody4.png',
+    ];
 
     const handleGameStateChange = useCallback(
         (newState: { score: number; lives: number; isGameOver: boolean }) => {
@@ -26,8 +42,19 @@ export default function GamdokRunnerPage() {
     );
 
     const startGame = () => {
-        if (canvasRef.current) {
-            const gameInstance = new Game(canvasRef.current, handleGameStateChange);
+        // Only start the running game if in dressUp stage
+        if (gameStage === 'dressUp') {
+            setGameStage('running');
+        }
+
+        if (canvasRef.current && gameStage === 'running') {
+            const gameInstance = new Game(
+                canvasRef.current,
+                handleGameStateChange,
+                selectedShoes,
+                selectedLowerBody,
+                selectedUpperBody,
+            );
             gameRef.current = gameInstance;
             setStarted(true);
             setGameOver(false);
@@ -39,7 +66,10 @@ export default function GamdokRunnerPage() {
 
     const retryGame = () => {
         setGameOver(false);
-        startGame();
+        setStarted(false); // Reset started to false to show start overlay again
+        setGameStage('dressUp'); // Go back to dress up stage
+        setScore(0);
+        setLives(3);
     };
 
     // Scroll to top on mount
@@ -63,11 +93,97 @@ export default function GamdokRunnerPage() {
                         <GameCanvas
                             ref={canvasRef}
                             gameRef={gameRef}
-                            isStarted={started && !gameOver && !won}
+                            isStarted={started && !gameOver && !won && gameStage === 'running'}
                         />
 
-                        {/* Start Overlay */}
-                        {!started && (
+                        {/* Dress Up Overlay */}
+                        {gameStage === 'dressUp' && (
+                            <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-white text-center p-4 backdrop-blur-sm">
+                                <h2 className="text-4xl lg:text-5xl font-extrabold mb-4 drop-shadow-md">
+                                    김감독 코디 대작전
+                                </h2>
+                                <p className="mb-8 text-lg opacity-90">
+                                    김감독에게 멋진 옷을 입혀주세요!
+                                </p>
+                                {/* Character Preview */}
+                                <div className="relative w-24 h-24 mb-8">
+                                    <img
+                                        src="/mini-games/gamdok-runner/full-body.png"
+                                        alt="Base Character"
+                                        className="absolute inset-0 w-full h-full object-contain"
+                                    />
+                                    {selectedLowerBody && (
+                                        <img
+                                            src={selectedLowerBody}
+                                            alt="Lower Body"
+                                            className="absolute inset-0 w-full h-full object-contain"
+                                        />
+                                    )}
+                                    {selectedUpperBody && (
+                                        <img
+                                            src={selectedUpperBody}
+                                            alt="Upper Body"
+                                            className="absolute inset-0 w-full h-full object-contain"
+                                        />
+                                    )}
+                                    {selectedShoes && (
+                                        <img
+                                            src={selectedShoes}
+                                            alt="Shoes"
+                                            className="absolute inset-0 w-full h-full object-contain"
+                                        />
+                                    )}
+                                </div>
+                                {/* Clothing Selection UI */}
+                                <div className="flex flex-col gap-4 mb-8">
+                                    <div className="flex flex-wrap justify-center gap-2">
+                                        <span className="font-bold mr-2">신발:</span>
+                                        {availableShoes.map((shoe) => (
+                                            <button
+                                                key={shoe}
+                                                onClick={() => setSelectedShoes(shoe)}
+                                                className={`p-2 border-2 ${selectedShoes === shoe ? 'border-yellow-400' : 'border-gray-400'} rounded-md`}
+                                            >
+                                                <img src={shoe} alt="shoe" className="w-8 h-8 object-contain" />
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <div className="flex flex-wrap justify-center gap-2">
+                                        <span className="font-bold mr-2">하의:</span>
+                                        {availableLowerBody.map((lb) => (
+                                            <button
+                                                key={lb}
+                                                onClick={() => setSelectedLowerBody(lb)}
+                                                className={`p-2 border-2 ${selectedLowerBody === lb ? 'border-yellow-400' : 'border-gray-400'} rounded-md`}
+                                            >
+                                                <img src={lb} alt="lower body" className="w-8 h-8 object-contain" />
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <div className="flex flex-wrap justify-center gap-2">
+                                        <span className="font-bold mr-2">상의:</span>
+                                        {availableUpperBody.map((ub) => (
+                                            <button
+                                                key={ub}
+                                                onClick={() => setSelectedUpperBody(ub)}
+                                                className={`p-2 border-2 ${selectedUpperBody === ub ? 'border-yellow-400' : 'border-gray-400'} rounded-md`}
+                                            >
+                                                <img src={ub} alt="upper body" className="w-8 h-8 object-contain" />
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={startGame}
+                                    className="bg-head-brown text-white px-10 py-4 text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg"
+                                >
+                                    달리기 시작!
+                                </button>
+                            </div>
+                        )}
+
+                        {/* Game Start Overlay (Only shown if gameStage is 'running' and not started yet) */}
+                        {gameStage === 'running' && !started && (
                             <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-white text-center p-4 backdrop-blur-sm">
                                 <h2 className="text-4xl lg:text-5xl font-extrabold mb-4 drop-shadow-md">
                                     김감독 지각 방지 대작전
@@ -87,23 +203,6 @@ export default function GamdokRunnerPage() {
                             </div>
                         )}
 
-                        {/* Stage Clear Overlay (Not applicable for Gamdok Runner yet, hidden) */}
-                        {false && (
-                            <div className="absolute inset-0 bg-black/75 flex flex-col items-center justify-center text-white text-center p-4 backdrop-blur-sm">
-                                <h2 className="text-5xl font-black mb-2 text-green-400 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
-                                    STAGE CLEAR!
-                                </h2>
-                                <p className="text-xl mb-6 font-medium">다음 단계로 나아가세요!</p>
-
-                                <button
-                                    onClick={retryGame} // or start next stage if applicable
-                                    className="bg-head-brown text-white px-10 py-4 text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg"
-                                >
-                                    NEXT STAGE
-                                </button>
-                            </div>
-                        )}
-
                         {/* Game Over Overlay */}
                         {gameOver && (
                             <div className="absolute inset-0 bg-black/75 flex flex-col items-center justify-center text-white text-center p-4 backdrop-blur-sm">
@@ -119,22 +218,6 @@ export default function GamdokRunnerPage() {
                                     className="bg-head-brown text-white px-10 py-4 text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg"
                                 >
                                     RETRY
-                                </button>
-                            </div>
-                        )}
-
-                        {/* Win Overlay (Not applicable for Gamdok Runner yet, hidden) */}
-                        {false && (
-                            <div className="absolute inset-0 flex flex-col items-center justify-center text-head-text text-center p-6  ">
-                                <h2 className="text-4xl lg:text-5xl font-black mb-6 text-yellow-400 drop-shadow-md">
-                                    ALL STAGES CLEAR!
-                                </h2>
-                                <p className="text-lg lg:text-xl mb-8 font-medium">축하합니다!</p>
-                                <button
-                                    onClick={startGame} // or restart game
-                                    className="bg-head-brown text-white px-10 py-4 text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg"
-                                >
-                                    다시하기
                                 </button>
                             </div>
                         )}
