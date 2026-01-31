@@ -17,10 +17,14 @@ export const HAIR_SPAWN_BOTTOM_OFFSET = 80;
 export const BALL_INITIAL_Y_OFFSET_FROM_PADDLE = 80;
 export const PADDLE_HIT_DX_MULTIPLIER = 10;
 
+export const HAIRS_PER_ROW = 8;
+export const HAIR_ROW_COUNT = 3;
+export const HAIR_PADDING = 5;
+
 export const STAGES = [
     {
         level: 1,
-        hairCount: 12,
+        hairCount: 16,
         hairSpeedMin: 1,
         hairSpeedMax: 2,
         ballSpeed: 4,
@@ -28,15 +32,15 @@ export const STAGES = [
     {
         level: 2,
         hairCount: 15,
-        hairSpeedMin: 1.5,
-        hairSpeedMax: 2.5,
-        ballSpeed: 5,
+        hairSpeedMin: 1,
+        hairSpeedMax: 3.5,
+        ballSpeed: 4,
     },
     {
         level: 3,
-        hairCount: 20,
-        hairSpeedMin: 2,
-        hairSpeedMax: 3.5,
-        ballSpeed: 6,
+        hairCount: 15,
+        hairSpeedMin: 0.3,
+        hairSpeedMax: 7,
+        ballSpeed: 5,
     },
 ];

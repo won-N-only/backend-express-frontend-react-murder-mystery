@@ -7,6 +7,9 @@ import {
     HAIR_SPAWN_BOTTOM_OFFSET,
     BALL_INITIAL_Y_OFFSET_FROM_PADDLE,
     PADDLE_HIT_DX_MULTIPLIER,
+    HAIRS_PER_ROW,
+    HAIR_ROW_COUNT,
+    HAIR_PADDING,
 } from "../constants";
 import type { Hair, GameState } from "../types";
 import { STAGES } from "../constants"; // Import STAGES
@@ -14,35 +17,45 @@ import { STAGES } from "../constants"; // Import STAGES
 export function initHairs(canvasWidth: number, canvasHeight: number, stageConfig: typeof STAGES[0]): Hair[] {
     const hairs: Hair[] = [];
     const boxTop = HAIR_SPAWN_TOP_OFFSET;
-    const boxBottom = canvasHeight - HEAD_SIZE - HAIR_SPAWN_BOTTOM_OFFSET;
-    const boxLeft = 0;
-    const boxRight = canvasWidth - HAIR_SIZE;
 
     const isStage1 = stageConfig.level === 1; // Check if it's stage 1
 
-    for (let i = 0; i < stageConfig.hairCount; i++) {
-        let speedX = 0; // Default to static
-        let speedY = 0; // Default to static
+    const totalHairWidth = (HAIRS_PER_ROW * HAIR_SIZE) + ((HAIRS_PER_ROW - 1) * HAIR_PADDING);
+    const startX = (canvasWidth - totalHairWidth) / 2; // Center the grid
 
-        if (!isStage1) { // Only apply movement for stages 2 and above
-            speedX = stageConfig.hairSpeedMin + Math.random() * (stageConfig.hairSpeedMax - stageConfig.hairSpeedMin);
-            speedY = stageConfig.hairSpeedMin + Math.random() * (stageConfig.hairSpeedMax - stageConfig.hairSpeedMin);
+    // Iterate through rows and columns to create hairs in a grid
+    for (let row = 0; row < HAIR_ROW_COUNT; row++) {
+        for (let col = 0; col < HAIRS_PER_ROW; col++) {
+            // Ensure we don't exceed the total hairCount for the stage
+            if (hairs.length >= stageConfig.hairCount) break;
+
+            let speedX = 0; // Default to static
+            let speedY = 0; // Default to static
+
+            if (!isStage1) { // Only apply movement for stages 2 and above
+                speedX = stageConfig.hairSpeedMin + Math.random() * (stageConfig.hairSpeedMax - stageConfig.hairSpeedMin);
+                speedY = stageConfig.hairSpeedMin + Math.random() * (stageConfig.hairSpeedMax - stageConfig.hairSpeedMin);
+            }
+
+            const dirX = Math.random() > 0.5 ? 1 : -1;
+            const dirY = Math.random() > 0.5 ? 1 : -1;
+
+            const x = startX + (col * (HAIR_SIZE + HAIR_PADDING));
+            const y = boxTop + (row * (HAIR_SIZE + HAIR_PADDING));
+
+            hairs.push({
+                x: x,
+                y: y,
+                dx: speedX * dirX,
+                dy: speedY * dirY,
+                minX: 0, // Hairs can move across the entire canvas width
+                maxX: canvasWidth - HAIR_SIZE,
+                minY: boxTop,
+                maxY: canvasHeight - HEAD_SIZE - HAIR_SIZE, // Hairs should not go below the paddle area
+                alive: true,
+            });
         }
-
-        const dirX = Math.random() > 0.5 ? 1 : -1;
-        const dirY = Math.random() > 0.5 ? 1 : -1;
-
-        hairs.push({
-            x: boxLeft + Math.random() * (boxRight - boxLeft),
-            y: boxTop + Math.random() * (boxBottom - boxTop - HAIR_SIZE),
-            dx: speedX * dirX,
-            dy: speedY * dirY,
-            minX: boxLeft,
-            maxX: boxRight,
-            minY: boxTop,
-            maxY: boxBottom - HAIR_SIZE,
-            alive: true,
-        });
+        if (hairs.length >= stageConfig.hairCount) break;
     }
     return hairs;
 }
