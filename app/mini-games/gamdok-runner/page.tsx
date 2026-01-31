@@ -144,13 +144,7 @@ export default function GamdokRunnerPage() {
                     {/* Game Info Card */}
                     <div className="bg-head-white shadow-xl border border-head-border flex flex-col h-full w-full">
                         <div className="flex justify-between items-start p-6">
-                            <h1 className="text-3xl font-black text-head-text">Gamdok Runner</h1>
-                            <Link
-                                href="/mini-games"
-                                className="text-sm font-bold text-head-brown underline hover:no-underline mt-2"
-                            >
-                                ← 미니게임 목록으로
-                            </Link>
+                            <h1 className="text-3xl font-black text-head-text">김감독 러너</h1>
                         </div>
 
                         <div className="bg-head-gray-100 p-4 mx-4 mb-4   ">
