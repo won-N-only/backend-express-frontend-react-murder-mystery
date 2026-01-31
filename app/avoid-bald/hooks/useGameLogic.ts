@@ -88,7 +88,7 @@ export const useGameLogic = () => {
             sizeMax = 80;
         } else {
             const difficultyMultiplier = Math.floor(scoreRef.current / 500);
-            currentSpawnRate = Math.max(10, INITIAL_SPAWN_RATE - difficultyMultiplier * 3);
+            currentSpawnRate = Math.max(8, INITIAL_SPAWN_RATE - difficultyMultiplier * 3);
             speedBase = 4 + scoreRef.current / 500;
             sizeMin = 30;
             sizeMax = 40 + Math.min(30, Math.floor(scoreRef.current / 1000) * 5);
