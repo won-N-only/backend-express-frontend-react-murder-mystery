@@ -228,9 +228,7 @@ export default function GamdokRunnerPage() {
                                 <h3 className="font-bold text-head-brown mb-2 text-lg">
                                     선택된 코디
                                 </h3>
-                                if(selectedUpperBody===
-                                "/mini-games/gamdok-runner/upper-body/upperbody4.png"){" "}
-                                {<div> 이날씨에 패딩 좀 더운디 ... </div>}
+
                                 {/* Combined Avatar Preview */}
                                 <div className="relative w-32 h-32 mx-auto mb-4 border border-gray-300 bg-white p-2">
                                     <img
