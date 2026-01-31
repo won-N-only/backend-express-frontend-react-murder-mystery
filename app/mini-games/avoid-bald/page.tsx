@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from "./constants";
 import { useGameLogic } from "./hooks/useGameLogic";
 
@@ -76,9 +77,11 @@ export default function AvoidBaldGame() {
                                 당신은 대머리가 되었습니다...
                             </p>
 
-                            <img
+                            <Image
                                 src="/sad_head.png"
                                 alt="Sad Head"
+                                width={96}
+                                height={96}
                                 className="w-24 h-24 mb-6 animate-bounce"
                             />
 
@@ -113,9 +116,11 @@ export default function AvoidBaldGame() {
                                 </span>
                             </p>
 
-                            <img
+                            <Image
                                 src="/sad_head.png"
                                 alt="Sad Head"
+                                width={128}
+                                height={128}
                                 className="w-32 h-32 mb-8 animate-pulse"
                             />
 

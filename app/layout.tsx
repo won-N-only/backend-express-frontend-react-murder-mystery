@@ -9,6 +9,7 @@ import "./globals.css";
 export const metadata: Metadata = {
     title: "대머리",
     description: "대구 머더 미스터리 모임",
+    metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'),
     icons: {
         icon: "/favicon_face.png",
     },
