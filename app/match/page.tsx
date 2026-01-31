@@ -42,7 +42,7 @@ export default function MatchPage() {
 
     return (
         <div>
-            <PageHeader title="사건 배당" description="토 달지 마세요. 불만은 사절." />
+            <PageHeader title="사건 배당" description="친절하게 배정해드려요" />
 
             <div className="pt-section">
                 <div className="text-head-text text-2xl font-bold mb-2">참가자 선택</div>
