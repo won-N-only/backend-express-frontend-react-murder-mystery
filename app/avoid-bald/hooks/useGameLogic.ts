@@ -68,8 +68,7 @@ export const useGameLogic = () => {
         if (gameState !== "playing") return;
 
         frameCountRef.current++;
-        // 1프레임에 2점씩 
-        scoreRef.current += 2;
+        scoreRef.current += 1.5;
 
         // 승리 조건
         if (!isSkinUnlockedRef.current && scoreRef.current >= 2000) {
@@ -82,15 +81,15 @@ export const useGameLogic = () => {
         let currentSpawnRate, speedBase, sizeMin, sizeMax;
 
         if (isHardMode) {
-            currentSpawnRate = Math.max(3, 10 - Math.floor((scoreRef.current - 2000) / 1000));
+            currentSpawnRate = Math.max(3, 15 - Math.floor((scoreRef.current - 2000) / 800));
             speedBase = 6 + scoreRef.current / 400;
             sizeMin = 50;
             sizeMax = 110;
         } else { // scoreRef.current < 2000
             currentSpawnRate = 20; // More frequent spawns
-            speedBase = 6; // Faster initial speed
+            speedBase = 4; // Faster initial speed
             sizeMin = 40; // Larger initial obstacles
-            sizeMax = 60;
+            sizeMax = 80;
         }
 
         // 장애물 생성
