@@ -1,4 +1,5 @@
 import { toCommentDto } from "@app/api/_mappers";
+import { sanitizeText } from "@app/lib/sanitizer";
 import {
     getCreateCommentUseCase,
     getGetCommentsByGameIdUseCase,
@@ -22,8 +23,8 @@ export async function createComment(gameId: string, body: CreateCommentBody) {
     const comment = await useCase.execute({
         gameId,
         authorId: body.authorId,
-        authorName: body.authorName,
-        content: body.content.trim(),
+        authorName: sanitizeText(body.authorName)!, // authorName is required
+        content: sanitizeText(body.content)!, // content is required
         parentId: body.parentId ?? null,
     });
     return { comment: toCommentDto(comment) };

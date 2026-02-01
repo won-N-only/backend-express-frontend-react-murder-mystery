@@ -1,4 +1,5 @@
 import { toGameDto } from "@app/api/_mappers";
+import { sanitizeText, sanitizeTextArray } from "@app/lib/sanitizer";
 import {
     getCreateGameUseCase,
     getGetGamesByPlayerCountUseCase,
@@ -33,23 +34,26 @@ export interface CreateGameBody {
     series?: string | null;
     thumbnail?: string | null;
     description?: string | null;
-    ownerNote?: string[] | null;
+    ownerNote?: string[] | string | null;
 }
 
 export async function createGame(body: CreateGameBody) {
     const useCase = getCreateGameUseCase();
+
+    const ownerNoteArray =
+        body.ownerNote && typeof body.ownerNote === "string"
+            ? body.ownerNote.split("\n")
+            : body.ownerNote;
+
     const created = await useCase.execute({
-        name: String(body.name).trim(),
+        name: sanitizeText(body.name)!, // name is required
         minPlayers: Number(body.minPlayers) ?? 2,
         maxPlayers: body.maxPlayers != null ? Number(body.maxPlayers) || null : null,
-        company: body.company != null ? String(body.company).trim() || null : null,
-        series: body.series != null ? String(body.series).trim() || null : null,
-        thumbnail: body.thumbnail != null ? String(body.thumbnail).trim() || null : null,
-        description: body.description != null ? String(body.description).trim() || null : null,
-        ownerNote:
-            body.ownerNote != null && String(body.ownerNote).trim() !== ""
-                ? String(body.ownerNote).trim().split("\n")
-                : null,
+        company: sanitizeText(body.company),
+        series: sanitizeText(body.series),
+        thumbnail: sanitizeText(body.thumbnail),
+        description: sanitizeText(body.description),
+        ownerNote: sanitizeTextArray(ownerNoteArray as string[]),
     });
     return { game: toGameDto(created) };
 }
