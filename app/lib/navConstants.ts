@@ -4,7 +4,7 @@ export const NAV_ITEMS = [
     { href: "/history", label: "게임 기록" },
     { href: "/games", label: "게임 목록" },
     { href: "/match", label: "조합 추천" },
-    { href: "/stats", label: "성적표" },
+    { href: "/stats", label: "성적 확인" },
     { href: "/faq", label: "궁금해요" },
 ] as const;
 
