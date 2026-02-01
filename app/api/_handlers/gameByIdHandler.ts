@@ -46,6 +46,12 @@ export async function updateGame(gameId: string, body: UpdateGameBody) {
         if (value !== undefined) {
             switch (key) {
                 case "name":
+                    const sanitizedName = sanitizeText(value as string | null);
+                    if (!sanitizedName) {
+                        throw new Error("name이 유효하지 않습니다.");
+                    }
+                    updateData[key] = sanitizedName;
+                    break;
                 case "company":
                 case "series":
                 case "description":

@@ -1,4 +1,5 @@
 import { toPlayerDto } from "@app/api/_mappers";
+import { sanitizeText } from "@app/lib/sanitizer";
 import { getGetPlayersUseCase, getUpsertPlayerUseCase } from "@shared/infrastructure/di/container";
 
 export async function getPlayers() {
@@ -13,6 +14,12 @@ export interface CreatePlayerBody {
 
 export async function createPlayer(body: CreatePlayerBody) {
     const useCase = getUpsertPlayerUseCase();
-    const player = await useCase.execute(body.name);
+
+    const sanitizedName = sanitizeText(body.name);
+    if (!sanitizedName) {
+        throw new Error("name이 유효하지 않습니다.");
+    }
+
+    const player = await useCase.execute(sanitizedName);
     return { player: toPlayerDto(player) };
 }

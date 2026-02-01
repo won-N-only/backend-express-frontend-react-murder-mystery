@@ -20,11 +20,19 @@ export interface CreateCommentBody {
 
 export async function createComment(gameId: string, body: CreateCommentBody) {
     const useCase = getCreateCommentUseCase();
+
+    const sanitizedAuthorName = sanitizeText(body.authorName);
+    const sanitizedContent = sanitizeText(body.content);
+
+    if (!sanitizedAuthorName || !sanitizedContent) {
+        throw new Error("authorName 또는 content가 유효하지 않습니다.");
+    }
+
     const comment = await useCase.execute({
         gameId,
         authorId: body.authorId,
-        authorName: sanitizeText(body.authorName)!, // authorName is required
-        content: sanitizeText(body.content)!, // content is required
+        authorName: sanitizedAuthorName,
+        content: sanitizedContent,
         parentId: body.parentId ?? null,
     });
     return { comment: toCommentDto(comment) };

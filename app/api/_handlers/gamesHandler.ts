@@ -45,8 +45,13 @@ export async function createGame(body: CreateGameBody) {
             ? body.ownerNote.split("\n")
             : body.ownerNote;
 
+    const sanitizedName = sanitizeText(body.name);
+    if (!sanitizedName) {
+        throw new Error("name이 유효하지 않습니다.");
+    }
+
     const created = await useCase.execute({
-        name: sanitizeText(body.name)!, // name is required
+        name: sanitizedName,
         minPlayers: Number(body.minPlayers) ?? 2,
         maxPlayers: body.maxPlayers != null ? Number(body.maxPlayers) || null : null,
         company: sanitizeText(body.company),
