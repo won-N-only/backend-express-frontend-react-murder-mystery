@@ -1,5 +1,8 @@
+"use client";
+
 import PageHeader from "@app/components/common/PageHeader";
-import type { ReactNode } from "react";
+import Image from "next/image";
+import { useState, type ReactNode } from "react";
 
 interface FaqSectionProps {
     title: string;
@@ -19,9 +22,10 @@ interface FaqItemProps {
     question: string;
     description: string;
     additionalInfo?: string;
+    children?: ReactNode;
 }
 
-function FaqItem({ question, description, additionalInfo }: FaqItemProps) {
+function FaqItem({ question, description, additionalInfo, children }: FaqItemProps) {
     return (
         <div className="mb-5 section-card">
             <h2 className="text-xl font-bold text-head-text mb-2">Q. {question}</h2>
@@ -33,11 +37,13 @@ function FaqItem({ question, description, additionalInfo }: FaqItemProps) {
                     {additionalInfo}
                 </p>
             )}
+            {children}
         </div>
     );
 }
 
 export default function FAQPage() {
+    const [showBubble, setShowBubble] = useState(false);
     return (
         <div className="container mx-auto px-4">
             <PageHeader
@@ -127,6 +133,40 @@ export default function FAQPage() {
                     additionalInfo={`무단 외부 유출 시 경고 없이 추방될 수 있습니다.
 사진에 나온 모든 인원의 승인을 받았거나, 철저하게 가리기(블러) 처리 후 모임장 승인을 받은 경우에만 업로드 가능합니다.`}
                 />
+            </FaqSection>
+            <FaqSection title="5. 개인적인 궁금증">
+                <FaqItem
+                    question="비터리타는 정말 갓겜인가요?"
+                    description="태규님한테 물어보세요"
+                />
+                <FaqItem
+                    question="주로 활동하는 지역은 어디인가요?"
+                    description="동성로나 칠곡에서 젤 많이해요"
+                />
+                <FaqItem
+                    question="감독님은 얼마나 지각을 자주 하나요?"
+                    description="거의 매주 100% 지각을 하고 있습니다."
+                />
+                <FaqItem question="감독님은 대머리인가요?" description="대머리가 아닙니다." />
+                <FaqItem question="이 사이트 누가 만들었어요?" description="">
+                    <div className="relative w-fit">
+                        <Image
+                            src="/makers.png"
+                            alt="makers"
+                            width={100}
+                            height={100}
+                            className="ml-10 mb-4"
+                            onClick={() => setShowBubble(!showBubble)}
+                        />
+                        {showBubble && (
+                            <div className="absolute left-full top-1/2 -translate-y-1/2 ml-4 w-max bg-gray-700 text-white text-lg rounded-lg px-4 py-2">
+                                왜눌러봐요;;
+                                {/* Triangle pointing left */}
+                                <div className="absolute top-1/2 -translate-y-1/2 -left-2 w-0 h-0 border-t-8 border-t-transparent border-b-8 border-b-transparent border-r-8 border-r-gray-700" />
+                            </div>
+                        )}
+                    </div>
+                </FaqItem>
             </FaqSection>
         </div>
     );
