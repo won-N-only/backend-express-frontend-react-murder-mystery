@@ -117,7 +117,7 @@ export default function GameCheckModal({ playerId, playerName, onClose }: GameCh
                                     updateStatus(game._id, !isCompleted);
                                 }}
                                 disabled={isUpdating}
-                                className={`font-bold text-sm transition-all btn-standard-padding ${
+                                className={`font-bold text-sm transition-all btn-standard-padding  ${
                                     isUpdating ? "opacity-50 cursor-wait" : "cursor-pointer"
                                 } ${
                                     isCompleted

@@ -130,7 +130,7 @@ export default function AvoidBaldGame() {
                             <div className="flex gap-4 flex-col sm:flex-row">
                                 <button
                                     onClick={continueGame}
-                                    className="bg-head-brown text-white text-lg font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg animate-bounce whitespace-nowrap btn-standard-padding"
+                                    className="bg-head-brown text-white text-lg font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg animate-bounce    btn-standard-padding"
                                 >
                                     계속 하기
                                 </button>
@@ -159,7 +159,7 @@ export default function AvoidBaldGame() {
                             <div className="flex gap-4 flex-col sm:flex-row">
                                 <button
                                     onClick={startGame}
-                                    className="bg-head-brown text-white text-lg font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg animate-bounce whitespace-nowrap btn-standard-padding"
+                                    className="bg-head-brown text-white text-lg font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg animate-bounce   btn-standard-padding"
                                 >
                                     다시 시작
                                 </button>

@@ -69,7 +69,7 @@ export default function MatchPage() {
                 type="button"
                 onClick={handleMatch}
                 disabled={loading || !selectedPlayers.length}
-                className="mt-section w-1/4 block btn-primary"
+                className="mt-section w-1/4 block btn-primary btn-standard-padding"
             >
                 {loading ? "조합 만드는 중..." : "조합 만들기"}
             </button>

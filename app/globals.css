@@ -48,7 +48,7 @@ body {
         @apply block pt-2;
     }
     .btn-standard-padding {
-        @apply py-[5px] px-[10px];
+        @apply py-[5px] px-[10px] whitespace-nowrap; 
     }
     /** Navbar 링크: 텍스트~밑줄 간격을 pt(::after)로 처리 */
     .nav-link-spacer::after {
