@@ -100,7 +100,7 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
                         <div className="bg-head-main px-6 py-5  flex-shrink-0">
                             <div className="flex items-start gap-4">
                                 {/* 썸네일 */}
-                                <div className="shrink-0 w-[90px] h-[90px] relative bg-white rounded-full border border-2 border-gray-800">
+                                <div className="shrink-0 w-[90px] h-[90px] relative bg-white rounded-full border border-2 border-gray-800 overflow-hidden">
                                     {game.thumbnail && (
                                         <Image
                                             src={game.thumbnail}
@@ -169,11 +169,15 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
                             {/* 시놉시스 */}
                             <section className="rounded-none  bg-head-white p-6">
                                 <h2 className="text-xl font-bold text-head-text mb-4">시놉시스</h2>
-                                {game.description && (
-                                    <p className="text-head-text whitespace-pre-wrap leading-relaxed">
-                                        {game.description}
-                                    </p>
-                                )}
+                                {game.description &&
+                                    game.description.split("\n").map((paragraph, index) => (
+                                        <p
+                                            key={index}
+                                            className="text-head-text whitespace-pre-wrap leading-relaxed"
+                                        >
+                                            {paragraph}
+                                        </p>
+                                    ))}
                             </section>
                             {/* 소유자 */}
                             {game.ownerNote && game.ownerNote.length > 0 && (
