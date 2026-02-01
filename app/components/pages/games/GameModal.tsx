@@ -100,7 +100,7 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
                         <div className="bg-head-main px-6 py-5  flex-shrink-0">
                             <div className="flex items-start gap-4">
                                 {/* 썸네일 */}
-                                <div className="shrink-0 w-[80px] h-[106px] relative bg-white rounded-full border border-2 border-gray-800">
+                                <div className="shrink-0 w-[90px] h-[90px] relative bg-white rounded-full border border-2 border-gray-800">
                                     {game.thumbnail && (
                                         <Image
                                             src={game.thumbnail}
