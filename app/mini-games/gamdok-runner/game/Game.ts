@@ -1,7 +1,34 @@
-import { GROUND_HEIGHT } from '../constants';
+import {
+  BACKGROUND_SCROLL_SPEED_MULTIPLIER,
+  FALL_TIMER_DURATION,
+  GAME_OVER_ITEM_CHANCE,
+  GAME_SPEED,
+  GLOBAL_SPEED_INCREMENT_AMOUNT,
+  GLOBAL_SPEED_INCREMENT_INTERVAL,
+  GROUND_HEIGHT,
+  HEART_SPACING,
+  HEART_WIDTH,
+  HEART_Y_OFFSET,
+  HOLE_TRIGGER_ZONE_END_RATIO,
+  HOLE_TRIGGER_ZONE_START_RATIO,
+  ITEM_INTERVAL,
+  ITEM_OVERLAP_CHECK_HEIGHT,
+  ITEM_OVERLAP_CHECK_WIDTH,
+  ITEM_SCORE_BOOST,
+  ITEM_SPAWN_OFFSET_X,
+  MAX_LIVES,
+  OBSTACLE_INTERVAL,
+  PLAYER_INITIAL_X,
+  PLAYER_INITIAL_Y_OFFSET,
+  PROP_SPAWN_INTERVAL,
+  SPEED_DOWN_MULTIPLIER,
+  SPEED_UP_MULTIPLIER,
+  TEMP_SPEED_DURATION
+} from '../constants';
 import { OBSTACLE_PATTERNS, ObstacleType } from '../constants/patterns';
 import { GameState, ItemType } from '../types';
 import { random } from '../utils';
+import { BackgroundProp } from './BackgroundProp';
 import { Hole } from './Hole';
 import { Item } from './Item';
 import { Obstacle } from './Obstacle';
@@ -13,22 +40,22 @@ export class Game {
   private items: Item[] = [];
   private holes: Hole[] = [];
   private canvas: HTMLCanvasElement;
-  private gameSpeed = 3;
+  private gameSpeed = GAME_SPEED;
   private globalGameSpeedMultiplier = 1.0;
-  private globalSpeedIncrementInterval = 40; // 10 seconds at 60 FPS
-  private globalSpeedIncrementAmount = 0.01;
+  private globalSpeedIncrementInterval = GLOBAL_SPEED_INCREMENT_INTERVAL; // 10 seconds at 60 FPS
+  private globalSpeedIncrementAmount = GLOBAL_SPEED_INCREMENT_AMOUNT;
   private globalSpeedIncrementTimer = this.globalSpeedIncrementInterval;
   private tempSpeedMultiplier = 1.0; // Multiplier for temporary speed changes (from items)
   private tempSpeedTimer = 0;        // Timer for temporary speed effect duration
-  private tempSpeedDuration = 120;   // 5 seconds at 60 FPS
-  private obstacleInterval = 40;
+  private tempSpeedDuration = TEMP_SPEED_DURATION;
+  private obstacleInterval = OBSTACLE_INTERVAL;
   private obstacleSpawnTimer = this.obstacleInterval;
-  private itemInterval = 300;
+  private itemInterval = ITEM_INTERVAL;
   private itemSpawnTimer = this.itemInterval;
   private groundHeight: number;
 
   private score = 0;
-  private lives = 3; // Changed from health to lives
+  private lives = MAX_LIVES;
   private isGameOver = false;
   private fallTimer: number | null = null; // New timer for falling effect
 
@@ -40,77 +67,112 @@ export class Game {
   private selectedShoesImage: HTMLImageElement | null = null;
   private selectedLowerBodyImage: HTMLImageElement | null = null;
   private selectedUpperBodyImage: HTMLImageElement | null = null;
-  private selectedHairImage: HTMLImageElement | null = null; // New: Selected hair image
-  private assetsLoadedPromise: Promise<void>; // New: Promise that resolves when assets are loaded
+  private selectedHairImage: HTMLImageElement | null = null;
+  private assetsLoadedPromise: Promise<void>;
+
+  // Background and Prop management
+  private backgroundImages: HTMLImageElement[] = [];
+  private propImages: HTMLImageElement[] = [];
+  private currentBackground: HTMLImageElement | null = null;
+  private nextBackground: HTMLImageElement | null = null; // Next background for seamless scrolling
+  private currentBackgroundX: number = 0;
+  private backgroundActualWidth: number = 0; // Stores the actual width of the background images
+  private propSpawnTimer: number = PROP_SPAWN_INTERVAL;
+  private backgroundProps: BackgroundProp[] = [];
 
   public onStateChange: (state: GameState) => void;
+  private _playerImageLoaded: boolean = false; // Track if the critical player image loaded
 
   constructor(
     canvas: HTMLCanvasElement,
     onStateChange: (state: GameState) => void,
-    selectedShoesPath: string | null = null,
-    selectedLowerBodyPath: string | null = null,
-    selectedUpperBodyPath: string | null = null,
-    selectedHairPath: string | null = null, // New: Selected hair path
+    private selectedShoesPath: string | null = null,
+    private selectedLowerBodyPath: string | null = null,
+    private selectedUpperBodyPath: string | null = null,
+    private selectedHairPath: string | null = null,
   ) {
     this.canvas = canvas;
     this.groundHeight = this.canvas.height - GROUND_HEIGHT;
-    this.onStateChange = onStateChange; // Set onStateChange first
-    this.assetsLoadedPromise = this.preloadAssets(selectedShoesPath, selectedLowerBodyPath, selectedUpperBodyPath, selectedHairPath); // Start preloading
-    this.loadNextPattern(); // This can run in parallel
+    this.onStateChange = onStateChange;
+    this.selectedShoesPath = selectedShoesPath || '/mini-games/gamdok-runner/shoes/shoes1.png';
+    this.selectedLowerBodyPath = selectedLowerBodyPath || '/mini-games/gamdok-runner/lower-body/lowerbody1.png';
+    this.loadNextPattern(); // This can run in parallel with asset loading
+    this.assetsLoadedPromise = this.preloadAssets();
   }
 
-  private async preloadAssets(
-    selectedShoesPath: string | null,
-    selectedLowerBodyPath: string | null,
-    selectedUpperBodyPath: string | null,
-    selectedHairPath: string | null, // New: Selected hair path
-  ): Promise<void> {
+  public async init(): Promise<void> {
+    try {
+      await this.assetsLoadedPromise;
+      if (!this._playerImageLoaded || !this.playerImage) {
+        throw new Error("Critical player asset failed to load, cannot initialize game.");
+      }
+      this.player = new Player(
+        PLAYER_INITIAL_X,
+        this.groundHeight - PLAYER_INITIAL_Y_OFFSET,
+        this.groundHeight,
+        this.playerImage,
+        this.selectedShoesImage,
+        this.selectedLowerBodyImage,
+        this.selectedUpperBodyImage,
+        this.selectedHairImage,
+      );
+    } catch (error) {
+      console.error("Game initialization failed due to asset loading error:", error);
+      this.isGameOver = true;
+      this.onStateChange({
+        score: this.score,
+        lives: this.lives,
+        isGameOver: this.isGameOver,
+      });
+      throw error; // Re-throw to propagate the error
+    }
+  }
+
+  private async preloadAssets(): Promise<void> {
     const loadImage = (src: string): Promise<HTMLImageElement> => {
       return new Promise((resolve, reject) => {
         const img = new Image();
         img.src = src;
         img.onload = () => resolve(img);
-        img.onerror = reject;
+        img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
       });
     };
 
     const imagePromises: Promise<void>[] = [];
 
-    // Load player base image
+    // Load player base image - CRITICAL
     imagePromises.push(
       loadImage('/mini-games/gamdok-runner/full-body.png')
-        .then(img => { this.playerImage = img; })
-        .catch(error => { console.error('Failed to load player image:', error); }),
+        .then(img => { this.playerImage = img; this._playerImageLoaded = true; console.log('Player base image loaded:', img.src); })
+        .catch(error => { console.error('Failed to load critical player image:', error); throw error; }), // Re-throw for critical asset
     );
 
-    // Load selected clothing images
-    if (selectedShoesPath) {
+    // Load selected clothing images (using paths passed in constructor)
+    if (this.selectedShoesPath) {
       imagePromises.push(
-        loadImage(selectedShoesPath)
-          .then(img => { this.selectedShoesImage = img; })
+        loadImage(this.selectedShoesPath)
+          .then(img => { this.selectedShoesImage = img; console.log('Shoes image loaded:', img.src); })
           .catch(error => { console.error('Failed to load shoes image:', error); }),
       );
     }
-    if (selectedLowerBodyPath) {
+    if (this.selectedLowerBodyPath) {
       imagePromises.push(
-        loadImage(selectedLowerBodyPath)
-          .then(img => { this.selectedLowerBodyImage = img; })
+        loadImage(this.selectedLowerBodyPath)
+          .then(img => { this.selectedLowerBodyImage = img; console.log('Lower body image loaded:', img.src); })
           .catch(error => { console.error('Failed to load lower body image:', error); }),
       );
     }
-    if (selectedUpperBodyPath) {
+    if (this.selectedUpperBodyPath) {
       imagePromises.push(
-        loadImage(selectedUpperBodyPath)
-          .then(img => { this.selectedUpperBodyImage = img; })
+        loadImage(this.selectedUpperBodyPath)
+          .then(img => { this.selectedUpperBodyImage = img; console.log('Upper body image loaded:', img.src); })
           .catch(error => { console.error('Failed to load upper body image:', error); }),
       );
     }
-    // Load selected hair image
-    if (selectedHairPath) {
+    if (this.selectedHairPath) {
       imagePromises.push(
-        loadImage(selectedHairPath)
-          .then(img => { this.selectedHairImage = img; })
+        loadImage(this.selectedHairPath)
+          .then(img => { this.selectedHairImage = img; console.log('Hair image loaded:', img.src); })
           .catch(error => { console.error('Failed to load hair image:', error); }),
       );
     }
@@ -131,19 +193,37 @@ export class Game {
       );
     });
 
+    // Load background images
+    for (let i = 1; i <= 3; i++) {
+      const src = `/mini-games/gamdok-runner/background/background${i}.png`;
+      imagePromises.push(
+        loadImage(src)
+          .then(img => {
+            this.backgroundImages.push(img);
+            if (this.backgroundActualWidth === 0) { // Set actual width from the first loaded background
+              this.backgroundActualWidth = img.width;
+            }
+          })
+          .catch(error => { console.error(`Failed to load background image: ${src}`, error); }),
+      );
+    }
+
+    // Load prop images
+    for (let i = 1; i <= 5; i++) {
+      const src = `/mini-games/gamdok-runner/background/prop${i}.png`;
+      imagePromises.push(
+        loadImage(src)
+          .then(img => { this.propImages.push(img); })
+          .catch(error => { console.error(`Failed to load prop image: ${src}`, error); }),
+      );
+    }
+
     await Promise.all(imagePromises);
 
-    // Instantiate player AFTER all relevant images are loaded
-    this.player = new Player(
-      120,
-      this.groundHeight - 50,
-      this.groundHeight,
-      this.playerImage,
-      this.selectedShoesImage,
-      this.selectedLowerBodyImage,
-      this.selectedUpperBodyImage,
-      this.selectedHairImage, // Pass selected hair
-    );
+    if (this.backgroundImages.length > 0) {
+      this.currentBackground = this.backgroundImages[random(0, this.backgroundImages.length - 1)];
+      this.nextBackground = this.backgroundImages[random(0, this.backgroundImages.length - 1)];
+    }
   }
 
 
@@ -176,6 +256,42 @@ export class Game {
 
     this.score += 1;
 
+    // Background scrolling
+    if (this.currentBackground) {
+      this.currentBackgroundX -= effectiveGameSpeed * BACKGROUND_SCROLL_SPEED_MULTIPLIER;
+      // If current background has scrolled off-screen, reset and pick next
+      if (this.currentBackgroundX <= -this.canvas.width) {
+        this.currentBackgroundX = 0;
+        // The current background becomes the next one
+        this.currentBackground = this.nextBackground;
+        // Load a new random image for the next background
+        this.nextBackground = this.backgroundImages[random(0, this.backgroundImages.length - 1)];
+      }
+    }
+
+    // Spawn props
+    this.propSpawnTimer--;
+    if (this.propSpawnTimer <= 0 && this.propImages.length > 0) {
+      const randomPropImage = this.propImages[random(0, this.propImages.length - 1)];
+      const propWidth = randomPropImage.width;
+      const propHeight = randomPropImage.height;
+
+      this.backgroundProps.push(new BackgroundProp(
+        this.canvas.width,
+        0,
+        randomPropImage,
+        propWidth,
+        propHeight,
+      ));
+      this.propSpawnTimer = random(PROP_SPAWN_INTERVAL / 2, PROP_SPAWN_INTERVAL * 1.5);
+    }
+
+    // Update and filter props
+    this.backgroundProps.forEach(prop => {
+      prop.position.x -= effectiveGameSpeed;
+    });
+    this.backgroundProps = this.backgroundProps.filter(prop => prop.position.x + prop.width > 0);
+
     // Gradually increase global game speed multiplier
     this.globalSpeedIncrementTimer--;
     if (this.globalSpeedIncrementTimer <= 0) {
@@ -194,14 +310,14 @@ export class Game {
     this.obstacleSpawnTimer--;
     if (this.obstacleSpawnTimer <= 0) {
       this.spawnFromPattern();
-      const dynamicObstacleInterval = Math.max(20, this.obstacleInterval / (this.globalGameSpeedMultiplier * this.tempSpeedMultiplier));
+      const dynamicObstacleInterval = Math.max(20, OBSTACLE_INTERVAL / (this.globalGameSpeedMultiplier * this.tempSpeedMultiplier));
       this.obstacleSpawnTimer = dynamicObstacleInterval;
     }
 
-    this.itemSpawnTimer--;
+    this.itemSpawnTimer -= 1;
     if (this.itemSpawnTimer <= 0) {
       this.spawnItem();
-      const dynamicItemInterval = Math.max(50, (this.itemInterval + random(-50, 50)) / (this.globalGameSpeedMultiplier * this.tempSpeedMultiplier));
+      const dynamicItemInterval = Math.max(50, (ITEM_INTERVAL + random(-50, 50)) / (this.globalGameSpeedMultiplier * this.tempSpeedMultiplier));
       this.itemSpawnTimer = dynamicItemInterval;
     }
 
@@ -223,7 +339,30 @@ export class Game {
   }
 
   draw(context: CanvasRenderingContext2D) {
-    // Draw ground by segments, leaving holes
+    // Draw background
+    if (this.currentBackground && this.nextBackground) { // Ensure both are loaded
+      // Draw the current background
+      context.drawImage(
+        this.currentBackground,
+        this.currentBackgroundX,
+        0,
+        this.canvas.width,
+        this.canvas.height
+      );
+      // Draw the next background immediately after the current one
+      context.drawImage(
+        this.nextBackground,
+        this.currentBackgroundX + this.canvas.width,
+        0,
+        this.canvas.width,
+        this.canvas.height
+      );
+    }
+
+    // Draw background props
+    this.backgroundProps.forEach(prop => prop.draw(context));
+
+    // Draw ground by segments, leaving holes (moved after background/props)
     context.fillStyle = 'gray';
     let lastX = 0;
     const sortedHoles = [...this.holes].sort((a, b) => a.position.x - b.position.x);
@@ -245,10 +384,10 @@ export class Game {
     // Draw lives (hearts)
     context.font = '24px Arial'; // Set a suitable font size for the emoji
     context.fillStyle = 'red';   // Set color for the emoji
-    const heartSpacing = 5;
-    const heartWidth = 24; // Approximate width of a 24px heart emoji
+    const heartSpacing = HEART_SPACING;
+    const heartWidth = HEART_WIDTH;
     for (let i = 0; i < this.lives; i++) {
-      context.fillText('❤️', this.canvas.width - (i + 1) * (heartWidth + heartSpacing) - 5, 30); // Adjust position as needed
+      context.fillText('❤️', this.canvas.width - (i + 1) * (heartWidth + heartSpacing) - 5, HEART_Y_OFFSET);
     }
   }
 
@@ -293,11 +432,16 @@ export class Game {
   }
 
   spawnItem() {
-    const y = random(this.groundHeight - 200, this.groundHeight - 80);
+    const yPositions = [
+      this.groundHeight - 120, // Jumpable
+      this.groundHeight - 80,  // Duckable
+      this.groundHeight - 50,  // Straight-through/Collectable
+    ];
+    const y = yPositions[random(0, yPositions.length - 1)];
     let randomItemType: ItemType;
 
     // 10% chance for GAME_OVER item, otherwise pick from other types
-    if (Math.random() < 0.05) {
+    if (Math.random() < GAME_OVER_ITEM_CHANCE) {
       randomItemType = ItemType.GAME_OVER;
     } else {
       const otherItemTypes = Object.values(ItemType).filter(type => type !== ItemType.GAME_OVER);
@@ -306,10 +450,10 @@ export class Game {
 
     // Define potential item bounds for collision check
     // Using default item width and height from Item constructor (40x40)
-    const potentialItemX = this.canvas.width;
+    const potentialItemX = this.canvas.width + ITEM_SPAWN_OFFSET_X;
     const potentialItemY = y;
-    const potentialItemWidth = 50;
-    const potentialItemHeight = 50;
+    const potentialItemWidth = ITEM_OVERLAP_CHECK_WIDTH;
+    const potentialItemHeight = ITEM_OVERLAP_CHECK_HEIGHT;
 
     // Check for overlap with existing obstacles
     const overlapsWithObstacle = this.obstacles.some(obstacle =>
@@ -324,37 +468,40 @@ export class Game {
     }
 
     const itemImage = this.itemImages.get(randomItemType);
-    this.items.push(new Item(this.canvas.width, y, 80, 80, randomItemType, itemImage || null));
+    this.items.push(new Item(this.canvas.width + ITEM_SPAWN_OFFSET_X, y, 80, 80, randomItemType, itemImage || null));
   }
 
-  checkCollisions() {
+  private _checkPlayerObstacleCollision() {
     const player = this.player;
     if (!player) return;
 
-    // Obstacle collision
     this.obstacles.forEach((obstacle, index) => {
       if (
         player.position.x < obstacle.position.x + obstacle.width &&
-        player.position.x + player.width > obstacle.position.x &&
+        player.position.x + player.hitboxWidth > obstacle.position.x &&
         player.position.y < obstacle.position.y + obstacle.height &&
-        player.position.y + player.height > obstacle.position.y
+        player.position.y + player.hitboxHeight > obstacle.position.y
       ) {
         this.obstacles.splice(index, 1);
-        this.lives -= 1; // Decrement lives
+        this.lives -= 1;
         if (this.lives <= 0) {
           this.lives = 0;
           this.isGameOver = true;
         }
       }
     });
+  }
 
-    // Item collision
+  private _checkPlayerItemCollision() {
+    const player = this.player;
+    if (!player) return;
+
     this.items.forEach((item, index) => {
       if (
         player.position.x < item.position.x + item.width &&
-        player.position.x + player.width > item.position.x &&
+        player.position.x + player.hitboxWidth > item.position.x &&
         player.position.y < item.position.y + item.height &&
-        player.position.y + player.height > item.position.y
+        player.position.y + player.hitboxHeight > item.position.y
       ) {
         this.items.splice(index, 1);
         switch (item.type) {
@@ -362,45 +509,55 @@ export class Game {
             this.isGameOver = true;
             break;
           case ItemType.SPEED_UP:
-            if (this.tempSpeedTimer <= 0) { // Only apply if no temporary effect is active
-              this.tempSpeedMultiplier = 1.4; // Increase speed by 50%
+            if (this.tempSpeedTimer <= 0) {
+              this.tempSpeedMultiplier = SPEED_UP_MULTIPLIER;
               this.tempSpeedTimer = this.tempSpeedDuration;
             }
             break;
           case ItemType.SPEED_DOWN:
-            if (this.tempSpeedTimer <= 0) { // Only apply if no temporary effect is active
-              this.tempSpeedMultiplier = 0.6; // Decrease speed by 50%
+            if (this.tempSpeedTimer <= 0) {
+              this.tempSpeedMultiplier = SPEED_DOWN_MULTIPLIER;
               this.tempSpeedTimer = this.tempSpeedDuration;
             }
             break;
           case ItemType.LIFE_UP:
-            this.lives = Math.min(3, this.lives + 1); // Cap lives at 3
+            this.lives = Math.min(MAX_LIVES, this.lives + 1);
             break;
         }
-        this.score += 100;
+        this.score += ITEM_SCORE_BOOST;
       }
     });
+  }
 
-    // Hole collision
-    // Check if player is over a hole when they are on the ground (or about to land)
-    const playerOnGround = player.position.y + player.height >= this.groundHeight;
+  private _checkPlayerHoleCollision() {
+    const player = this.player;
+    if (!player) return;
+
+    const playerOnGround = player.position.y + player.hitboxHeight >= this.groundHeight;
 
     if (!player.isFalling && !player.isJumping && playerOnGround) {
       for (const hole of this.holes) {
-        const playerCenter = player.position.x + player.width / 2;
+        // Use player.hitboxWidth for playerCenter calculation
+        const playerCenter = player.position.x + player.hitboxWidth / 2;
 
-        // Define a narrow central "trigger zone" within the hole (e.g., central 20% of the hole width)
-        const triggerZoneStart = hole.position.x + hole.width * 0.4; // 40% from left edge
-        const triggerZoneEnd = hole.position.x + hole.width * 0.8;   // 80% from left edge
+        const triggerZoneStart = hole.position.x + hole.width * HOLE_TRIGGER_ZONE_START_RATIO;
+        const triggerZoneEnd = hole.position.x + hole.width * HOLE_TRIGGER_ZONE_END_RATIO;
 
-        // Check if the player's center is within this narrow trigger zone
         if (playerCenter > triggerZoneStart && playerCenter < triggerZoneEnd) {
-          // Player is on the ground and over a hole's trigger zone -> start falling
           player.fallIntoHole();
-          this.fallTimer = 60; // 1 second delay before game over
+          this.fallTimer = FALL_TIMER_DURATION;
           return;
         }
       }
     }
+  }
+
+  checkCollisions() {
+    const player = this.player;
+    if (!player) return;
+
+    this._checkPlayerObstacleCollision();
+    this._checkPlayerItemCollision();
+    this._checkPlayerHoleCollision();
   }
 }

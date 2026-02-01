@@ -1,3 +1,4 @@
+import { GROUND_HEIGHT, HOLE_FILL_COLOR } from '../constants';
 import { Position } from '../types';
 
 export class Hole {
@@ -9,6 +10,8 @@ export class Hole {
     this.width = width;
   }
 
-  // A hole doesn't need a draw method itself, it's a lack of ground.
-  // It also doesn't need an update method as it moves with the game speed.
+  draw(context: CanvasRenderingContext2D) {
+    context.fillStyle = HOLE_FILL_COLOR;
+    context.fillRect(this.position.x, this.position.y, this.width, GROUND_HEIGHT);
+  }
 }
