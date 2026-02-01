@@ -7,17 +7,10 @@ import {
 } from "@shared/infrastructure/di/container";
 
 export async function getGameById(gameId: string) {
-    const [getGameByIdUseCase, getCompletionsUseCase] = [
-        getGetGameByIdUseCase(),
-        getGetCompletionsByGameIdUseCase(),
-    ];
-    const [game, completions] = await Promise.all([
-        getGameByIdUseCase.execute(gameId),
-        getCompletionsUseCase.execute(gameId),
-    ]);
+    const getGameByIdUseCase = getGetGameByIdUseCase();
+    const game = await getGameByIdUseCase.execute(gameId);
     return {
         game: toGameDto(game),
-        completions: completions.map(toCompletionDto),
     };
 }
 

@@ -97,7 +97,7 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
             onClick={handleClose}
         >
             <div
-                className="  bg-head-main shadow-soft   w-full max-w-[750px]  max-h-[775px]  h-auto   overflow-hidden  flex flex-col"
+                className="  bg-head-main shadow-soft   w-full max-w-[750px]  max-h-[90vh]  h-auto   overflow-hidden  flex flex-col"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="sticky top-0 bg-head-main z-10 px-[30px] py-[20px] flex-shrink-0 flex items-center justify-between">
@@ -230,7 +230,7 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
                             id="add-description"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
-                            className={`${inputClass} w-full h-[110px] mt-2`}
+                            className={`h-[200px] w-full  mt-2 border border-head-border text-head-text focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent`}
                             placeholder="게임 소개 또는 시놉시스"
                         />
                     </div>
