@@ -9,10 +9,11 @@ export interface CreateGameRequest {
     series?: string | null;
     thumbnail?: string | null;
     description?: string | null;
+    ownerNote?: string[] | null;
 }
 
 export class CreateGameUseCase {
-    constructor(private gameRepository: IGameRepository) {}
+    constructor(private gameRepository: IGameRepository) { }
 
     async execute(request: CreateGameRequest): Promise<Game> {
         const orderNumber = await this.gameRepository.getNextOrderNumber();
@@ -25,7 +26,7 @@ export class CreateGameUseCase {
             request.maxPlayers ?? null,
             request.company ?? null,
             request.series ?? null,
-            null,
+            request.ownerNote ?? null,
             request.thumbnail ?? null,
             request.description ?? null,
             now,

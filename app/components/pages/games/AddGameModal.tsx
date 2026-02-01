@@ -11,7 +11,7 @@ export interface AddGamePayload {
     series: string | null;
     thumbnail: string | null;
     description: string | null;
-    ownerNote: string | null;
+    ownerNote: string[] | null;
 }
 
 const inputClass =
