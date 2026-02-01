@@ -19,8 +19,6 @@ interface GameModalProps {
  * 게임 상세 모달
  */
 export default function GameModal({ gameId, onClose }: GameModalProps) {
-    const [showCompletions, setShowCompletions] = useState(false);
-
     const {
         data,
         mutate: mutateGame,
@@ -31,7 +29,7 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
         data: completionsData,
         mutate: mutateCompletions,
         isLoading: isLoadingCompletions,
-    } = useSWR(showCompletions && gameId ? `/api/games/${gameId}/completions` : null, fetcher);
+    } = useSWR(gameId ? `/api/games/${gameId}/completions` : null, fetcher);
 
     const { data: playersData } = useSWR("/api/players", fetcher);
 
@@ -188,15 +186,8 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
                                                                 <h2 className="text-xl font-bold text-head-text">
                                                                     대머리 완료 여부
                                                                 </h2>
-                                                                <button
-                                                                    onClick={() => setShowCompletions(!showCompletions)}
-                                                                    className="text-md bg-head-brown text-white px-4 py-1 rounded-none font-bold"
-                                                                >
-                                                                    {showCompletions ? "닫기" : "보기"}
-                                                                </button>
                                                             </div>
                             
-                                                            {showCompletions && (
                                                                 <>
                                                                     {isLoadingCompletions ? (
                                                                         <div className="text-head-text text-center mt-4">로딩 중...</div>
@@ -237,7 +228,6 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
                                                                         </>
                                                                     )}
                                                                 </>
-                                                            )}
                                                         </section>                        </div>
                     </>
                 ) : (
