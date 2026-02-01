@@ -219,14 +219,14 @@ export default function GameForm({
             </div>
             <div>
                 <label htmlFor="ownerNote" className={labelClass}>
-                    소유자 (한 줄씩 또는 쉼표 구분)
+                    소유자 (엔터로 구분)
                 </label>
                 <textarea
                     id="ownerNote"
                     value={form.ownerNote}
                     onChange={(e) => setForm((p) => ({ ...p, ownerNote: e.target.value }))}
                     className={`${inputClass} w-full h-[80px] mt-2`}
-                    placeholder="소유자 메모"
+                    placeholder="소유자, 엔터로 구분"
                 />
             </div>
             <div className="flex flex-col sm:flex-row gap-[10px] sm:gap-3">

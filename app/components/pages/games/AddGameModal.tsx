@@ -247,7 +247,7 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
                             value={ownerNote}
                             onChange={(e) => setOwnerNote(e.target.value)}
                             className={`h-[100px] w-full  mt-2 border border-head-border text-head-text focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent`}
-                            placeholder="소유자 메모"
+                            placeholder="소유자, 엔터로 구분"
                         />
                     </div>
                     <div className="flex flex-col sm:flex-row gap-[10px] sm:gap-3">

@@ -168,24 +168,24 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
                         <div className="flex-1 overflow-y-auto bg-head-main p-6 space-y-6">
                             {/* 시놉시스 */}
                             <section className="rounded-none  bg-head-white p-6">
-                                <h2 className="text-xl font-bold text-head-text mb-4">
-                                    시놉시스
-                                </h2>
+                                <h2 className="text-xl font-bold text-head-text mb-4">시놉시스</h2>
                                 {game.description && (
                                     <p className="text-head-text whitespace-pre-wrap leading-relaxed">
                                         {game.description}
                                     </p>
                                 )}
                             </section>
-
-                            {/* 나만의 노트 */}
+                            {/* 소유자 */}
                             {game.ownerNote && game.ownerNote.length > 0 && (
                                 <section className="rounded-none  bg-head-white p-6">
                                     <h2 className="text-xl font-bold text-head-text mb-4">
-                                        나만의 노트
+                                        소유자
                                     </h2>
                                     {game.ownerNote.map((note, index) => (
-                                        <p key={index} className="text-head-text whitespace-pre-wrap leading-relaxed">
+                                        <p
+                                            key={index}
+                                            className="text-head-text whitespace-pre-wrap leading-relaxed"
+                                        >
                                             {note}
                                         </p>
                                     ))}
@@ -193,56 +193,62 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
                             )}
                             {/* 댓글 섹션 */}
                             <GameCommentsSection gameId={gameId} />
+                            {/* 대머리 완료 여부 토글/컨텐츠 */}
+                            <section className="rounded-none  bg-head-white p-6">
+                                <div className="flex justify-between items-center">
+                                    <h2 className="text-xl font-bold text-head-text">
+                                        대머리 완료 여부
+                                    </h2>
+                                </div>
 
-                                                        {/* 대머리 완료 여부 토글/컨텐츠 */}
-                                                        <section className="rounded-none  bg-head-white p-6">
-                                                            <div className="flex justify-between items-center">
-                                                                <h2 className="text-xl font-bold text-head-text">
-                                                                    대머리 완료 여부
-                                                                </h2>
+                                <>
+                                    {isLoadingCompletions ? (
+                                        <div className="text-head-text text-center mt-4">
+                                            로딩 중...
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <hr className="border-head-gray-500 opacity-40 py-2 my-4" />
+                                            <div className="flex justify-end mb-4">
+                                                <button
+                                                    onClick={() => setIsEditing(!isEditing)}
+                                                    className="text-md bg-head-brown text-white px-4 py-1 rounded-none font-bold"
+                                                >
+                                                    {isEditing ? "완료" : "수정"}
+                                                </button>
+                                            </div>
+                                            <div className="grid grid-cols-4 gap-3">
+                                                {players.map((p) => {
+                                                    const status =
+                                                        completionMap.get(p._id) ??
+                                                        CompletionStatus.NOT_DONE;
+                                                    return (
+                                                        <div
+                                                            key={p._id}
+                                                            className="flex flex-col gap-2 mb-4"
+                                                        >
+                                                            <span className="text-sm font-bold text-center text-head-text">
+                                                                {p.name}
+                                                            </span>
+                                                            <hr className="border-head-gray-500 opacity-40 " />
+                                                            <div className="flex justify-center">
+                                                                <CompletionStatusButtons
+                                                                    currentStatus={status}
+                                                                    onStatusChange={(s) =>
+                                                                        updateStatus(p._id, s)
+                                                                    }
+                                                                    isEditable={isEditing}
+                                                                />
                                                             </div>
-                            
-                                                                <>
-                                                                    {isLoadingCompletions ? (
-                                                                        <div className="text-head-text text-center mt-4">로딩 중...</div>
-                                                                    ) : (
-                                                                        <>
-                                                                            <hr className="border-head-gray-500 opacity-40 py-2 my-4" />
-                                                                            <div className="flex justify-end mb-4">
-                                                                                <button
-                                                                                    onClick={() => setIsEditing(!isEditing)}
-                                                                                    className="text-md bg-head-brown text-white px-4 py-1 rounded-none font-bold"
-                                                                                >
-                                                                                    {isEditing ? "완료" : "수정"}
-                                                                                </button>
-                                                                            </div>
-                                                                            <div className="grid grid-cols-4 gap-3">
-                                                                                {players.map((p) => {
-                                                                                    const status =
-                                                                                        completionMap.get(p._id) ?? CompletionStatus.NOT_DONE;
-                                                                                    return (
-                                                                                        <div key={p._id} className="flex flex-col gap-2 mb-4">
-                                                                                            <span className="text-sm font-bold text-center text-head-text">
-                                                                                                {p.name}
-                                                                                            </span>
-                                                                                            <hr className="border-head-gray-500 opacity-40 " />
-                                                                                            <div className="flex justify-center">
-                                                                                                <CompletionStatusButtons
-                                                                                                    currentStatus={status}
-                                                                                                    onStatusChange={(s) =>
-                                                                                                        updateStatus(p._id, s)
-                                                                                                    }
-                                                                                                    isEditable={isEditing}
-                                                                                                />
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    );
-                                                                                })}
-                                                                            </div>
-                                                                        </>
-                                                                    )}
-                                                                </>
-                                                        </section>                        </div>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        </>
+                                    )}
+                                </>
+                            </section>{" "}
+                        </div>
                     </>
                 ) : (
                     <div className="flex items-center justify-center p-8">
