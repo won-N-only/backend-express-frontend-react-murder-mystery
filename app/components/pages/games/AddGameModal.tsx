@@ -209,22 +209,6 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
                                 placeholder="미스터리 파티 시리즈"
                             />
                         </div>
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-[20px]">
-                            <label
-                                htmlFor="add-thumbnail"
-                                className={`${labelClass} font-semibold sm:w-[120px]`}
-                            >
-                                썸네일 URL
-                            </label>
-                            <input
-                                id="add-thumbnail"
-                                type="url"
-                                value={thumbnail}
-                                onChange={(e) => setThumbnail(e.target.value)}
-                                className={`${inputClass} w-full sm:w-[570px] px-4 text-sm`}
-                                placeholder="https://..."
-                            />
-                        </div>
                     </div>
                     <div>
                         <label htmlFor="add-description" className={labelClass}>

@@ -188,22 +188,6 @@ export default function GameForm({
                         placeholder="미스터리 파티 시리즈"
                     />
                 </div>
-                <div className="flex flex-col sm:flex-row sm:items-center gap-[20px]">
-                    <label
-                        htmlFor="thumbnail"
-                        className={`${labelClass} font-semibold sm:w-[120px]`}
-                    >
-                        썸네일 URL
-                    </label>
-                    <input
-                        id="thumbnail"
-                        type="url"
-                        value={form.thumbnail}
-                        onChange={(e) => setForm((p) => ({ ...p, thumbnail: e.target.value }))}
-                        className={`${inputClass} w-full sm:w-[570px] px-4 text-sm`}
-                        placeholder="https://..."
-                    />
-                </div>
             </div>
             <div>
                 <label htmlFor="description" className={labelClass}>
