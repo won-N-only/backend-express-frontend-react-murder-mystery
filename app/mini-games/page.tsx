@@ -11,7 +11,9 @@ export default function MiniGamesPage() {
     return (
         <div className="min-h-screen bg-head-main flex flex-col items-center p-4 lg:p-8">
             <h1 className="text-3xl font-black text-head-text mb-8">대머리 미니게임</h1>
-
+            <p className="text-head-text opacity-80 mb-8">
+                혹시 발견해도 남들에겐 알려지지 않게 해주세요 .. 발견하는 재미가 있어야하니가
+            </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-[800px] justify-center">
                 {/* 가발 깨기 카드 */}
                 <Link
