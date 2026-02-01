@@ -214,13 +214,13 @@ export default function GameForm({
                 />
             </div>
             <div className="flex flex-col sm:flex-row gap-[10px] sm:gap-3">
-                <button type="submit" disabled={isSubmitting} className="btn-primary px-4 py-2">
+                <button type="submit" disabled={isSubmitting} className="btn-primary">
                     {isSubmitting ? "저장 중..." : submitLabel}
                 </button>
                 <button
                     type="button"
                     onClick={handleCancel}
-                    className="px-4 py-2 text-gray-500 hover:underline"
+                    className="btn-standard-padding text-gray-500 hover:underline"
                 >
                     취소
                 </button>

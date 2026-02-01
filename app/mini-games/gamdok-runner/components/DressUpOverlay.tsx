@@ -51,7 +51,7 @@ const DressUpOverlay: React.FC<DressUpOverlayProps> = ({
       />
       <button
         onClick={onStartGame}
-        className="bg-head-brown text-white px-10 py-4 text-2xl font-bold hover:opacity-90 transition-transform active:scale-95  rounded-none shadow-lg"
+        className="bg-head-brown text-white text-2xl font-bold hover:opacity-90 transition-transform active:scale-95  rounded-none shadow-lg btn-standard-padding"
       >
         달리기 시작!
       </button>

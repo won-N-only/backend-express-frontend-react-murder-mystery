@@ -48,7 +48,7 @@ const DressUpSelection: React.FC<DressUpSelectionProps> = ({
           {/* None option for hair */}
           <button
             onClick={() => setSelectedHair(null)}
-            className={`p-2 border-2 bg-head-main ${selectedHair === null ? "border-yellow-400" : "border-gray-400"} rounded-md flex items-center justify-center`}
+            className={`border-2 bg-head-main ${selectedHair === null ? "border-yellow-400" : "border-gray-400"} rounded-md flex items-center justify-center btn-standard-padding`}
           >
             <span className="text-white text-lg font-bold">X</span>
           </button>
@@ -56,7 +56,7 @@ const DressUpSelection: React.FC<DressUpSelectionProps> = ({
             <button
               key={hair}
               onClick={() => setSelectedHair(hair)}
-              className={`p-2 border-2 bg-head-main ${selectedHair === hair ? "border-yellow-400" : "border-gray-400"} rounded-md`}
+              className={`border-2 bg-head-main ${selectedHair === hair ? "border-yellow-400" : "border-gray-400"} rounded-md btn-standard-padding`}
             >
               <Image
                 src={hair}
@@ -72,7 +72,7 @@ const DressUpSelection: React.FC<DressUpSelectionProps> = ({
           {/* None option for upper body */}
           <button
             onClick={() => setSelectedUpperBody(null)}
-            className={`p-2 border-2 bg-head-main ${selectedUpperBody === null ? "border-yellow-400" : "border-gray-400"} rounded-md flex items-center justify-center`}
+            className={`border-2 bg-head-main ${selectedUpperBody === null ? "border-yellow-400" : "border-gray-400"} rounded-md flex items-center justify-center btn-standard-padding`}
           >
             <span className="text-white text-lg font-bold">X</span>
           </button>
@@ -80,7 +80,7 @@ const DressUpSelection: React.FC<DressUpSelectionProps> = ({
             <button
               key={ub}
               onClick={() => setSelectedUpperBody(ub)}
-              className={`p-2 border-2 bg-head-main ${selectedUpperBody === ub ? "border-yellow-400" : "border-gray-400"} rounded-md`}
+              className={`border-2 bg-head-main ${selectedUpperBody === ub ? "border-yellow-400" : "border-gray-400"} rounded-md btn-standard-padding`}
             >
               <Image
                 src={ub}

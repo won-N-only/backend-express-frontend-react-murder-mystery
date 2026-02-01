@@ -47,6 +47,9 @@ body {
         content: "";
         @apply block pt-2;
     }
+    .btn-standard-padding {
+        @apply py-[10px] px-[15px];
+    }
     /** Navbar 링크: 텍스트~밑줄 간격을 pt(::after)로 처리 */
     .nav-link-spacer::after {
         content: "";
@@ -61,15 +64,15 @@ body {
 
     /* ===== 유저 목록 버튼 (게임 기록·참가자 선택 등) ===== */
     .user-list-btn {
-        @apply rounded-3xl px-3 py-3 text-sm bg-head-white text-head-text hover:bg-head-accent-brown hover:text-white;
+        @apply rounded-3xl text-sm bg-head-white text-head-text hover:bg-head-accent-brown hover:text-white btn-standard-padding;
     }
     .user-list-btn-selected {
-        @apply bg-head-brown text-head-white text-sm font-extrabold shadow-soft py-3;
+        @apply bg-head-brown text-head-white text-sm font-extrabold shadow-soft btn-standard-padding;
     }
 
     /* ===== 메인 CTA 버튼 (매칭 실행·전체 너비 등) ===== */
     .btn-primary {
-        @apply bg-head-brown text-head-white font-semibold py-1 px-1 hover:bg-head-brown-dark transition disabled:bg-head-gray-300 disabled:text-head-text disabled:cursor-not-allowed;
+        @apply bg-head-brown text-head-white font-semibold hover:bg-head-brown-dark transition disabled:bg-head-gray-300 disabled:text-head-text disabled:cursor-not-allowed btn-standard-padding;
     }
 }
 

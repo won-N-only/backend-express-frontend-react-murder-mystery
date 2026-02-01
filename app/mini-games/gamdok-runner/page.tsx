@@ -138,13 +138,13 @@ export default function GamdokRunnerPage() {
                             <div className="absolute bottom-4 w-full flex justify-around md:hidden">
                                 <button
                                     onClick={handleSlideTouch}
-                                    className="bg-gray-700 text-head-white p-4 rounded-full w-24 h-24 flex items-center justify-center text-xl font-bold opacity-80"
+                                    className="bg-gray-700 text-head-white rounded-full flex items-center justify-center text-xl font-bold opacity-80 btn-standard-padding"
                                 >
                                     Slide
                                 </button>
                                 <button
                                     onClick={handleJumpTouch}
-                                    className="bg-gray-700 text-head-white p-4 rounded-full w-24 h-24 flex items-center justify-center text-xl font-bold opacity-80"
+                                    className="bg-gray-700 text-head-white rounded-full flex items-center justify-center text-xl font-bold opacity-80 btn-standard-padding"
                                 >
                                     Jump
                                 </button>

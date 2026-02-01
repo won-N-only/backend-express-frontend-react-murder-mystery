@@ -42,7 +42,7 @@ export default function MatchPage() {
 
     return (
         <div>
-            <PageHeader title="조합 추천" description="맞춤 플레이 조합을 받아보세요~!" />
+            <PageHeader title="조합 추천" description="맞춤 플레이 조합을 받아보세요 " />
 
             <div className="pt-section">
                 <div className="text-head-text text-2xl font-bold mb-2">참가자 선택</div>
@@ -69,7 +69,7 @@ export default function MatchPage() {
                 type="button"
                 onClick={handleMatch}
                 disabled={loading || !selectedPlayers.length}
-                className="mt-section w-1/4 block h-12 btn-primary"
+                className="mt-section w-1/4 block btn-primary"
             >
                 {loading ? "조합 만드는 중..." : "조합 만들기"}
             </button>

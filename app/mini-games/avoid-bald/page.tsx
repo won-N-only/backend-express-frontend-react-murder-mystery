@@ -60,7 +60,7 @@ export default function AvoidBaldGame() {
                             <hr className="border-head-gray-500 opacity-40 my-2 text-4xl" />
                             <button
                                 onClick={startGame}
-                                className="bg-head-brown text-white px-10 py-4 text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg"
+                                className="bg-head-brown text-white text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg btn-standard-padding"
                             >
                                 START
                             </button>
@@ -94,7 +94,7 @@ export default function AvoidBaldGame() {
 
                             <button
                                 onClick={startGame}
-                                className="bg-head-brown text-white px-10 py-4 text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg"
+                                className="bg-head-brown text-white text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg btn-standard-padding"
                             >
                                 다시 하기
                             </button>
@@ -130,7 +130,7 @@ export default function AvoidBaldGame() {
                             <div className="flex gap-4 flex-col sm:flex-row">
                                 <button
                                     onClick={continueGame}
-                                    className="bg-head-brown text-white px-6 py-3 text-lg font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg animate-bounce whitespace-nowrap"
+                                    className="bg-head-brown text-white text-lg font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg animate-bounce whitespace-nowrap btn-standard-padding"
                                 >
                                     계속 하기
                                 </button>
@@ -159,7 +159,7 @@ export default function AvoidBaldGame() {
                             <div className="flex gap-4 flex-col sm:flex-row">
                                 <button
                                     onClick={startGame}
-                                    className="bg-head-brown text-white px-6 py-3 text-lg font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg animate-bounce whitespace-nowrap"
+                                    className="bg-head-brown text-white text-lg font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg animate-bounce whitespace-nowrap btn-standard-padding"
                                 >
                                     다시 시작
                                 </button>

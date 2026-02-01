@@ -14,7 +14,7 @@ const GameStartOverlay: React.FC<GameStartOverlayProps> = ({ onStartGame }) => {
       <p className="mb-8 text-lg opacity-90">space로 점프하고 shift로 슬라이딩</p>
       <button
         onClick={onStartGame}
-        className="bg-head-brown text-white px-10 py-4 text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg"
+        className="bg-head-brown text-white text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg btn-standard-padding"
       >
         START
       </button>

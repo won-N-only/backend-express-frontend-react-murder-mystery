@@ -57,10 +57,7 @@ export default function HistoryPage() {
 
     return (
         <div>
-            <PageHeader
-                title="게임 기록"
-                description="대머리 플레이 기록을 확인하세요~!"
-            />
+            <PageHeader title="게임 기록" description="대머리 플레이 기록을 확인하세요 " />
             <div className="pt-section text-head-text text-2xl font-bold">
                 어떤 대머리의 이력을 볼까요?
             </div>
@@ -97,7 +94,7 @@ export default function HistoryPage() {
                     <div className="flex justify-end">
                         <button
                             onClick={() => setShowGameCheckModal(true)}
-                            className="bg-head-accent-brown text-white px-5 py-1 text-md font-bold shadow-soft hover:opacity-90 transition-opacity"
+                            className="bg-head-accent-brown text-white text-md font-bold shadow-soft hover:opacity-90 transition-opacity btn-standard-padding"
                         >
                             완료한 게임 체크하기
                         </button>
@@ -115,7 +112,7 @@ export default function HistoryPage() {
             />
 
             <CompletedGamesModal
-                playerId={showCompletedGamesModal ? (selectedPlayer?._id ?? null) : null}
+                playerId={showCompletedGamesModal ? selectedPlayer?._id ?? null : null}
                 playerName={selectedPlayer?.name ?? null}
                 onClose={() => setShowCompletedGamesModal(false)}
                 onOpenGameDetail={(gameId) => {
@@ -125,7 +122,7 @@ export default function HistoryPage() {
             />
 
             <GameCheckModal
-                playerId={showGameCheckModal ? (selectedPlayer?._id ?? null) : null}
+                playerId={showGameCheckModal ? selectedPlayer?._id ?? null : null}
                 playerName={selectedPlayer?.name ?? null}
                 onClose={() => setShowGameCheckModal(false)}
             />

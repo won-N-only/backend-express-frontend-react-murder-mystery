@@ -62,7 +62,7 @@ export default function GameListModal({
                             </div>
                             <button
                                 onClick={onClose}
-                                className="text-head-text text-2xl leading-none font-normal hover:opacity-80"
+                                className="text-head-text text-2xl leading-none font-normal hover:opacity-80 btn-standard-padding"
                                 aria-label="닫기"
                             >
                                 ×
@@ -87,7 +87,7 @@ export default function GameListModal({
                             <button
                                 type="button"
                                 onClick={searchProps.onSearch}
-                                className="bg-head-brown w-[100px] text-lg text-white px-4 py-2 font-extrabold hover:opacity-90 transition-opacity"
+                                className="bg-head-brown text-lg text-white font-extrabold hover:opacity-90 transition-opacity btn-standard-padding"
                             >
                                 검색
                             </button>

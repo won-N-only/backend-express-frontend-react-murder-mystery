@@ -155,14 +155,14 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
                                             <button
                                                 type="button"
                                                 onClick={onClose}
-                                                className="text-head-text opacity-50 text-2xl    hover:opacity-70"
+                                                className="text-head-text opacity-50 text-2xl    hover:opacity-70 btn-standard-padding"
                                                 aria-label="닫기"
                                             >
                                                 ×
                                             </button>
                                             <Link
                                                 href={`/games/${gameId}/edit`}
-                                                className="text-md bg-head-brown text-white px-4 py-1 rounded-none font-bold"
+                                                className="text-md bg-head-brown text-white rounded-none font-bold btn-standard-padding"
                                             >
                                                 게임 수정
                                             </Link>
@@ -220,7 +220,7 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
                                             <div className="flex justify-end mb-4">
                                                 <button
                                                     onClick={() => setIsEditing(!isEditing)}
-                                                    className="text-md bg-head-brown text-white px-4 py-1 rounded-none font-bold"
+                                                    className="text-md bg-head-brown text-white rounded-none font-bold btn-standard-padding"
                                                 >
                                                     {isEditing ? "완료" : "수정"}
                                                 </button>

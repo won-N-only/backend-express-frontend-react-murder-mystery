@@ -194,7 +194,7 @@ export default function BrickBreakerPage() {
                                 </p>
                                 <button
                                     onClick={() => initializeStage(0)}
-                                    className="bg-head-brown text-white px-10 py-4 text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg"
+                                    className="bg-head-brown text-white text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg btn-standard-padding"
                                 >
                                     START
                                 </button>
@@ -211,7 +211,7 @@ export default function BrickBreakerPage() {
 
                                 <button
                                     onClick={startNextStage}
-                                    className="bg-head-brown text-white px-10 py-4 text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg"
+                                    className="bg-head-brown text-white text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg btn-standard-padding"
                                 >
                                     NEXT STAGE
                                 </button>
@@ -230,7 +230,7 @@ export default function BrickBreakerPage() {
 
                                 <button
                                     onClick={() => initializeStage(stage)}
-                                    className="bg-head-brown text-white px-10 py-4 text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg"
+                                    className="bg-head-brown text-white text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg btn-standard-padding"
                                 >
                                     RETRY
                                 </button>
@@ -246,7 +246,7 @@ export default function BrickBreakerPage() {
                                 <p className="text-lg lg:text-xl mb-8 font-medium">축하합니다!</p>
                                 <button
                                     onClick={() => initializeStage(0)}
-                                    className="bg-head-brown text-white px-10 py-4 text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg"
+                                    className="bg-head-brown text-white text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg btn-standard-padding"
                                 >
                                     다시하기
                                 </button>

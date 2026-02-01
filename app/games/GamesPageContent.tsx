@@ -55,7 +55,7 @@ export default function GamesPageContent() {
 
     return (
         <>
-            <PageHeader title="게임 목록" description="할 수 있는 모든 게임을 둘러보세요~!" />
+            <PageHeader title="게임 목록" description="할 수 있는 모든 게임을 둘러보세요 " />
 
             {/* 검색 바: 입력 필드 + 검색 버튼 */}
             <div className="mt-section flex">
@@ -68,7 +68,7 @@ export default function GamesPageContent() {
                 />
                 <button
                     type="button"
-                    className="shrink-0 h-[50px] font-extrabold bg-head-accent-brown text-white px-5 text-lg hover:opacity-90 transition-opacity"
+                    className="shrink-0 font-extrabold bg-head-accent-brown text-white text-lg hover:opacity-90 transition-opacity btn-standard-padding"
                 >
                     검색
                 </button>
@@ -82,7 +82,7 @@ export default function GamesPageContent() {
                 <button
                     type="button"
                     onClick={() => setShowAddModal(true)}
-                    className="btn-primary px-3 py-1.5 text-sm"
+                    className="btn-primary text-sm"
                 >
                     게임추가
                 </button>

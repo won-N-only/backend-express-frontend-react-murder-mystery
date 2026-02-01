@@ -55,7 +55,7 @@ export default function NavbarFallback() {
                     </div>
                     <button
                         type="button"
-                        className="md:hidden p-2 rounded-lg text-[#333] hover:bg-black/5"
+                        className="md:hidden rounded-lg text-[#333] hover:bg-black/5 btn-standard-padding"
                         onClick={() => setMobileMenuOpen((p) => !p)}
                         aria-expanded={mobileMenuOpen}
                         aria-label={mobileMenuOpen ? "메뉴 닫기" : "메뉴 열기"}

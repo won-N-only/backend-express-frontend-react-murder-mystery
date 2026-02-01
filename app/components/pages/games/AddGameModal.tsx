@@ -109,7 +109,7 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
                     <button
                         type="button"
                         onClick={handleClose}
-                        className="text-head-text hover:text-head-text text-2xl leading-none"
+                        className="text-head-text hover:text-head-text text-2xl leading-none btn-standard-padding"
                     >
                         ×
                     </button>
@@ -238,14 +238,14 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
                         <button
                             type="submit"
                             disabled={submitting}
-                            className="btn-primary px-4 py-2"
+                            className="btn-primary"
                         >
                             {submitting ? "추가 중..." : "추가하기"}
                         </button>
                         <button
                             type="button"
                             onClick={handleClose}
-                            className="px-4 py-2 text-gray-500 hover:underline"
+                            className="btn-standard-padding text-gray-500 hover:underline"
                         >
                             취소
                         </button>

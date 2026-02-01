@@ -66,7 +66,7 @@ function NavbarInner() {
 
                     <button
                         type="button"
-                        className="md:hidden p-2 rounded-lg font-semibold text-head-text hover:bg-black/5"
+                        className="md:hidden rounded-lg font-semibold text-head-text hover:bg-black/5 btn-standard-padding"
                         onClick={() => setMobileMenuOpen((prev) => !prev)}
                         aria-expanded={mobileMenuOpen}
                         aria-label={mobileMenuOpen ? "메뉴 닫기" : "메뉴 열기"}

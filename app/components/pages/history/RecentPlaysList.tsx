@@ -39,7 +39,7 @@ export default function RecentPlaysList({
                     <h2 className="text-head-text font-bold text-xl">완료한 게임</h2>
                     <button
                         onClick={onViewAll}
-                        className="text-sm text-head-brown font-medium hover:text-head-brown-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="btn-standard-padding text-sm text-head-brown font-medium hover:text-head-brown-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled={!selectedPlayerName}
                     >
                         전체보기
@@ -80,7 +80,7 @@ export default function RecentPlaysList({
                                         <button
                                             type="button"
                                             onClick={() => openGameDetail(game.gameId)}
-                                            className=" shrink-0 w-fit bg-head-white border border-1 border-head-border/10 text-head-brown px-4 py-2 text-md font-extrabold hover:bg-head-brown hover:text-head-white transition-colors"
+                                            className=" shrink-0 w-fit bg-head-white border border-1 border-head-border/10 text-head-brown text-md font-extrabold hover:bg-head-brown hover:text-head-white transition-colors btn-standard-padding"
                                         >
                                             상세보기
                                         </button>
