@@ -70,13 +70,14 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
     useEffect(() => {
         if (gameId) {
             document.body.style.overflow = "hidden";
+            mutateGame();
         } else {
             document.body.style.overflow = "";
         }
         return () => {
             document.body.style.overflow = "";
         };
-    }, [gameId]);
+    }, [gameId, mutateGame]);
 
     if (!gameId) return null;
 
