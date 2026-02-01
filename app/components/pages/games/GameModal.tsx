@@ -97,10 +97,10 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
                 ) : game ? (
                     <>
                         {/* 헤더 */}
-                        <div className="bg-head-main px-6 pt-5  flex-shrink-0">
+                        <div className="bg-head-main px-6 py-6  flex-shrink-0">
                             <div className="flex items-start gap-4">
                                 {/* 썸네일 */}
-                                <div className="shrink-0 w-[90px] h-[90px] relative bg-white rounded-full border border-4 border-head-white overflow-hidden">
+                                <div className="shrink-0 w-[110px] h-[110px] relative bg-white rounded-full border border-4 border-head-white overflow-hidden">
                                     {game.thumbnail && (
                                         <Image
                                             src={game.thumbnail}
@@ -116,21 +116,21 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
                                 <div className="flex-1 min-w-0">
                                     <div className="flex justify-between items-start">
                                         <div>
-                                            <div className="text-sm font-bold text-head-text opacity-70 mb-1">
+                                            <div className="text-sm font-bold text-head-text opacity-70 mb-2">
                                                 #{game.orderNumber}
                                             </div>
-                                            <h2 className="text-2xl font-bold text-head-text mb-2 leading-tight">
+                                            <h2 className="text-2xl font-bold text-head-text mb-1 leading-tight">
                                                 {game.name}
                                             </h2>
                                             <div className="flex items-center gap-2">
-                                                <span className="text-md font-extrabold text-head-text">
+                                                <span className="text-sm font-extrabold text-head-text">
                                                     소유자{" "}
                                                 </span>
-                                                <span className="text-md font-thin text-head-text">
+                                                <span className="text-sm font-thin text-head-text">
                                                     {game.ownerNote && game.ownerNote.join(" | ")}
                                                 </span>
                                             </div>
-                                            <div className="text-sm font-semibold text-head-text opacity-90 mt-1">
+                                            <div className="text-sm font-semibold text-head-text opacity-90 mt-2">
                                                 <span>
                                                     {game.minPlayers}
                                                     {game.maxPlayers ? `-${game.maxPlayers}` : "+"}
@@ -173,7 +173,7 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
                         </div>
 
                         {/* 콘텐츠 영역 */}
-                        <div className="flex-1 overflow-y-auto bg-head-main p-6 space-y-6">
+                        <div className="flex-1 overflow-y-auto bg-head-main px-6 pb-6 space-y-6">
                             {/* 시놉시스 */}
                             <section className="rounded-none  bg-head-white p-6">
                                 <h2 className="text-xl font-bold text-head-text mb-4">시놉시스</h2>
