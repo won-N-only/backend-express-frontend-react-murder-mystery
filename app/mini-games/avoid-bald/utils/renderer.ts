@@ -59,7 +59,7 @@ export const drawGame = (
 
     // 점수 표시
     ctx.fillStyle = "#374151";
-    ctx.font = "bold 24px sans-serif";
+    ctx.font = "bold 36px sans-serif";
     ctx.textAlign = "left";
-    ctx.fillText(`SCORE: ${Math.floor(score / 10)}`, 20, 40);
+    ctx.fillText(`SCORE: ${Math.floor(score / 10)}`, 40, 80);
 };

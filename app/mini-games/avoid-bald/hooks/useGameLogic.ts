@@ -14,7 +14,9 @@ export const useGameLogic = () => {
     const [finalScore, setFinalScore] = useState(0);
     const [highScore, setHighScore] = useState(0);
 
-    const [isSkinUnlocked, setIsSkinUnlocked] = useState(false);
+    const [imagesLoaded, setImagesLoaded] = useState(false);
+
+
     const [playerSkin, setPlayerSkin] = useState("/thumbnail.png");
 
     const requestRef = useRef<number>();
@@ -35,43 +37,62 @@ export const useGameLogic = () => {
 
     // Asset Loading
     useEffect(() => {
-        const pImg = new Image();
-        pImg.src = playerSkin;
-        playerImgRef.current = pImg;
-    }, [playerSkin]);
+        let loadedCount = 0;
+        const totalImages = 2; // Player and obstacle
 
-    useEffect(() => {
-        const oImg = new Image();
-        oImg.src = "/sad_head.png";
-        obstacleImgRef.current = oImg;
-    }, []);
+        const loadImage = (src: string, ref: React.MutableRefObject<HTMLImageElement | null>) => {
+            return new Promise<void>((resolve) => {
+                const img = new Image();
+                img.src = src;
+                img.onload = () => {
+                    ref.current = img;
+                    loadedCount++;
+                    if (loadedCount === totalImages) {
+                        setImagesLoaded(true);
+                    }
+                    resolve();
+                };
+                img.onerror = () => {
+                    console.error(`Failed to load image: ${src}`);
+                    // Still count even if failed to allow other images to load
+                    loadedCount++;
+                    if (loadedCount === totalImages) {
+                        setImagesLoaded(true);
+                    }
+                    resolve(); // Resolve even on error to not block other images
+                };
+            });
+        };
+
+        // Reset loaded state when playerSkin changes
+        setImagesLoaded(false);
+
+        loadImage(playerSkin, playerImgRef);
+        loadImage("/sad_head.png", obstacleImgRef);
+
+    }, [playerSkin]);
 
     const gameOver = useCallback(() => {
         setGameState("gameover");
         const currentScore = Math.floor(scoreRef.current / 10);
         setFinalScore(currentScore);
-        if (currentScore > highScore) {
-            setHighScore(currentScore);
-        }
-    }, [highScore]);
+        setHighScore(prevHighScore => Math.max(prevHighScore, currentScore));
+    }, []);
+
 
     const gameClear = useCallback(() => {
         setGameState("clear");
         const currentScore = Math.floor(scoreRef.current / 10);
         setFinalScore(currentScore);
-        if (currentScore > highScore) {
-            setHighScore(currentScore);
-        }
-    }, [highScore]);
+        setHighScore(prevHighScore => Math.max(prevHighScore, currentScore));
+    }, []);
 
     const gameEndingClear = useCallback(() => {
         setGameState("endingClear");
         const currentScore = Math.floor(scoreRef.current / 10);
         setFinalScore(currentScore);
-        if (currentScore > highScore) {
-            setHighScore(currentScore);
-        }
-    }, [highScore]);
+        setHighScore(prevHighScore => Math.max(prevHighScore, currentScore));
+    }, []);
 
     const update = useCallback(() => {
         if (gameState !== "playing") return;
@@ -194,7 +215,7 @@ export const useGameLogic = () => {
         obstaclesRef.current = [];
         playerRef.current.x = CANVAS_WIDTH / 2 - PLAYER_SIZE / 2;
 
-        setIsSkinUnlocked(unlockSkin);
+
         isSkinUnlockedRef.current = unlockSkin;
         setPlayerSkin(playerStartingSkin);
 
@@ -202,7 +223,7 @@ export const useGameLogic = () => {
     }, [highScore]);
 
     const continueGame = useCallback(() => {
-        setIsSkinUnlocked(true);
+
         isSkinUnlockedRef.current = true;
         setPlayerSkin("/sad_head.png");
         setGameState("playing");
@@ -210,6 +231,12 @@ export const useGameLogic = () => {
 
     // Game Loop Effect
     useEffect(() => {
+        if (!imagesLoaded) {
+            // If images are not loaded, cancel any ongoing animation and return
+            if (requestRef.current) cancelAnimationFrame(requestRef.current);
+            return;
+        }
+
         if (gameState === "playing") {
             requestRef.current = requestAnimationFrame(update);
         } else if (gameState === "start") {
@@ -226,7 +253,7 @@ export const useGameLogic = () => {
         return () => {
             if (requestRef.current) cancelAnimationFrame(requestRef.current);
         };
-    }, [gameState, update]);
+    }, [gameState, update, imagesLoaded]);
 
     const updatePlayerPosition = useCallback((clientX: number) => {
         const canvas = canvasRef.current;

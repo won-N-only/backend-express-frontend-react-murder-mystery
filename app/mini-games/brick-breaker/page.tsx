@@ -164,10 +164,6 @@ export default function BrickBreakerPage() {
         paddleImgRef,
         sadHeadImgRef,
         hairImgRef,
-        setGameOver,
-        setStageClear,
-        setWon,
-        setScore,
     ]);
 
     return (
