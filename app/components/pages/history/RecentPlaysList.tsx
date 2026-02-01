@@ -36,7 +36,7 @@ export default function RecentPlaysList({
         <div className="mt-subtitle">
             <section className="section-card">
                 <div className="flex items-center justify-between">
-                    <h2 className="text-head-text font-bold text-2xl">완료한 게임</h2>
+                    <h2 className="text-head-text font-bold text-xl">완료한 게임</h2>
                     <button
                         onClick={onViewAll}
                         className="text-sm text-head-brown font-medium hover:text-head-brown-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -45,18 +45,23 @@ export default function RecentPlaysList({
                         전체보기
                     </button>
                 </div>
+                <hr className="border-gray-500/50  mt-4" />
                 {plays.length === 0 ? (
                     <p className="text-head-text text-sm py-4 mt-4">
                         {selectedPlayerName ? emptyMessage : emptyHint}
                     </p>
                 ) : (
-                    <ul className="mt-4 list-none">
+                    <ul className="  list-none">
                         {plays.map((game, index) => (
                             <Fragment key={game.gameId}>
                                 {index > 0 && (
-                                    <li className="line" aria-hidden role="presentation" />
+                                    <li
+                                        className="line border-gray-500/50"
+                                        aria-hidden
+                                        role="presentation"
+                                    />
                                 )}
-                                <li className="flex items-center gap-3 py-3 px-2  transition-colors">
+                                <li className="flex items-center py-4 transition-colors ">
                                     <div className="flex-1 min-w-0 flex flex-col gap-2">
                                         <button
                                             type="button"
@@ -75,7 +80,7 @@ export default function RecentPlaysList({
                                         <button
                                             type="button"
                                             onClick={() => openGameDetail(game.gameId)}
-                                            className="shrink-0 w-fit bg-head-white border border-head-border text-head-brown px-4 py-1 text-sm font-medium hover:bg-head-brown hover:text-head-white transition-colors"
+                                            className=" shrink-0 w-fit bg-head-white border border-1 border-head-border/10 text-head-brown px-4 py-2 text-md font-extrabold hover:bg-head-brown hover:text-head-white transition-colors"
                                         >
                                             상세보기
                                         </button>
