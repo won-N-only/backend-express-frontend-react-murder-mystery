@@ -66,7 +66,8 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
                 series: series.trim() || null,
                 thumbnail: thumbnail.trim() || null,
                 description: description.trim() || null,
-                ownerNote: ownerNote.trim() || null,
+                ownerNote:
+                    ownerNote.trim() !== "" ? ownerNote.trim().split("\n") : null,
             };
             const res = await fetch("/api/games", {
                 method: "POST",
