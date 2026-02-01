@@ -178,6 +178,19 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
                                 )}
                             </section>
 
+                            {/* 나만의 노트 */}
+                            {game.ownerNote && game.ownerNote.length > 0 && (
+                                <section className="rounded-none  bg-head-white p-6">
+                                    <h2 className="text-xl font-bold text-head-text mb-4">
+                                        나만의 노트
+                                    </h2>
+                                    {game.ownerNote.map((note, index) => (
+                                        <p key={index} className="text-head-text whitespace-pre-wrap leading-relaxed">
+                                            {note}
+                                        </p>
+                                    ))}
+                                </section>
+                            )}
                             {/* 댓글 섹션 */}
                             <GameCommentsSection gameId={gameId} />
 
