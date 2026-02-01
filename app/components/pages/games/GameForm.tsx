@@ -213,7 +213,7 @@ export default function GameForm({
                     id="description"
                     value={form.description}
                     onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))}
-                    className={`${inputClass} w-full h-[110px] mt-2`}
+                    className={`${inputClass} w-full h-[120px] mt-2`}
                     placeholder="게임 소개 또는 시놉시스"
                 />
             </div>
