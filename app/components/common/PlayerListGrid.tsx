@@ -24,7 +24,9 @@ export default function PlayerListGrid({
                     key={p._id}
                     type="button"
                     onClick={() => onSelectPlayer(p._id)}
-                    className={`user-list-btn ${selectedPlayerIds.includes(p._id) ? "user-list-btn-selected" : ""}`}
+                    className={`user-list-btn ${
+                        selectedPlayerIds.includes(p._id) ? "user-list-btn-selected" : ""
+                    }`}
                 >
                     {p.name}
                 </button>

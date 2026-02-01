@@ -94,7 +94,7 @@ export default function HistoryPage() {
                     <div className="flex justify-end">
                         <button
                             onClick={() => setShowGameCheckModal(true)}
-                            className="bg-head-accent-brown text-white text-md font-bold shadow-soft hover:opacity-90 transition-opacity btn-standard-padding"
+                            className="bg-head-brown text-white text-md font-bold shadow-soft hover:opacity-90 transition-opacity btn-standard-padding"
                         >
                             완료한 게임 체크하기
                         </button>

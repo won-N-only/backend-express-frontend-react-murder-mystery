@@ -209,7 +209,7 @@ export default function GameCommentsSection({ gameId }: GameCommentsSectionProps
                     <button
                         type="submit"
                         disabled={submitting || authorId == null}
-                        className="bg-head-brown text-white px-6 py-2 rounded-none text-sm font-bold hover:opacity-90 transition-opacity disabled:opacity-50"
+                        className=" bg-head-brown text-white  btn-standard-padding rounded-none text-sm font-bold hover:opacity-90 transition-opacity disabled:opacity-50"
                     >
                         {submitting ? "등록 중..." : "댓글 작성"}
                     </button>
