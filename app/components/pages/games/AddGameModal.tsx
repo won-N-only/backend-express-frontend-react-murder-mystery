@@ -235,17 +235,13 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
                         />
                     </div>
                     <div className="flex flex-col sm:flex-row gap-[10px] sm:gap-3">
-                        <button
-                            type="submit"
-                            disabled={submitting}
-                            className="btn-primary"
-                        >
+                        <button type="submit" disabled={submitting} className="btn-primary">
                             {submitting ? "추가 중..." : "추가하기"}
                         </button>
                         <button
                             type="button"
                             onClick={handleClose}
-                            className="btn-standard-padding text-gray-500 hover:underline"
+                            className="btn-standard-padding text-head-white  bg-gray-500 hover:underline"
                         >
                             취소
                         </button>
