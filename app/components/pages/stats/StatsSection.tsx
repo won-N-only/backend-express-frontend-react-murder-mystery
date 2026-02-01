@@ -53,13 +53,12 @@ export default function StatsSection({ players, companies, isLoading }: StatsSec
                     <h2 className="text-2xl font-semibold text-head-text">대머리 졸업 순위</h2>
                     <div className="grid gap-4 md:grid-cols-1">
                         {players.map((p, index) => (
-                            <div
-                                key={p.playerId}
-                                className="section-card"
-                                onClick={() => handlePlayerClick(p.playerId, p.playerName)}
-                            >
+                            <div key={p.playerId} className="section-card">
                                 <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
+                                    <div
+                                        className="flex items-center gap-3 cursor-pointer"
+                                        onClick={() => handlePlayerClick(p.playerId, p.playerName)}
+                                    >
                                         <span className="text-2xl">{index + 1 + "."}</span>
                                         <span className="font-bold text-lg text-head-text">
                                             {p.playerName}
