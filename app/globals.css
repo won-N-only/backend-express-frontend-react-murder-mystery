@@ -2,6 +2,7 @@
 @import "@fontsource/pretendard/500.css";
 @import "@fontsource/pretendard/600.css";
 @import "@fontsource/pretendard/700.css";
+@import "@fontsource/pretendard/800.css";
 
 @tailwind base;
 @tailwind components;
@@ -33,11 +34,7 @@ html {
 
 body {
     @apply antialiased font-medium text-head-text;
-    font-family:
-        "Pretendard",
-        -apple-system,
-        BlinkMacSystemFont,
-        sans-serif;
+    font-family: "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
     overflow-x: hidden;
 }
 
