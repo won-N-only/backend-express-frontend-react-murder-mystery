@@ -109,6 +109,18 @@ export default function GamdokRunnerPage() {
         }
     }, [started, gameOver, won]);
 
+    const handleJumpTouch = useCallback(() => {
+        if (gameRef.current && started && !gameOver && !won && gameStage === "running") {
+            gameRef.current.jump();
+        }
+    }, [started, gameOver, won, gameStage]);
+
+    const handleSlideTouch = useCallback(() => {
+        if (gameRef.current && started && !gameOver && !won && gameStage === "running") {
+            gameRef.current.slide();
+        }
+    }, [started, gameOver, won, gameStage]);
+
     return (
         <div className="min-h-screen bg-head-main flex flex-col items-center p-2 lg:p-8  ">
             <div className="w-full max-w-[1500px] flex flex-col lg:flex-row items-stretch lg:items-start justify-center gap-2 lg:gap-6">
@@ -120,6 +132,24 @@ export default function GamdokRunnerPage() {
                             gameRef={gameRef}
                             isStarted={started && !gameOver && !won && gameStage === "running"}
                         />
+
+                        {/* Touch Controls */}
+                        {gameStage === "running" && started && !gameOver && !won && (
+                            <div className="absolute bottom-4 w-full flex justify-around md:hidden">
+                                <button
+                                    onClick={handleSlideTouch}
+                                    className="bg-gray-800 text-white p-4 rounded-full w-24 h-24 flex items-center justify-center text-xl font-bold opacity-80"
+                                >
+                                    Slide
+                                </button>
+                                <button
+                                    onClick={handleJumpTouch}
+                                    className="bg-gray-800 text-white p-4 rounded-full w-24 h-24 flex items-center justify-center text-xl font-bold opacity-80"
+                                >
+                                    Jump
+                                </button>
+                            </div>
+                        )}
 
                         {/* Dress Up Overlay */}
                         {gameStage === "dressUp" && (
