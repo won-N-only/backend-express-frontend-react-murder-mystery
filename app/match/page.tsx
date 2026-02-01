@@ -42,7 +42,7 @@ export default function MatchPage() {
 
     return (
         <div>
-            <PageHeader title="사건 배당" description="친절하게 배정해드려요" />
+            <PageHeader title="조합 추천" description="맞춤 플레이 조합을 받아보세요~!" />
 
             <div className="pt-section">
                 <div className="text-head-text text-2xl font-bold mb-2">참가자 선택</div>
@@ -71,7 +71,7 @@ export default function MatchPage() {
                 disabled={loading || !selectedPlayers.length}
                 className="mt-section w-1/4 block h-12 btn-primary"
             >
-                {loading ? "매칭 중..." : "조합 추천 보기"}
+                {loading ? "조합 만드는 중..." : "조합 만들기"}
             </button>
 
             {combinations.length > 0 && (

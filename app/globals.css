@@ -61,7 +61,7 @@ body {
         @apply shrink-0 border-t border-head-gray-500;
     }
 
-    /* ===== 유저 목록 버튼 (전과 기록·참가자 선택 등) ===== */
+    /* ===== 유저 목록 버튼 (게임 기록·참가자 선택 등) ===== */
     .user-list-btn {
         @apply rounded-3xl px-3 py-3 text-sm bg-head-white text-head-text hover:bg-head-accent-brown hover:text-white;
     }

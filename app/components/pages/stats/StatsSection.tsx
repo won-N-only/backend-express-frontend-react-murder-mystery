@@ -44,10 +44,7 @@ export default function StatsSection({ players, companies, isLoading }: StatsSec
     return (
         <>
             <div className="space-y-section">
-                <PageHeader
-                    title="대머리 성적표"
-                    description="머리를 얼마나 썼는지 확인해볼까요?"
-                />
+                <PageHeader title="성적표" description="대머리 플레이 순위를 확인해보세요~!" />
 
                 <section className="space-y-4">
                     <h2 className="text-2xl font-semibold text-head-text">대머리 졸업 순위</h2>

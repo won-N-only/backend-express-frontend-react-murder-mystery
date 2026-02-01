@@ -58,8 +58,8 @@ export default function HistoryPage() {
     return (
         <div>
             <PageHeader
-                title="전과 기록"
-                description="내가 저지른... 아니, 내가 해결한 수많은 사건들의 흔적."
+                title="게임 기록"
+                description="대머리 플레이 기록을 확인하세요~!"
             />
             <div className="pt-section text-head-text text-2xl font-bold">
                 어떤 대머리의 이력을 볼까요?

@@ -9,7 +9,7 @@ interface PlayerListGridProps {
 }
 
 /**
- * 유저/플레이어 목록 버튼 그리드 (전과 기록·매칭 참가자 선택 등 공용).
+ * 유저/플레이어 목록 버튼 그리드 (게임 기록·매칭 참가자 선택 등 공용).
  * user-list-btn 스타일 사용.
  */
 export default function PlayerListGrid({

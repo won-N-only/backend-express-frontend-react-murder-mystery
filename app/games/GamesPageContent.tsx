@@ -55,7 +55,7 @@ export default function GamesPageContent() {
 
     return (
         <>
-            <PageHeader title="사건 수색" description="입맛에 맞는 사건 뒤지기" />
+            <PageHeader title="게임 목록" description="할 수 있는 모든 게임을 둘러보세요~!" />
 
             {/* 검색 바: 입력 필드 + 검색 버튼 */}
             <div className="mt-section flex">
