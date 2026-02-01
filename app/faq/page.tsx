@@ -134,7 +134,7 @@ export default function FAQPage() {
 사진에 나온 모든 인원의 승인을 받았거나, 철저하게 가리기(블러) 처리 후 모임장 승인을 받은 경우에만 업로드 가능합니다.`}
                 />
             </FaqSection>
-            <FaqSection title="5. 개인적인 궁금증">
+            <FaqSection title="6. 개인적인 궁금증">
                 <FaqItem
                     question="비터리타는 정말 갓겜인가요?"
                     description="태규님한테 물어보세요"
