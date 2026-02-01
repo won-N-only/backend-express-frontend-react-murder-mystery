@@ -151,7 +151,7 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
                                             </div>
                                         </div>
                                         {/* 액션 버튼 */}
-                                        <div className="flex flex-row-reverse items-start gap-2 p-[30px] py-6">
+                                        <div className="flex flex-row-reverse items-start gap-4  p-[20px] py-6">
                                             <button
                                                 type="button"
                                                 onClick={onClose}
