@@ -127,7 +127,7 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
                                                     소유자{" "}
                                                 </span>
                                                 <span className="text-sm font-thin text-head-text">
-                                                    {game.ownerNote && game.ownerNote.join(" | ")}
+                                                    {game.ownerNote && game.ownerNote.join(" ｜ ")}
                                                 </span>
                                             </div>
                                             <div className="text-sm font-semibold text-head-text opacity-90 mt-2">
