@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        const { name, minPlayers, maxPlayers, company, series, thumbnail, description } = body;
+        const { name, minPlayers, maxPlayers, company, series, thumbnail, description, ownerNote } = body;
 
         if (!name || minPlayers == null) {
             return NextResponse.json(
@@ -35,6 +35,7 @@ export async function POST(req: NextRequest) {
             series,
             thumbnail,
             description,
+            ownerNote,
         });
         return NextResponse.json(result, { status: 201 });
     } catch (error) {

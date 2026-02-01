@@ -11,6 +11,7 @@ export interface AddGamePayload {
     series: string | null;
     thumbnail: string | null;
     description: string | null;
+    ownerNote: string | null;
 }
 
 const inputClass =
@@ -31,6 +32,7 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
     const [series, setSeries] = useState("");
     const [thumbnail, setThumbnail] = useState("");
     const [description, setDescription] = useState("");
+    const [ownerNote, setOwnerNote] = useState("");
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -42,6 +44,7 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
         setSeries("");
         setThumbnail("");
         setDescription("");
+        setOwnerNote("");
         setError(null);
     };
 
@@ -63,6 +66,7 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
                 series: series.trim() || null,
                 thumbnail: thumbnail.trim() || null,
                 description: description.trim() || null,
+                ownerNote: ownerNote.trim() || null,
             };
             const res = await fetch("/api/games", {
                 method: "POST",
@@ -232,6 +236,18 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
                             onChange={(e) => setDescription(e.target.value)}
                             className={`h-[200px] w-full  mt-2 border border-head-border text-head-text focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent`}
                             placeholder="게임 소개 또는 시놉시스"
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="add-ownerNote" className={labelClass}>
+                            나만의 노트
+                        </label>
+                        <textarea
+                            id="add-ownerNote"
+                            value={ownerNote}
+                            onChange={(e) => setOwnerNote(e.target.value)}
+                            className={`h-[100px] w-full  mt-2 border border-head-border text-head-text focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent`}
+                            placeholder="게임에 대한 나만의 생각, 팁, 전략 등을 기록하세요."
                         />
                     </div>
                     <div className="flex flex-col sm:flex-row gap-[10px] sm:gap-3">

@@ -33,6 +33,7 @@ export interface CreateGameBody {
     series?: string | null;
     thumbnail?: string | null;
     description?: string | null;
+    ownerNote?: string | null;
 }
 
 export async function createGame(body: CreateGameBody) {
@@ -45,6 +46,7 @@ export async function createGame(body: CreateGameBody) {
         series: body.series != null ? String(body.series).trim() || null : null,
         thumbnail: body.thumbnail != null ? String(body.thumbnail).trim() || null : null,
         description: body.description != null ? String(body.description).trim() || null : null,
+        ownerNote: body.ownerNote != null ? String(body.ownerNote).trim() || null : null,
     });
     return { game: toGameDto(created) };
 }
