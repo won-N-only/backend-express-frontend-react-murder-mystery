@@ -3,7 +3,6 @@ export type ObstacleType = 'bottom' | 'top' | 'gap' | 'hole';
 export const OBSTACLE_PATTERNS: ObstacleType[][] = [
   ['gap', 'bottom', 'gap', 'top', 'gap'],
   ['gap', 'gap', 'bottom', 'gap', 'top'],
-  ['bottom', 'gap', 'gap', 'bottom', 'gap'],
   ['top', 'gap', 'gap', 'top', 'gap'],
 
   ['bottom', 'gap', 'top', 'gap', 'bottom'],
