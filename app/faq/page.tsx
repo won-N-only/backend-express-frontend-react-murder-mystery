@@ -135,10 +135,7 @@ export default function FAQPage() {
                 />
             </FaqSection>
             <FaqSection title="6. 개인적인 궁금증">
-                <FaqItem
-                    question="비터리타는 정말 갓겜인가요?"
-                    description="태규님한테 물어보세요"
-                />
+                <FaqItem question="비더리타는 정말 갓겜인가요?" description="해보면 안다니까요" />
                 <FaqItem
                     question="주로 활동하는 지역은 어디인가요?"
                     description="동성로나 칠곡에서 젤 많이해요"
