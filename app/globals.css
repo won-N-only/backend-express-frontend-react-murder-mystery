@@ -48,7 +48,7 @@ body {
         @apply block pt-2;
     }
     .btn-standard-padding {
-        @apply py-[5px] px-[10px] whitespace-nowrap; 
+        @apply py-[10px] px-[15px];
     }
     /** Navbar 링크: 텍스트~밑줄 간격을 pt(::after)로 처리 */
     .nav-link-spacer::after {
@@ -125,4 +125,31 @@ body {
 [class*="group/face"]:hover .hair-fly-in {
     transform: translate(-50%, 0) rotate(0deg) !important;
     opacity: 1 !important;
+}
+
+/* Custom scrollbar styles */
+html,
+* {
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: rgba(0, 0, 0, 0.15) transparent; /* Firefox: thumb track */
+}
+
+/* Webkit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+    height: 8px; /* Height of the horizontal scrollbar */
+}
+
+::-webkit-scrollbar-track {
+    background: transparent; /* Make track transparent */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.15); /* Light, semi-transparent thumb */
+    border-radius: 4px; /* Rounded corners for the thumb */
+    border: 2px solid transparent; /* Border to make it look thinner */
+    background-clip: padding-box; /* Ensures border doesn't shrink the thumb */
+}
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.25); /* Slightly darker on hover */
 }

@@ -241,9 +241,11 @@ export default function BrickBreakerPage() {
                         {won && (
                             <div className="absolute inset-0 flex flex-col items-center justify-center text-head-text text-center p-6  ">
                                 <h2 className="text-4xl lg:text-5xl font-black mb-6 text-yellow-400 drop-shadow-md">
-                                    ALL STAGES CLEAR!
+                                    가발을 만들었어요!
                                 </h2>
-                                <p className="text-lg lg:text-xl mb-8 font-medium">축하합니다!</p>
+                                <p className="text-lg lg:text-xl mb-8 font-medium">
+                                    이제 당신은 가발을 쓴 대머리입니다.
+                                </p>
                                 <button
                                     onClick={() => initializeStage(0)}
                                     className="bg-head-brown text-white text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg btn-standard-padding"
