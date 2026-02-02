@@ -70,7 +70,8 @@ export default function NavbarFallback() {
                 type="button"
                 className={`md:hidden fixed inset-0 z-40 bg-black/70 transition-opacity duration-300 ${mobileMenuOpen ? "opacity-100" : "pointer-events-none opacity-0"}`}
                 onClick={() => setMobileMenuOpen(false)}
-                aria-hidden
+                aria-hidden={!mobileMenuOpen}
+                tabIndex={-1}
             />
             <div
                 className={`md:hidden fixed top-0 right-0 z-50 h-full w-64 max-w-[85vw] bg-head-main shadow-xl transition-transform duration-300 ${mobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}
