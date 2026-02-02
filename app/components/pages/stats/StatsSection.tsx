@@ -57,7 +57,7 @@ export default function StatsSection({ players, companies, isLoading }: StatsSec
                                         onClick={() => handlePlayerClick(p.playerId, p.playerName)}
                                     >
                                         <span className="text-2xl">{index + 1 + "."}</span>
-                                        <span className="font-bold text-lg text-head-text">
+                                        <span className="font-extrabold text-lg text-head-text">
                                             {p.playerName}
                                         </span>
                                     </div>
@@ -65,7 +65,7 @@ export default function StatsSection({ players, companies, isLoading }: StatsSec
                                         <div className="text-2xl font-bold text-head-brown">
                                             {p.completionRate.toFixed(1)}%
                                         </div>
-                                        <div className="text-xs text-head-text">
+                                        <div className="text-sm md:text-md text-head-text">
                                             {p.completedCount} 개 완료 - 전체 {p.totalGames} 개 중
                                         </div>
                                     </div>

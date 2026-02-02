@@ -26,7 +26,7 @@ function NavbarInner() {
 
     return (
         <div className="fixed top-0 left-0 right-0 z-40 w-full bg-head-main">
-            <nav className="flex items-center justify-center w-full h-[100px] bg-head-main">
+            <nav className="flex items-center justify-center w-full h-[100px] bg-head-main md:h-[70px]">
                 <div className="mx-auto max-w-content w-full px-4 flex items-center justify-between">
                     <Link
                         href="/"
@@ -71,13 +71,12 @@ function NavbarInner() {
                         aria-expanded={mobileMenuOpen}
                         aria-label={mobileMenuOpen ? "메뉴 닫기" : "메뉴 열기"}
                     >
-                        <span className="block w-6 h-0.5 bg-current rounded" />
-                        <span className="block w-6 h-0.5 bg-current rounded mt-1.5" />
-                        <span className="block w-6 h-0.5 bg-current rounded mt-1.5" />
+                        <span className="block w-8 h-0.5 bg-current rounded" />
+                        <span className="block w-8 h-0.5 bg-current rounded mt-2" />
+                        <span className="block w-8 h-0.5 bg-current rounded mt-2" />
                     </button>
                 </div>
             </nav>
-
             <button
                 type="button"
                 className={`md:hidden fixed inset-0 z-40 bg-black/70 transition-opacity duration-300 ease-out ${
@@ -96,7 +95,7 @@ function NavbarInner() {
                     className="flex flex-col items-end gap-5 pt-11 px-4 font-bold"
                     aria-label="메인 메뉴"
                 >
-                    <div className="text-3xl font-bold">메뉴</div>
+                    <div className="text-lg md:text-3xl font-bold ">메뉴</div>
                     <div
                         className="w-full border-b-2 border-head-border border-solid text-2xl"
                         aria-hidden
@@ -116,8 +115,7 @@ function NavbarInner() {
                     ))}
                 </nav>
             </div>
-
-            <div className="w-full border-b-2 border-head-border border-solid" aria-hidden />
+            <hr className="w-full border-t border-head-border" />
         </div>
     );
 }

@@ -17,7 +17,6 @@
     --color-primary: #573f33; /* 포인트/버튼 */
     --color-primary-dark: #573f33; /* 포인트 호버 */
     --color-accent-brown: #573f33dd; /* 졸업률 배너·차트·버튼 다크 브라운 */
-    --content-max-width: 750px; /* 본문 컨테이너 최대 너비 */
     --spacing-section: 50px; /* 요소(이미지/텍스트)별 상하 여백 */
 }
 
@@ -41,20 +40,20 @@ body {
 /* ===== 공통 섹션 카드 (졸업률·완료한 게임 등) ===== */
 @layer components {
     .section-card {
-        @apply rounded-2xl bg-gradient-to-b from-white to-head-main pt-6 px-6 shadow-none;
+        @apply rounded-2xl bg-gradient-to-b from-white to-head-main pt-[30px] px-[30px] shadow-none rounded-[20px];
     }
     .section-card::after {
         content: "";
         @apply block pt-2;
     }
     .btn-standard-padding {
-        @apply py-[10px] px-[15px];
+        @apply py-[10px] px-[15px] whitespace-nowrap;
     }
     /** Navbar 링크: 텍스트~밑줄 간격을 pt(::after)로 처리 */
     .nav-link-spacer::after {
         content: "";
         display: block;
-        padding-top: 4px;
+        padding-top: 1px;
     }
 
     /** 요소 간 분리선 (목록·카드 내 구분) */
@@ -95,7 +94,6 @@ body {
     .section-bottom::after {
         content: "";
         display: block;
-        padding-top: var(--spacing-section);
     }
 }
 

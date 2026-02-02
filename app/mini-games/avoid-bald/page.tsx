@@ -127,7 +127,7 @@ export default function AvoidBaldGame() {
                                 className="w-32 h-32 mb-8 animate-pulse"
                             />
 
-                            <div className="flex gap-4 flex-col sm:flex-row">
+                            <div className="flex gap-4 flex-col md:flex-row">
                                 <button
                                     onClick={continueGame}
                                     className="bg-head-brown text-white text-lg font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg animate-bounce    btn-standard-padding"
@@ -156,7 +156,7 @@ export default function AvoidBaldGame() {
                                 className="w-32 h-32 mb-8 animate-pulse"
                             />
 
-                            <div className="flex gap-4 flex-col sm:flex-row">
+                            <div className="flex gap-4 flex-col md:flex-row">
                                 <button
                                     onClick={startGame}
                                     className="bg-head-brown text-white text-lg font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg animate-bounce   btn-standard-padding"

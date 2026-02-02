@@ -68,7 +68,7 @@ export default function GamesPageContent() {
                 />
                 <button
                     type="button"
-                    className="shrink-0 font-extrabold bg-head-accent-brown text-white text-lg hover:opacity-90 transition-opacity btn-standard-padding"
+                    className="shrink-0 bg-head-accent-brown text-white text-sm md:text-lg hover:opacity-90 transition-opacity btn-standard-padding"
                 >
                     검색
                 </button>

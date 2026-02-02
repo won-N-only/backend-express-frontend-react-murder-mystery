@@ -12,9 +12,9 @@ interface PageHeaderProps {
 export default function PageHeader({ title, description }: PageHeaderProps) {
     return (
         <header className="pt-section">
-            <h1 className="text-4xl font-bold text-head-text">{title}</h1>
+            <h1 className="text-[40px] font-bold text-head-text">{title}</h1>
             {description != null && description !== "" && (
-                <p className="text-md font-semibold text-head-text mt-2">{description}</p>
+                <p className="text-[20px] font-semibold text-head-text mt-2">{description}</p>
             )}
         </header>
     );

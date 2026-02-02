@@ -81,12 +81,12 @@ function CommentItem({
     };
 
     return (
-        <div className="border border-head-border bg-head-gray-50 p-4 mb-2">
+        <div className="border border-head-border bg-head-gray-50 p-5 ">
             <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0 flex-1">
                     <p className="text-md text-head-text font-semibold">{comment.content}</p>
 
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex items-center gap-2  ">
                         <span className="text-xs font-medium text-head-text">
                             {comment.authorName}
                         </span>
@@ -180,7 +180,7 @@ export default function GameCommentsSection({ gameId }: GameCommentsSectionProps
 
             <form onSubmit={handleSubmit} className="space-y-4 ">
                 <div>
-                    <label className="block text-sm font-bold text-head-text mb-1">* 작성자</label>
+                    <label className="block text-md font-bold text-head-text mb-1">* 작성자</label>
                     <AuthorSuggestInput
                         className="mt-1"
                         players={players}
@@ -195,13 +195,13 @@ export default function GameCommentsSection({ gameId }: GameCommentsSectionProps
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-bold text-head-text mb-1">* 내용</label>
+                    <label className="block text-md font-bold text-head-text mb-1">* 내용</label>
                     <textarea
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
                         placeholder="댓글을 입력하세요"
                         rows={3}
-                        className="w-full border border-head-brown rounded-none px-3 py-2 text-sm focus:outline-none bg-white"
+                        className="w-full border border-head-brown rounded-none p-3 text-sm focus:outline-none bg-white"
                         required
                     />
                 </div>

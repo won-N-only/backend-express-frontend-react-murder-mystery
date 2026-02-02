@@ -152,7 +152,7 @@ export default function FAQPage() {
                             alt="makers"
                             width={100}
                             height={100}
-                            className="ml-10 mb-4"
+                            className="mb-4"
                             onClick={() => setShowBubble(!showBubble)}
                         />
                         {showBubble && (

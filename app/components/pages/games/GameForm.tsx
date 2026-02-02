@@ -69,9 +69,10 @@ interface GameFormProps {
 }
 
 const inputClass =
-    "border border-head-border text-head-text focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent  h-[40px]";
-const labelClass = "block text-base font-semibold text-head-text";
-
+    "border border-head-border text-head-text text-lg focus:outline-none p-[10px] focus:ring-2 focus:ring-head-brown focus:border-transparent  ";
+const labelClass = "block text-base font-bold text-head-text";
+const textareaClass =
+    "border border-head-border  text-lg text-head-text focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent";
 /**
  * 게임 수정  페이지
  */
@@ -104,13 +105,13 @@ export default function GameForm({
         >
             <div className="space-y-[20px]">
                 {/* 게임명 */}
-                <div className="flex flex-col sm:flex-row sm:items-center gap-[10px] sm:gap-[20px]">
-                    <label htmlFor="name" className={`${labelClass} font-semibold sm:w-[120px]`}>
+                <div className="flex flex-col md:flex-row md:items-center gap-[10px] md:gap-[20px]">
+                    <label htmlFor="name" className={`${labelClass} font-bold md:w-[120px]`}>
                         * 게임명
                     </label>
                     <input
                         id="name"
-                        className={`${inputClass} w-full sm:w-[570px] px-4 text-sm`}
+                        className={`${inputClass} w-full md:w-[570px] `}
                         type="text"
                         required
                         value={form.name}
@@ -119,11 +120,11 @@ export default function GameForm({
                     />
                 </div>
                 {/* 최소/최대 인원 */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-[20px]">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-[20px]">
                     <div className="flex items-center">
                         <label
                             htmlFor="minPlayers"
-                            className={`${labelClass} mr-5 font-semibold w-[120px] shrink-0`}
+                            className={`${labelClass} md:mr-5 mr-2 font-bold w-[120px] shrink-0`}
                         >
                             * 최소 인원
                         </label>
@@ -138,14 +139,14 @@ export default function GameForm({
                                     minPlayers: Number(e.target.value) || 1,
                                 }))
                             }
-                            className={`${inputClass} w-full sm:w-[215px] px-4 text-sm`}
+                            className={`${inputClass} w-full md:w-[215px] px-4`}
                         />
                     </div>
 
                     <div className="flex items-center">
                         <label
                             htmlFor="maxPlayers"
-                            className={`${labelClass} mr-2 font-semibold w-[120px] shrink-0`}
+                            className={`${labelClass} mr-2 font-bold w-[120px] shrink-0`}
                         >
                             * 최대 인원
                         </label>
@@ -155,14 +156,14 @@ export default function GameForm({
                             min={1}
                             value={form.maxPlayers}
                             onChange={(e) => setForm((p) => ({ ...p, maxPlayers: e.target.value }))}
-                            className={`${inputClass} w-full sm:w-[215px] px-4 text-sm`}
+                            className={`${inputClass} w-full md:w-[215px] px-4`}
                             placeholder="6"
                         />
                     </div>
                 </div>
                 {/* 제작사 */}
-                <div className="flex flex-col sm:flex-row sm:items-center gap-[20px]">
-                    <label htmlFor="company" className={`${labelClass} font-semibold sm:w-[120px]`}>
+                <div className="flex flex-col md:flex-row md:items-center gap-[20px]">
+                    <label htmlFor="company" className={`${labelClass} font-bold md:w-[120px]`}>
                         * 제작사
                     </label>
                     <input
@@ -170,13 +171,13 @@ export default function GameForm({
                         type="text"
                         value={form.company}
                         onChange={(e) => setForm((p) => ({ ...p, company: e.target.value }))}
-                        className={`${inputClass} w-full sm:w-[570px] px-4 text-sm`}
+                        className={`${inputClass} w-full md:w-[570px] px-4`}
                         placeholder="언더독 게임즈"
                     />
                 </div>
                 {/* 시리즈 */}
-                <div className="flex flex-col sm:flex-row sm:items-center gap-[20px]">
-                    <label htmlFor="series" className={`${labelClass} font-semibold sm:w-[120px]`}>
+                <div className="flex flex-col md:flex-row md:items-center gap-[20px]">
+                    <label htmlFor="series" className={`${labelClass} font-bold md:w-[120px]`}>
                         * 시리즈
                     </label>
                     <input
@@ -184,7 +185,7 @@ export default function GameForm({
                         type="text"
                         value={form.series}
                         onChange={(e) => setForm((p) => ({ ...p, series: e.target.value }))}
-                        className={`${inputClass} w-full sm:w-[570px] px-4 text-sm`}
+                        className={`${inputClass} w-full md:w-[570px] px-4`}
                         placeholder="미스터리 파티 시리즈"
                     />
                 </div>
@@ -197,9 +198,9 @@ export default function GameForm({
                     id="description"
                     value={form.description}
                     onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))}
-                    className={`${inputClass} w-full h-[120px] mt-2`}
+                    className={`${textareaClass} w-full h-[120px] mt-2 p-2 text-md`}
                     placeholder="게임 소개 또는 시놉시스"
-                />
+                />{" "}
             </div>
             <div>
                 <label htmlFor="ownerNote" className={labelClass}>
@@ -209,11 +210,11 @@ export default function GameForm({
                     id="ownerNote"
                     value={form.ownerNote}
                     onChange={(e) => setForm((p) => ({ ...p, ownerNote: e.target.value }))}
-                    className={`${inputClass} w-full h-[80px] mt-2`}
+                    className={`${textareaClass} w-full mt-2`}
                     placeholder="소유자, 엔터로 구분"
                 />
             </div>
-            <div className="flex flex-col sm:flex-row gap-[10px] sm:gap-3">
+            <div className="flex flex-col md:flex-row gap-[10px] md:gap-3">
                 <button type="submit" disabled={isSubmitting} className="btn-primary">
                     {isSubmitting ? "저장 중..." : submitLabel}
                 </button>

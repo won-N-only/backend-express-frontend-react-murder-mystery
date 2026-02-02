@@ -73,15 +73,15 @@ export default function HistoryPage() {
                     <section className="section-card">
                         <div className="flex items-start justify-between gap-4 flex-wrap">
                             <div className="flex-1 min-w-0">
-                                <h2 className="text-head-text font-bold text-2xl">
+                                <h2 className="text-head-text font-bold text-xl md:text-2xl">
                                     {selectedPlayer.name}님의 졸업률
                                 </h2>
                                 {topPercent != null && (
-                                    <p className="text-head-brown font-semibold text-lg mt-2">
+                                    <p className="text-head-brown font-semibold text-base md:text-lg mt-2">
                                         상위 {topPercent}%
                                     </p>
                                 )}
-                                <p className="text-head-text text-sm mt-1">
+                                <p className="text-head-text text-xs md:text-sm mt-1">
                                     {selectedStat.completedCount}개 완료 · 전체{" "}
                                     {selectedStat.totalGames}개 중
                                 </p>

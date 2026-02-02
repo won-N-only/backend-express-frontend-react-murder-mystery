@@ -236,7 +236,7 @@ export default function GamdokRunnerPage() {
                                     )}
                                     {selectedUpperBody ===
                                         "/mini-games/gamdok-runner/upper-body/upperbody4.png" && (
-                                        <div className="absolute top-[-10%] left-1/2 transform -translate-x-1/2 p-2 bg-white text-black text-xs sm:text-sm rounded-lg shadow-lg z-20 w-32 sm:w-40">
+                                        <div className="absolute top-[-10%] left-1/2 transform -translate-x-1/2 p-2 bg-white text-black text-xs md:text-sm rounded-lg shadow-lg z-20 w-32 md:w-40">
                                             <p>이 날씨에 패딩 좀 더운디...</p>
                                             <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0 border-x-8 border-x-transparent border-t-8 border-t-white -mb-2"></div>
                                         </div>

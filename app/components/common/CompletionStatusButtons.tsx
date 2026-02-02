@@ -22,7 +22,7 @@ export default function CompletionStatusButtons({
                     type="button"
                     onClick={() => onStatusChange(s)}
                     disabled={!isEditable}
-                    className={`text-md font-medium transition-colors btn-standard-padding ${
+                    className={`text-xs font-bold transition-colors btn-standard-padding ${
                         currentStatus === s
                             ? "bg-head-brown text-white"
                             : "bg-head-main text-head-text hover:bg-head-gray-200"

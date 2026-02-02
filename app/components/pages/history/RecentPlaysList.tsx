@@ -36,14 +36,13 @@ export default function RecentPlaysList({
         <div className="mt-subtitle">
             <section className="section-card">
                 <div className="flex items-center justify-between">
-                    <h2 className="text-head-text font-bold text-xl">완료한 게임</h2>
-                    <button
+                    <h2 className="text-head-text font-bold text-2xl">완료한 게임</h2>
+                    <text
                         onClick={onViewAll}
-                        className="btn-standard-padding text-sm text-head-brown font-medium hover:text-head-brown-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled={!selectedPlayerName}
+                        className="cursor-pointer text-sm text-head-text font-medium hover:text-head-brown-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         전체보기
-                    </button>
+                    </text>
                 </div>
                 <hr className="border-gray-500/50  mt-4" />
                 {plays.length === 0 ? (
@@ -66,12 +65,12 @@ export default function RecentPlaysList({
                                         <button
                                             type="button"
                                             onClick={() => openGameDetail(game.gameId)}
-                                            className="text-head-text font-medium truncate hover:text-head-brown transition-colors block text-left w-full"
+                                            className="text-head-text text-lg font-medium truncate hover:text-head-brown transition-colors block text-left w-full"
                                         >
                                             {game.gameName}
                                         </button>
                                         {game.completedAt && (
-                                            <p className="text-head-text text-xs">
+                                            <p className="text-head-text text-sm">
                                                 {new Date(game.completedAt).toLocaleDateString(
                                                     "ko-KR",
                                                 )}
@@ -80,7 +79,7 @@ export default function RecentPlaysList({
                                         <button
                                             type="button"
                                             onClick={() => openGameDetail(game.gameId)}
-                                            className=" shrink-0 w-fit bg-head-white border border-1 border-head-border/10 text-head-brown text-md font-extrabold hover:bg-head-brown hover:text-head-white transition-colors btn-standard-padding"
+                                            className=" shrink-0 w-fit bg-head-white border border-1 border-head-border text-head-brown text-md font-extrabold hover:bg-head-brown hover:text-head-white transition-colors btn-standard-padding"
                                         >
                                             상세보기
                                         </button>

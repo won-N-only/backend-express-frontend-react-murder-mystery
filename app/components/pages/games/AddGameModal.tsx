@@ -121,16 +121,16 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
                     {error && <p className="text-sm text-red-600 bg-red-50 px-3 py-2  ">{error}</p>}
                     <div className="space-y-[20px]">
                         {/* 게임명 */}
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-[10px] sm:gap-[20px]">
+                        <div className="flex flex-col md:flex-row md:items-center gap-[10px] md:gap-[20px]">
                             <label
                                 htmlFor="add-name"
-                                className={`${labelClass} font-semibold sm:w-[120px]`}
+                                className={`${labelClass} font-semibold md:w-[120px]`}
                             >
                                 * 게임명
                             </label>
                             <input
                                 id="add-name"
-                                className={`${inputClass} w-full sm:w-[570px] px-4 text-sm`}
+                                className={`${inputClass} w-full md:w-[570px] px-4 text-sm`}
                                 type="text"
                                 required
                                 value={name}
@@ -139,7 +139,7 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
                             />
                         </div>
                         {/* 최소/최대 인원 */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-[20px]">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-[20px]">
                             <div className="flex items-center">
                                 <label
                                     htmlFor="add-minPlayers"
@@ -153,7 +153,7 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
                                     min={1}
                                     value={minPlayers}
                                     onChange={(e) => setMinPlayers(Number(e.target.value) || 1)}
-                                    className={`${inputClass} w-full sm:w-[215px] px-4 text-sm`}
+                                    className={`${inputClass} w-full md:w-[215px] px-4 text-sm`}
                                 />
                             </div>
 
@@ -170,16 +170,16 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
                                     min={1}
                                     value={maxPlayers}
                                     onChange={(e) => setMaxPlayers(e.target.value)}
-                                    className={`${inputClass} w-full sm:w-[215px] px-4 text-sm`}
+                                    className={`${inputClass} w-full md:w-[215px] px-4 text-sm`}
                                     placeholder="6"
                                 />
                             </div>
                         </div>
                         {/* 제작사 */}
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-[20px]">
+                        <div className="flex flex-col md:flex-row md:items-center gap-[20px]">
                             <label
                                 htmlFor="add-company"
-                                className={`${labelClass} font-semibold sm:w-[120px]`}
+                                className={`${labelClass} font-semibold md:w-[120px]`}
                             >
                                 * 제작사
                             </label>
@@ -188,15 +188,15 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
                                 type="text"
                                 value={company}
                                 onChange={(e) => setCompany(e.target.value)}
-                                className={`${inputClass} w-full sm:w-[570px] px-4 text-sm`}
+                                className={`${inputClass} w-full md:w-[570px] px-4 text-sm`}
                                 placeholder="언더독 게임즈"
                             />
                         </div>
                         {/* 시리즈 */}
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-[20px]">
+                        <div className="flex flex-col md:flex-row md:items-center gap-[20px]">
                             <label
                                 htmlFor="add-series"
-                                className={`${labelClass} font-semibold sm:w-[120px]`}
+                                className={`${labelClass} font-semibold md:w-[120px]`}
                             >
                                 * 시리즈
                             </label>
@@ -205,7 +205,7 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
                                 type="text"
                                 value={series}
                                 onChange={(e) => setSeries(e.target.value)}
-                                className={`${inputClass} w-full sm:w-[570px] px-4 text-sm`}
+                                className={`${inputClass} w-full md:w-[570px] px-4 text-sm`}
                                 placeholder="미스터리 파티 시리즈"
                             />
                         </div>
@@ -234,7 +234,7 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
                             placeholder="소유자, 엔터로 구분"
                         />
                     </div>
-                    <div className="flex flex-col sm:flex-row gap-[10px] sm:gap-3">
+                    <div className="flex flex-col md:flex-row gap-[10px] md:gap-3">
                         <button type="submit" disabled={submitting} className="btn-primary">
                             {submitting ? "추가 중..." : "추가하기"}
                         </button>

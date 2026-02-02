@@ -13,24 +13,24 @@ export default function CombinationResult({ combinations, players }: Combination
                 <Fragment key={idx}>
                     {idx > 0 && <div className="line mt-subtitle" aria-hidden />}
                     <div className={idx > 0 ? "mt-subtitle space-y-3" : "space-y-3"}>
-                        <span className="text-sm font-semibold text-head-brown">
+                        <span className="text-sm font-semibold text-head-text">
                             조합 #{idx + 1}
                         </span>
                         <div className="grid md:grid-cols-2 gap-3">
                             {combo.groups.map((group, gIdx) => (
                                 <div key={gIdx} className="section-card">
-                                    <div className="font-semibold text-md">{group.game.name}</div>
-                                    <div className="text-xs text-head-text mt-1">
+                                    <div className="font-semibold text-xl">{group.game.name}</div>
+                                    <div className="text-sm text-head-text mt-1">
                                         {group.game.minPlayers}
                                         {group.game.maxPlayers ? `-${group.game.maxPlayers}` : "+"}
                                         인{group.game.company && ` · ${group.game.company}`}
                                     </div>
-                                    <div className="border mt-2"></div>
+                                    <hr className="border-head-border mt-2"></hr>
                                     <div className="flex flex-wrap gap-1 mt-2">
                                         {group.playerNames.map((name) => (
                                             <span
                                                 key={name}
-                                                className="px-3 py-1 text-sm font-bold bg-head-badge text-head-brown"
+                                                className="px-3 py-1 text-sm font-extrabold bg-head-badge text-head-brown"
                                             >
                                                 {name}
                                             </span>

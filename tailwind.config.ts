@@ -36,7 +36,7 @@ const config: Config = {
         soft: "0 2px 8px rgba(0, 0, 0, 0.08)",
       },
       maxWidth: {
-        content: "var(--content-max-width)",
+        content: "750px",
       },
       /* section: extend.spacing에 var() 쓰면 유틸이 빌드에 안 나오는 경우 있음 → globals.css @layer utilities에 동일 유틸 정의해 둠 */
       spacing: {
