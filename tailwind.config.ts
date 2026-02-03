@@ -11,7 +11,6 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        /* 메인·구분선 (globals.css :root 참조) */
         "head-main": "var(--color-main)",
         "head-badge": "var(--color-badge-bg)",
         "head-text": "var(--color-text)",
@@ -38,12 +37,30 @@ const config: Config = {
       maxWidth: {
         content: "750px",
       },
-      /* section: extend.spacing에 var() 쓰면 유틸이 빌드에 안 나오는 경우 있음 → globals.css @layer utilities에 동일 유틸 정의해 둠 */
       spacing: {
         section: "var(--spacing-section)",
+      },
+
+
+      // 공용 애니메이션
+      animation: {
+        'tilt-spin': 'tiltSpin 5s ease-in-out infinite',
+        'spin-full': 'spinFull 1s ease-in-out',
+      },
+      keyframes: {
+        tiltSpin: {
+          '0%': { transform: 'rotate(-13deg)' },
+          '50%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(13deg)' },
+        },
+        spinFull: {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(1080deg)' },
+        },
       },
     },
   },
   plugins: [],
 };
+
 export default config;
