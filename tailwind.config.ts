@@ -44,15 +44,14 @@ const config: Config = {
 
       // 공용 애니메이션
       animation: {
-        'tilt-spin': 'tiltSpin 5s ease-in-out infinite',
+        'tilt-spin': 'tiltSpin 3s ease-in-out infinite',
         'spin-full': 'spinFull 1s ease-in-out',
         'float-up': 'floatUp 0.8s ease-out forwards',
       },
       keyframes: {
         tiltSpin: {
-          '0%': { transform: 'rotate(-13deg)' },
-          '50%': { transform: 'rotate(0deg)' },
-          '100%': { transform: 'rotate(13deg)' },
+          '0% , 100%': { transform: 'rotate(-15deg)' },
+          '50%': { transform: 'rotate(15deg)' },
         },
         spinFull: {
           '0%': { transform: 'rotate(0deg)' },
