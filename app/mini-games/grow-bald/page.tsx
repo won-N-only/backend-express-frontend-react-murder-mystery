@@ -1,41 +1,119 @@
 "use client";
 
-export default function GrowBaldPage() {
+import { useState } from "react";
+import GameContainer from "./components/GameContainer";
+import GameControls from "./components/GameControls";
+import GameHeader from "./components/GameHeader";
+import GameImage from "./components/GameImage";
+import ItemInfo from "./components/ItemInfo";
+import ResultModal from "./components/ResultModal";
+import { LEVELS } from "./constants";
+import { LevelData } from "./types";
+
+export default function GrowBaldGame() {
+    const [money, setMoney] = useState(100_000);
+    const [level, setLevel] = useState(0);
+    const [modalMsg, setModalMsg] = useState<string | null>(null);
+    const [pulse, setPulse] = useState(false);
+    const [spin, setSpin] = useState(false);
+    const [enhanceResult, setEnhanceResult] = useState<"success" | "maintain" | "fail" | null>(
+        null,
+    );
+
+    const currentLevel = LEVELS[level];
+    const MAX_LEVEL = LEVELS.length - 1;
+
+    // 강화 버튼
+    const handleEnhance = () => {
+        if (money < currentLevel.cost) {
+            setModalMsg("돈이 부족합니다.");
+            setEnhanceResult(null);
+            return;
+        }
+        setMoney((prev) => prev - currentLevel.cost);
+
+        const rand = Math.random();
+        if (rand < currentLevel.success_rate) {
+            if (level < LEVELS.length - 1) setLevel((prev) => prev + 1);
+            setModalMsg(currentLevel.success_msg);
+            setEnhanceResult("success");
+        } else if (rand < currentLevel.success_rate + currentLevel.maintain_rate) {
+            setModalMsg(currentLevel.maintain_msg ?? "강화 유지");
+            setEnhanceResult("maintain");
+        } else {
+            setModalMsg(currentLevel.fail_msg ?? "강화 실패");
+            setLevel(0);
+            setEnhanceResult("fail");
+        }
+    };
+
+    // 판매 버튼
+    const handleSell = () => {
+        setMoney((prev) => prev + currentLevel.price);
+        setLevel(0); // 단계 초기화
+    };
+
+    // 대머리 클릭 시 pulse
+    const handleHeadClick = () => {
+        setPulse(true);
+        setTimeout(() => setPulse(false), 2500);
+    };
+
+    // 프로그레스 바 텍스트 생성기
+    const getProgressText = (
+        enhanceResult: "success" | "maintain" | "fail" | null,
+        level: number,
+        currentLevel: LevelData,
+    ) => {
+        if (enhanceResult === "success") {
+            // 성공 시: +이전 -> +현재 아이템명
+            return `+${level - 1} → +${level} ${currentLevel.item_name}`;
+        }
+        if (enhanceResult === "maintain") {
+            // 유지 시: +현재 -> +현재 아이템명
+            return `+${level} → +${level} ${currentLevel.item_name}`;
+        }
+        // 실패 시: +현재(0) 아이템명
+        return `+${level} ${currentLevel.item_name}`;
+    };
+
+    const handleModalClose = (result: "success" | "maintain" | "fail" | null) => {
+        setModalMsg(null);
+        if (result === "success") {
+            setSpin(true);
+            setTimeout(() => setSpin(false), 1800);
+        }
+    };
+
     return (
-        <div>
-            {/* 1. Game Area */}
-            <div className="mb-24 p-6 sm:p-8 bg-[url('/mini-games/grow-bald/background.png')] bg-cover bg-center flex flex-col items-center gap-8 w-full max-w-xl mx-auto">
-                <div className="text-2xl font-bold text-head-white py-3 px-6 bg-head-brown rounded-full">
-                    대머리 강화하기
-                </div>
-                <div className="text-3xl font-bold text-head-text">최고의 대머리로 강화하세요!</div>
-                <img src="/favicon_face.png" alt="대머리 그림" className="w-72 aspect-square" />
-                <div className="w-full p-6 sm:p-10 rounded-2xl bg-white/80 gap-5 flex flex-col">
-                    <div className="font-bold text-3xl text-head-text">+ 0 그냥 대머리</div>
-                    <div className=" flex items-center justify-between w-full">
-                        <div className="flex gap-2">
-                            <div className="py-2.5 px-5 font-semibold text-lg text-head-white rounded-full bg-[#EDA234]">
-                                강화비용 n 원
-                            </div>
-                            <div className="py-2.5 px-5 font-semibold text-lg text-head-white rounded-full bg-[#EDA234]">
-                                판매가격 n 원
-                            </div>
-                        </div>
-                        <div className="py-2.5 px-5 font-semibold text-lg text-[#EDA234] rounded-full bg-head-white">
-                            내돈 n원
-                        </div>
-                    </div>
-                    <div className="font-medium text-xl text-head-gray-500">현상황 설명</div>
-                </div>
-                <div className="flex gap-4">
-                    <button className="font-semibold text-2xl text-head-white bg-head-brown rounded-2xl py-3 px-6">
-                        강화하기
-                    </button>
-                    <button className="font-semibold text-2xl text-head-brown bg-head-white rounded-2xl py-3 px-6">
-                        판매하기
-                    </button>
-                </div>
-            </div>
-        </div>
+        <GameContainer>
+            <GameHeader money={money} />
+            <GameImage
+                level={level}
+                currentLevel={currentLevel}
+                pulse={pulse}
+                spin={spin}
+                handleHeadClick={handleHeadClick}
+            />
+            <ItemInfo level={level} currentLevel={currentLevel} />
+            <GameControls
+                currentLevel={currentLevel}
+                handleEnhance={handleEnhance}
+                handleSell={handleSell}
+            />
+            {modalMsg && (
+                <ResultModal
+                    modalMsg={modalMsg}
+                    enhanceResult={enhanceResult}
+                    level={level}
+                    currentLevel={currentLevel}
+                    MAX_LEVEL={MAX_LEVEL}
+                    getProgressText={(result, level, currentLevel) =>
+                        getProgressText(result, level, currentLevel)
+                    }
+                    onClose={handleModalClose}
+                />
+            )}
+        </GameContainer>
     );
 }
