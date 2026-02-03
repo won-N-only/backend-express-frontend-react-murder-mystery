@@ -139,12 +139,16 @@ export default function GrowBaldGame() {
                     handleHeadClick={handleHeadClick}
                 />
             </div>
+            {/* 대머리 현재 정보 */}
             <ItemInfo level={level} currentLevel={currentLevel} />
+            {/* 강화 및 판매 버튼 */}
             <GameControls
+                currentMoney={money}
                 currentLevel={currentLevel}
                 handleEnhance={handleEnhance}
                 handleSell={handleSell}
             />
+            {/* 결과 모달 */}
             {modalMsg && (
                 <ResultModal
                     modalMsg={modalMsg}
@@ -158,6 +162,7 @@ export default function GrowBaldGame() {
                     onClose={handleModalClose}
                 />
             )}
+            {/* 클릭 플로팅 텍스트 */}
             {floatingTexts.map((ft) => (
                 <FloatingTextComponent key={ft.id} id={ft.id} text={ft.text} x={ft.x} y={ft.y} />
             ))}
