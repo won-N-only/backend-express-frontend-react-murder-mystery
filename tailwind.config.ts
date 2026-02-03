@@ -46,6 +46,7 @@ const config: Config = {
       animation: {
         'tilt-spin': 'tiltSpin 5s ease-in-out infinite',
         'spin-full': 'spinFull 1s ease-in-out',
+        'float-up': 'floatUp 0.8s ease-out forwards',
       },
       keyframes: {
         tiltSpin: {
@@ -56,6 +57,10 @@ const config: Config = {
         spinFull: {
           '0%': { transform: 'rotate(0deg)' },
           '100%': { transform: 'rotate(1080deg)' },
+        },
+        floatUp: {
+          '0%': { opacity: '1', transform: 'translateY(0)' },
+          '100%': { opacity: '0', transform: 'translateY(-50px)' },
         },
       },
     },
