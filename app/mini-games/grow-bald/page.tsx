@@ -166,7 +166,11 @@ export default function GrowBaldGame() {
             {floatingTexts.map((ft) => (
                 <FloatingTextComponent key={ft.id} id={ft.id} text={ft.text} x={ft.x} y={ft.y} />
             ))}
-            대머리를 눌러보면 좋은 일이 생길 수도?
+            {money < currentLevel.cost && (
+                <div className=" fixed bottom-0 text-center text-[14px] text-gray-600">
+                    대머리를 눌러보면 좋은 일이 생길 수도?
+                </div>
+            )}
         </GameContainer>
     );
 }
