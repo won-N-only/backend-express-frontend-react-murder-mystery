@@ -38,6 +38,8 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
     const players: Player[] = playersData?.players ?? [];
 
     const [isEditing, setIsEditing] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
+    const SCROLL_THRESHOLD = 24; // 스크롤 감지 임계값
 
     const completionMap = new Map<string, CompletionStatusValue>(
         completions.map((c: { playerId: string; status: CompletionStatusValue }) => [
@@ -67,16 +69,37 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
         }
     };
 
+    const handleContentScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        setIsScrolled(e.currentTarget.scrollTop > SCROLL_THRESHOLD);
+    };
+
+    // 모달이 열릴 때 스크롤 잠금 및 해제
     useEffect(() => {
         if (gameId) {
             document.body.style.overflow = "hidden";
-            mutateGame();
+            document.documentElement.style.overflow = "hidden"; // html 스크롤도 방지
         } else {
             document.body.style.overflow = "";
+            document.documentElement.style.overflow = "";
         }
+        // 컴포넌트 언마운트 시 스크롤 복원
         return () => {
             document.body.style.overflow = "";
+            document.documentElement.style.overflow = "";
         };
+    }, [gameId]);
+
+    // gameId 변경 시 데이터 뮤테이트 및 스크롤 상태 초기화
+    useEffect(() => {
+        if (gameId) {
+            mutateGame();
+            setIsScrolled(false);
+            // 모달 콘텐츠 스크롤을 최상단으로 초기화 (필요하다면 ref를 사용하여 특정 div에 적용)
+            const modalContent = document.querySelector(".game-modal-content");
+            if (modalContent) {
+                modalContent.scrollTop = 0;
+            }
+        }
     }, [gameId, mutateGame]);
 
     if (!gameId) return null;
@@ -87,7 +110,7 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
             onClick={onClose}
         >
             <div
-                className="bg-head-white rounded-none  shadow-lg max-w-content w-full max-h-[90vh] overflow-hidden flex flex-col"
+                className="bg-head-white rounded-lg shadow-lg max-w-content w-full max-h-[90vh] flex flex-col" // overflow-hidden 제거
                 onClick={(e) => e.stopPropagation()}
             >
                 {isLoadingGame ? (
@@ -97,83 +120,107 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
                 ) : game ? (
                     <>
                         {/* 헤더 */}
-                        <div className="bg-head-main p-7  flex-shrink-0">
-                            <div className="flex items-start gap-4">
-                                {/* 썸네일 */}
-                                <div className="shrink-0 w-[110px] h-[110px] relative bg-white rounded-full border border-4 border-head-white overflow-hidden">
-                                    {game.thumbnail && (
-                                        <Image
-                                            src={game.thumbnail}
-                                            alt={game.name}
-                                            fill
-                                            className="object-cover"
-                                            sizes="80px"
-                                        />
-                                    )}
-                                </div>
-
-                                {/* 정보 */}
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex justify-between items-start">
-                                        <div>
-                                            <div className="text-sm font-bold text-head-text opacity-70 mb-2">
-                                                #{game.orderNumber}
-                                            </div>
-                                            <h2 className="text-2xl font-bold text-head-text mb-1 leading-tight">
-                                                {game.name}
-                                            </h2>
-                                            <div className="flex items-center gap-2">
-                                                <span className="text-sm font-extrabold text-head-text">
-                                                    소유자{" "}
-                                                </span>
-                                                <span className="text-sm font-thin text-head-text">
-                                                    {game.ownerNote && game.ownerNote.join(" ｜ ")}
-                                                </span>
-                                            </div>
-                                            <div className="text-sm font-semibold text-head-text opacity-90 mt-2">
-                                                <span>
-                                                    {game.minPlayers}
-                                                    {game.maxPlayers ? `-${game.maxPlayers}` : "+"}
-                                                    인
-                                                </span>
-                                                {(game.company || game.series) && (
-                                                    <>
-                                                        <span className="mx-2">·</span>
-                                                        {game.company && (
-                                                            <span>{game.company}</span>
-                                                        )}
-                                                        {game.company && game.series && (
-                                                            <span> : </span>
-                                                        )}
-                                                        {game.series && <span>{game.series}</span>}
-                                                    </>
-                                                )}
-                                            </div>
-                                        </div>
-                                        {/* 액션 버튼 */}
-                                        <div className="flex flex-row-reverse items-start gap-4  p-[20px] py-6">
-                                            <button
-                                                type="button"
-                                                onClick={onClose}
-                                                className="text-head-text opacity-50 text-2xl    hover:opacity-70 btn-standard-padding"
-                                                aria-label="닫기"
-                                            >
-                                                ×
-                                            </button>
-                                            <Link
-                                                href={`/games/${gameId}/edit`}
-                                                className="text-md bg-head-brown text-white rounded-none font-bold btn-standard-padding"
-                                            >
-                                                게임 수정
-                                            </Link>
-                                        </div>
+                        <div
+                            className="bg-head-main sticky top-0 z-10 flex-shrink-0 transition-all duration-300"
+                            style={{ padding: isScrolled ? "12px 24px" : "28px 24px" }} // p-7 대신 padding 직접 지정
+                        >
+                            <div className="flex items-center justify-between gap-4">
+                                <div className="flex flex-1 items-center gap-4 min-w-0">
+                                    {/* 썸네일 */}
+                                    <div
+                                        className={`shrink-0 relative bg-white rounded-full border-4 border-head-white overflow-hidden transition-all duration-300 ${
+                                            isScrolled
+                                                ? "w-0 h-0 opacity-0"
+                                                : "w-16 h-16 md:w-20 md:h-20"
+                                        }`}
+                                    >
+                                        {game.thumbnail && (
+                                            <Image
+                                                src={game.thumbnail}
+                                                alt={game.name}
+                                                fill
+                                                className="object-cover"
+                                                sizes="80px"
+                                            />
+                                        )}
                                     </div>
+
+                                    {/* 정보 */}
+                                    <div className="flex-1 min-w-0">
+                                        <h2
+                                            className={`font-bold text-head-text mb-1 leading-tight transition-all duration-300 ${
+                                                isScrolled
+                                                    ? "text-xl truncate"
+                                                    : "text-xl md:text-2xl truncate"
+                                            }`}
+                                            title={game.name} // 말줄임 시 전체 제목 표시
+                                        >
+                                            {game.name}
+                                        </h2>
+                                                                                <div
+                                                                                    className={`transition-all duration-300 space-y-2 ${ // Added space-y-2
+                                                                                        isScrolled ? "h-0 opacity-0 invisible" : ""
+                                                                                    }`}
+                                                                                >
+                                                                                    <div className="text-sm font-bold text-head-text opacity-70">
+                                                                                        #{game.orderNumber}
+                                                                                    </div>
+                                                                                    <div className="flex items-center gap-2">
+                                                                                        <span className="text-sm font-extrabold text-head-text">
+                                                                                            소유자{" "}
+                                                                                        </span>
+                                                                                        <span className="text-sm font-thin text-head-text">
+                                                                                            {game.ownerNote && game.ownerNote.join(" ｜ ")}
+                                                                                        </span>
+                                                                                    </div>
+                                                                                    <div className="text-sm font-semibold text-head-text opacity-90">
+                                                                                        <span>
+                                                                                            {game.minPlayers}
+                                                                                            {game.maxPlayers ? `-${game.maxPlayers}` : "+"}인
+                                                                                        </span>
+                                                                                        {(game.company || game.series) && (
+                                                                                            <>
+                                                                                                <span className="mx-2">·</span>
+                                                                                                {game.company && (
+                                                                                                    <span>{game.company}</span>
+                                                                                                )}
+                                                                                                {game.company && game.series && (
+                                                                                                    <span> : </span>
+                                                                                                )}
+                                                                                                {game.series && <span>{game.series}</span>}
+                                                                                            </>
+                                                                                        )}
+                                                                                    </div>
+                                                                                </div>
+                                    </div>
+                                </div>
+                                {/* 액션 버튼 */}
+                                <div className="flex items-center gap-4 flex-shrink-0">
+                                    <Link
+                                        href={`/games/${gameId}/edit`}
+                                        className={`text-md bg-head-brown text-white rounded-none font-bold btn-standard-padding hidden md:block transition-all duration-300 ${
+                                            isScrolled ? "opacity-0 pointer-events-none" : ""
+                                        }`}
+                                    >
+                                        게임 수정
+                                    </Link>
+                                    <button
+                                        type="button"
+                                        onClick={onClose}
+                                        className="p-2 text-2xl opacity-60 hover:opacity-100 text-head-text transition-opacity duration-300"
+                                        aria-label="닫기"
+                                    >
+                                        ×
+                                    </button>
                                 </div>
                             </div>
                         </div>
 
                         {/* 콘텐츠 영역 */}
-                        <div className="flex-1 overflow-y-auto bg-head-main px-6 pb-6 space-y-6">
+                        <div
+                            className="flex-1 overflow-y-auto bg-head-main px-6 pb-6 space-y-6 game-modal-content"
+                            onScroll={handleContentScroll}
+                        >
                             {/* 시놉시스 */}
                             <section className="rounded-none  bg-head-white p-5">
                                 <h2 className="text-xl font-bold text-head-text">시놉시스</h2>

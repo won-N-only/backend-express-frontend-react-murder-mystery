@@ -51,9 +51,7 @@ export default function GameListModal({
                     <div>
                         <div className="flex items-start justify-between">
                             <div>
-                                <h2 className="text-2xl font-bold text-head-text">
-                                    {title}
-                                </h2>
+                                <h2 className="text-2xl font-bold text-head-text">{title}</h2>
                                 {subtitle && (
                                     <p className="text-sm font-semibold text-head-text mt-[10px]">
                                         {subtitle}
@@ -100,13 +98,9 @@ export default function GameListModal({
                     {isLoading ? (
                         <div className="text-center py-8 text-head-text">로딩 중...</div>
                     ) : isEmpty ? (
-                        <div className="text-center py-8 text-head-text">
-                            {emptyMessage}
-                        </div>
+                        <div className="text-center py-8 text-head-text">{emptyMessage}</div>
                     ) : (
-                        <div className="mt-[20px]">
-                            {children}
-                        </div>
+                        <div className="">{children}</div>
                     )}
                 </div>
             </div>
