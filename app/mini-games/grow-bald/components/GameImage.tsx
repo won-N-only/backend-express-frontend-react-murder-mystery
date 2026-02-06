@@ -19,7 +19,7 @@ const GameImage: React.FC<GameImageProps> = ({
 }) => {
     return (
         <Image
-            src={`/mini-games/grow-bald/level/head/level_${level}.png`}
+            src={`/mini-games/grow-bald/level/head/${level}.png`}
             alt={currentLevel.item_name}
             width={250}
             height={250}

@@ -17,7 +17,7 @@ const GameControls: React.FC<GameControlsProps> = ({
     const isEnhanceDisabled = currentMoney < currentLevel.cost;
 
     return (
-        <div className="flex gap-4 w-full justify-center">
+        <div className="grid grid-cols-2 gap-2 w-full justify-center">
             <button
                 onClick={handleEnhance}
                 disabled={isEnhanceDisabled}
@@ -35,7 +35,7 @@ const GameControls: React.FC<GameControlsProps> = ({
             >
                 강화하기
                 <span className="text-sm md:text-base mt-1">
-                    {isEnhanceDisabled ? "돈이 부족합니다." : `${currentLevel.cost} 원`}
+                    {isEnhanceDisabled ? "돈 부족" : `${currentLevel.cost.toLocaleString()} 원`}
                 </span>
             </button>
 
@@ -45,7 +45,7 @@ const GameControls: React.FC<GameControlsProps> = ({
             >
                 판매하기
                 <span className="text-head-brown text-sm md:text-base mt-1">
-                    {currentLevel.price} 원
+                    {currentLevel.price.toLocaleString()} 원
                 </span>
             </button>
         </div>

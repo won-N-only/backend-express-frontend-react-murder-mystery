@@ -12,7 +12,7 @@ import { LEVELS } from "./constants";
 import { FloatingText, LevelData } from "./types";
 
 export default function GrowBaldGame() {
-    const [money, setMoney] = useState(5000); // 초기 자금 1000원
+    const [money, setMoney] = useState(25000); // 초기 자금 1000원
     const [level, setLevel] = useState(0);
     const [modalMsg, setModalMsg] = useState<string | null>(null);
     const [pulse, setPulse] = useState(false);
@@ -23,7 +23,10 @@ export default function GrowBaldGame() {
     const [floatingTexts, setFloatingTexts] = useState<FloatingText[]>([]);
     const [isClickCooldown, setIsClickCooldown] = useState(false); // New state for click cooldown
 
+    // Passive income states
+
     const currentLevel = LEVELS[level];
+    const NextLevel = LEVELS[level + 1];
     const MAX_LEVEL = LEVELS.length - 1;
 
     // 강화 버튼
@@ -38,13 +41,13 @@ export default function GrowBaldGame() {
         const rand = Math.random();
         if (rand < currentLevel.success_rate) {
             if (level < LEVELS.length - 1) setLevel((prev) => prev + 1);
-            setModalMsg(currentLevel.success_msg);
+            setModalMsg(NextLevel.success_msg);
             setEnhanceResult("success");
         } else if (rand < currentLevel.success_rate + currentLevel.maintain_rate) {
-            setModalMsg(currentLevel.maintain_msg ?? "강화 유지");
+            setModalMsg(NextLevel.maintain_msg ?? "강화 유지");
             setEnhanceResult("maintain");
         } else {
-            setModalMsg(currentLevel.fail_msg ?? "강화 실패");
+            setModalMsg(NextLevel.fail_msg ?? "강화 실패");
             setLevel(0);
             setEnhanceResult("fail");
         }
@@ -52,7 +55,11 @@ export default function GrowBaldGame() {
 
     // 판매 버튼
     const handleSell = () => {
-        setMoney((prev) => prev + currentLevel.price);
+        if (currentLevel.price === 0) {
+            return;
+        }
+        const randomRate = 0.9 + Math.random() * 0.2; // 0.9 ~ 1.1 범위에서 랜덤
+        setMoney((prev) => prev + Math.round(currentLevel.price * randomRate));
         setLevel(0); // 단계 초기화
     };
 
@@ -147,7 +154,7 @@ export default function GrowBaldGame() {
                 currentLevel={currentLevel}
                 handleEnhance={handleEnhance}
                 handleSell={handleSell}
-            />
+            />{" "}
             {/* 결과 모달 */}
             {modalMsg && (
                 <ResultModal
@@ -167,7 +174,7 @@ export default function GrowBaldGame() {
                 <FloatingTextComponent key={ft.id} id={ft.id} text={ft.text} x={ft.x} y={ft.y} />
             ))}
             {money < currentLevel.cost && (
-                <div className=" fixed bottom-0 text-center text-[14px] text-gray-600">
+                <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-fit whitespace-nowrap bg-black/60 text-white text-[14px] py-2 px-4 rounded-lg shadow-lg">
                     대머리를 눌러보면 좋은 일이 생길 수도?
                 </div>
             )}

@@ -14,12 +14,14 @@ const GameHeader: React.FC<GameHeaderProps> = ({ money }) => {
             <div className="text-xl md:text-2xl font-bold text-head-text">
                 최고의 대머리로 강화하세요!
             </div>
-            {/* 돈 */}
-            <div className="w-full flex justify-end font-semibold text-sm md:text-lg text-head-brown">
-                <span className="text-head-white bg-head-brown text-bold px-1.5 rounded-full mr-2">
-                    ₩
-                </span>
-                {money} 원
+            {/* 정보 */}
+            <div className="w-full flex justify-end items-center gap-4 font-semibold text-sm md:text-lg text-head-brown">
+                <div className="flex items-center">
+                    <span className="text-head-white bg-head-brown text-bold px-1.5 rounded-full mr-2">
+                        ₩
+                    </span>
+                    {money.toLocaleString()} 원
+                </div>
             </div>
         </>
     );
