@@ -37,12 +37,13 @@ export default function RecentPlaysList({
             <section className="section-card">
                 <div className="flex items-center justify-between">
                     <h2 className="text-head-text font-bold text-2xl">완료한 게임</h2>
-                    <text
+                    <button
                         onClick={onViewAll}
                         className="cursor-pointer text-sm text-head-text font-medium hover:text-head-brown-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        type="button" //  
                     >
                         전체보기
-                    </text>
+                    </button>
                 </div>
                 <hr className="border-gray-500/50  mt-4" />
                 {plays.length === 0 ? (
