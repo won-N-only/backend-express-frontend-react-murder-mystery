@@ -45,7 +45,7 @@ function FaqItem({ question, description, additionalInfo, children }: FaqItemPro
 export default function FAQPage() {
     const [showBubble, setShowBubble] = useState(false);
     return (
-        <div className="container mx-auto px-4">
+        <div className=" ">
             <PageHeader
                 title="자주 묻는 질문"
                 description="궁금한 점이 있으신가요? 대머리 모임 FAQ입니다."
