@@ -1,49 +1,22 @@
-# Codebase Optimization and Refactoring Plan
+## 변경사항 요약 보고서: 조합 추천 페이지에서 플레이 가능한 게임 목록 API 호출 지연
 
-## 1. Completed Task Summary
+### 목표
+"조합 추천" 페이지에서 "플레이 가능한 게임 목록 보기" 버튼을 클릭하기 전까지는 관련 API(`api/match/playable-games`) 호출을 지연시켜 불필요한 네트워크 요청을 줄이고 성능을 최적화하는 것이 목표였습니다.
 
-*   Successfully moved `app/avoid-bald` and `app/brick-breaker` directories into `app/mini-games/`.
-*   Updated `href` paths in `app/mini-games/page.tsx` to reflect the new directory structure (e.g., `/brick-breaker` to `/mini-games/brick-breaker`).
-*   Resolved a `TypeError: Cannot find name 'PLAYER_SPEED'` in `app/mini-games/gamdok-runner/components/GamdokRunner.tsx` by adding `PLAYER_SPEED` to its import statement from `../constants`.
-*   The project now builds successfully without errors.
+### 구현 상세
 
-## 2. Identified Refactoring and Optimization Points
+#### 1. 프론트엔드 구현: 조합 추천 페이지 (`app/match/page.tsx`)
 
-Based on the recent changes and build output, here are some areas for potential improvement:
+*   **새로운 상태 추가**:
+    *   `fetchPlayableGames`라는 새로운 boolean 상태 변수를 추가하고 초기값을 `false`로 설정했습니다. 이 상태는 플레이 가능한 게임 API 호출을 조건부로 트리거하는 데 사용됩니다.
+*   **`useSWR` 호출 조건 수정**:
+    *   플레이 가능한 게임을 가져오는 `useSWR` 훅의 키 조건부를 `selectedPlayers.length > 0`에서 `fetchPlayableGames && selectedPlayers.length > 0`로 변경했습니다. 이로써 `useSWR`는 `fetchPlayableGames`가 `true`일 때만 API를 호출하게 됩니다.
+*   **버튼 `onClick` 핸들러 수정**:
+    *   "플레이 가능한 게임 목록 보기" 버튼의 `onClick` 핸들러를 수정하여, 모달을 여는 `setShowPlayableGamesModal(true)`와 함께 `setFetchPlayableGames(true)`를 호출하도록 했습니다. 이는 사용자가 버튼을 클릭했을 때 비로소 API 호출이 시작되도록 합니다.
+    *   버튼의 `disabled` 상태 로직도 `isLoadingPlayableGames || playableGames.length === 0`에서 `selectedPlayers.length === 0`으로 변경했습니다. 이는 플레이어가 선택되지 않았을 때만 버튼이 비활성화되도록 하여, API 호출 전에 버튼의 로딩 상태에 의존하지 않게 합니다.
+    *   버튼 텍스트의 로딩 상태 표시도 `isLoadingPlayableGames && fetchPlayableGames` 조건부로 변경하여, `fetchPlayableGames` 상태가 `true`일 때만 로딩 메시지가 표시되도록 했습니다.
+*   **`GameListModal` `onClose` 핸들러 수정**:
+    *   `GameListModal`의 `onClose` 핸들러에 `setFetchPlayableGames(false)`를 추가했습니다. 모달이 닫히면 `fetchPlayableGames` 상태를 초기화하여, 다음 번 버튼 클릭 시에 새로운 API 호출이 이루어지도록 준비합니다.
 
-### 2.1. Image Optimization
-
-*   **Issue:** The build process flagged warnings in `app/mini-games/avoid-bald/page.tsx` regarding the use of `<img>` tags, suggesting it could lead to slower LCP and higher bandwidth consumption.
-*   **Recommendation:** Replace native `<img>` tags with Next.js's `<Image />` component for automatic image optimization (lazy loading, responsive images, format optimization). This will improve performance and user experience.
-
-### 2.2. React Hook Dependencies
-
-*   **Issue:** A warning was identified in `app/mini-games/gamdok-runner/components/GamdokRunner.tsx` indicating that the `useCallback` hook has unnecessary dependencies (`items` and `resetGame`).
-*   **Recommendation:** Review the dependencies of `useCallback` and other React hooks (`useEffect`, `useMemo`) to ensure they are correctly specified. Incorrect dependencies can lead to stale closures or unnecessary re-renders. Exclude `items` and `resetGame` if they are not truly dependencies that change across renders or if `resetGame` is itself a `useCallback` with stable dependencies.
-
-### 2.3. Next.js MetadataBase Configuration
-
-*   **Issue:** Multiple warnings appeared during the build: `metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000"`.
-*   **Recommendation:** Configure the `metadataBase` property in the `metadata` export of your root `layout.tsx` or `page.tsx` files. This ensures that social sharing images (Open Graph, Twitter Cards) use the correct absolute URLs when deployed, improving SEO and social media presence.
-
-### 2.4. Centralized Game Configuration and Structure
-
-*   **Observation:** Each mini-game (`avoid-bald`, `brick-breaker`, `gamdok-runner`) currently has its own dedicated folders for `constants`, `hooks`, `types`, and `utils` directly within its game directory.
-*   **Recommendation:** As the number of mini-games grows, consider establishing a more centralized or standardized structure for common game-related assets and logic.
-    *   **Shared Game Utilities/Hooks:** Identify common patterns or functionalities across games (e.g., game loop mechanisms, input handling, physics calculations) and extract them into shared hooks or utility functions in a `app/mini-games/shared` or `app/hooks` directory.
-    *   **Consistent `constants` and `types`:** While game-specific constants are fine, some global game configurations or fundamental types could be moved to a shared `mini-games/types` or `mini-games/constants` if applicable, reducing redundancy.
-
-### 2.5. API Routes Organization (Current good practice, future consideration)
-
-*   **Observation:** The `app/api/_handlers` and `app/api/_mappers` structure demonstrates a clear separation of concerns, which is good.
-*   **Future Consideration:** As the API grows, you might explore further organizational patterns like grouping related handlers/mappers within domain-specific sub-folders (e.g., `_handlers/games`, `_handlers/comments`) if the current flat structure becomes unwieldy.
-
-### 2.6. Domain-Driven Design (DDD) Structure in `src`
-
-*   **Observation:** The `src` directory shows a well-structured approach using DDD principles (`comment`, `completion`, `game`, `match`, `player`, `shared`, `stats` with `application`, `domain`, `infrastructure`). This is an excellent foundation for maintainable and scalable code.
-*   **Recommendation:** Continue to strictly adhere to this pattern. Ensure that `domain` layers remain pure (business logic, entities, value objects, interfaces) and are not polluted with infrastructure details. `application` layers should orchestrate domain logic, and `infrastructure` should handle external concerns (databases, external services).
-
-## 3. Future Considerations
-
-*   **Common Game Components:** If visual components (e.g., buttons, score displays, modal overlays) are consistently used across mini-games, consider extracting them into `app/components/common` to promote reusability and maintain a consistent UI/UX.
-*   **Test Coverage:** Implement unit and integration tests for game logic, hooks, and API handlers to ensure long-term stability and easier refactoring.
+### 결론
+이번 변경을 통해 "조합 추천" 페이지는 플레이 가능한 게임 목록을 가져오는 API 호출을 사용자의 명시적인 요청(버튼 클릭) 시점으로 지연시킴으로써 애플리케이션의 반응성과 효율성을 향상시켰습니다. 불필요한 데이터 페칭을 줄이고, 자원 사용을 최적화하여 더 나은 사용자 경험을 제공할 것입니다.

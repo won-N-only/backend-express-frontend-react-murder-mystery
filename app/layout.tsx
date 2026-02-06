@@ -42,7 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <SWRProvider>
                     <SelectedPlayerProvider>
                         <Navbar />
-                        <main className="mx-auto max-w-content w-full px-4 pt-[100px] section-bottom bg-transparent">
+                        <main className="mx-auto max-w-content w-full px-4 py-[50px] md:py-[100px] section-bottom bg-transparent">
                             {children}
                         </main>
                         <ScrollToTop />

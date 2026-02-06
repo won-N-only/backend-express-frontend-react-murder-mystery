@@ -18,6 +18,7 @@ import type { IGameRepository } from "@game/domain/repositories/IGameRepository"
 import { MongoGameRepository } from "@game/infrastructure/repositories/MongoGameRepository";
 import { FindCombinationMatchesUseCase } from "@match/application/usecases/FindCombinationMatchesUseCase";
 import { FindMatchesUseCase } from "@match/application/usecases/FindMatchesUseCase";
+import { GetPlayableGamesByPlayersUseCase } from "@match/application/usecases/GetPlayableGamesByPlayersUseCase";
 import { GetPlayersUseCase } from "@player/application/usecases/GetPlayersUseCase";
 import { UpsertPlayerUseCase } from "@player/application/usecases/UpsertPlayerUseCase";
 import type { IPlayerRepository } from "@player/domain/repositories/IPlayerRepository";
@@ -33,6 +34,7 @@ let playerRepository: IPlayerRepository | null = null;
 let completionRepository: IGameCompletionRepository | null = null;
 let findMatchesUseCase: FindMatchesUseCase | null = null;
 let findCombinationMatchesUseCase: FindCombinationMatchesUseCase | null = null;
+let getPlayableGamesByPlayersUseCase: GetPlayableGamesByPlayersUseCase | null = null; // New instance
 let getPlayerStatsUseCase: GetPlayerStatsUseCase | null = null;
 let getGameCompletionStatsUseCase: GetGameCompletionStatsUseCase | null = null;
 let getCompanyStatsUseCase: GetCompanyStatsUseCase | null = null;
@@ -94,6 +96,16 @@ export function getFindCombinationMatchesUseCase(): FindCombinationMatchesUseCas
         );
     }
     return findCombinationMatchesUseCase;
+}
+
+export function getGetPlayableGamesByPlayersUseCase(): GetPlayableGamesByPlayersUseCase {
+    if (!getPlayableGamesByPlayersUseCase) {
+        getPlayableGamesByPlayersUseCase = new GetPlayableGamesByPlayersUseCase(
+            getGameRepository(),
+            getCompletionRepository(),
+        );
+    }
+    return getPlayableGamesByPlayersUseCase;
 }
 
 export function getGetPlayerStatsUseCase(): GetPlayerStatsUseCase {

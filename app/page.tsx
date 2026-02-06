@@ -12,7 +12,7 @@ export default function LandingPage() {
     }, [router]);
 
     return (
-        <div className="flex flex-col items-center py-[100px] md:py-[50px]">
+        <div className="flex flex-col items-center  ">
             <div className="relative  w-full   aspect-[4/3]">
                 <div className="relative w-full h-full flex  justify-center">
                     <Image

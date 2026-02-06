@@ -14,5 +14,6 @@ export {
     createGame, getGamesList, type CreateGameBody, type GetGamesQuery
 } from "./gamesHandler";
 export { findMatches, type MatchRequestBody } from "./matchHandler";
+export { getPlayableGames } from "./playableGamesHandler";
 export { createPlayer, getPlayers, type CreatePlayerBody } from "./playersHandler";
 export { getStats, type StatsType } from "./statsHandler";
