@@ -12,7 +12,7 @@ import { LEVELS } from "./constants";
 import { FloatingText, LevelData } from "./types";
 
 export default function GrowBaldGame() {
-    const [money, setMoney] = useState(25000); // 초기 자금 1000원
+    const [money, setMoney] = useState(10000); // 초기 자금 1000원
     const [level, setLevel] = useState(0);
     const [modalMsg, setModalMsg] = useState<string | null>(null);
     const [pulse, setPulse] = useState(false);

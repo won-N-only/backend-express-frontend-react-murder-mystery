@@ -11,9 +11,6 @@ export default function MiniGamesPage() {
     return (
         <div className="min-h-screen bg-head-main flex flex-col items-center p-4 lg:p-8">
             <h1 className="text-3xl font-black text-head-text mb-8">대머리 미니게임</h1>
-            <p className="text-head-text opacity-80 mb-8">
-                혹시 발견해도 남들에겐 알려지지 않게 해주세요 .. 발견하는 재미가 있어야하니가
-            </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-[800px] justify-center">
                 {/* 가발 깨기 카드 */}
                 <Link
@@ -56,6 +53,18 @@ export default function MiniGamesPage() {
                         김감독을 모임까지 지각 없이 보내세요!
                     </p>
                 </Link> */}
+
+                {/* 김감독 러너 카드 */}
+                <Link
+                    href="/mini-games/grow-bald"
+                    className="bg-head-white  p-6 hover:shadow-2xl transition-transform hover:-translate-y-1 group"
+                >
+                    <div className="h-40 bg-head-gray-100 mb-4 flex items-center justify-center text-4xl group-hover:scale-110 transition-transform">
+                        대머리 강화하기
+                    </div>
+                    <h2 className="text-2xl font-bold text-head-text mb-2">대머리 강화하기</h2>
+                    <p className="text-head-text opacity-80">최고의 대머리를 만들어보세요!</p>
+                </Link>
             </div>
         </div>
     );
