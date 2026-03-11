@@ -12,10 +12,48 @@ import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
 
+type PlayerFilterKey = "all" | "1-2" | "3-4" | "5-6" | "7+";
+
+const PLAYER_FILTERS: { key: PlayerFilterKey; label: string }[] = [
+    { key: "all", label: "전체 인원" },
+    { key: "1-2", label: "1-2인" },
+    { key: "3-4", label: "3-4인" },
+    { key: "5-6", label: "5-6인" },
+    { key: "7+", label: "7인 이상" },
+];
+
 export default function GamesPageContent() {
     const searchParams = useSearchParams();
 
-    const { data, mutate } = useSWR("/api/games", fetcher);
+    const [playerFilter, setPlayerFilter] = useState<PlayerFilterKey>("all");
+
+    const apiPath = useMemo(() => {
+        const params = new URLSearchParams();
+        switch (playerFilter) {
+            case "1-2":
+                params.set("minPlayers", "1");
+                params.set("maxPlayers", "2");
+                break;
+            case "3-4":
+                params.set("minPlayers", "3");
+                params.set("maxPlayers", "4");
+                break;
+            case "5-6":
+                params.set("minPlayers", "5");
+                params.set("maxPlayers", "6");
+                break;
+            case "7+":
+                params.set("minPlayers", "7");
+                break;
+            case "all":
+            default:
+                break;
+        }
+        const qs = params.toString();
+        return `/api/games${qs ? `?${qs}` : ""}`;
+    }, [playerFilter]);
+
+    const { data, mutate } = useSWR(apiPath, fetcher);
     const games = useMemo(() => (data?.games ?? []) as Game[], [data?.games]);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedGameId, setSelectedGameId] = useState<string | null>(null);
@@ -58,20 +96,43 @@ export default function GamesPageContent() {
             <PageHeader title="게임 목록" description="할 수 있는 모든 게임을 둘러보세요 " />
 
             {/* 검색 바: 입력 필드 + 검색 버튼 */}
-            <div className="mt-section flex">
-                <input
-                    type="text"
-                    placeholder="게임 이름, 제작사, 시리즈로 검색..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="flex-1 h-[50px] bg-head-white px-4 text-gray-500 placeholder:text-head-text focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent"
-                />
-                <button
-                    type="button"
-                    className="shrink-0 bg-head-accent-brown text-white text-sm md:text-lg hover:opacity-90 transition-opacity btn-standard-padding"
-                >
-                    검색
-                </button>
+            <div className="mt-section">
+                <div className="flex">
+                    <input
+                        type="text"
+                        placeholder="게임 이름, 제작사, 시리즈로 검색..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="flex-1 h-[50px] bg-head-white px-4 text-gray-500 placeholder:text-head-text focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent"
+                    />
+                    <button
+                        type="button"
+                        className="shrink-0 bg-head-accent-brown text-white text-sm md:text-lg hover:opacity-90 transition-opacity btn-standard-padding"
+                    >
+                        검색
+                    </button>
+                </div>
+
+                {/* 인원 수 칩 필터 */}
+                <div className="mt-3 flex flex-wrap gap-2">
+                    {PLAYER_FILTERS.map((filter) => {
+                        const isActive = filter.key === playerFilter;
+                        return (
+                            <button
+                                key={filter.key}
+                                type="button"
+                                onClick={() => setPlayerFilter(filter.key)}
+                                className={`px-3 py-1.5 text-xs md:text-sm rounded-full border transition ${
+                                    isActive
+                                        ? "bg-head-text text-white border-head-text shadow-sm"
+                                        : "bg-head-white text-head-text border-head-border hover:bg-head-gray-100"
+                                }`}
+                            >
+                                {filter.label}
+                            </button>
+                        );
+                    })}
+                </div>
             </div>
 
             {/* 게임 목록 헤더 */}
