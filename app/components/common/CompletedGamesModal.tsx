@@ -3,6 +3,7 @@
 import { fetcher } from "@app/lib/fetcher";
 import type { CompletedGame } from "@app/types";
 import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
 import useSWR from "swr";
 import GameListItem from "./GameListItem";
 import GameListModal from "./GameListModal";
@@ -28,7 +29,34 @@ export default function CompletedGamesModal({
     );
     const completedGames = completedGamesData?.completedGames ?? [];
 
+    const [searchQuery, setSearchQuery] = useState("");
+    const [playerCountRange, setPlayerCountRange] = useState<"ALL" | "1-2" | "3-4" | "5+">("ALL");
+
+    const filteredGames = useMemo(() => {
+        let list = completedGames;
+
+        if (searchQuery.trim()) {
+            const q = searchQuery.toLowerCase();
+            list = list.filter((g) => g.gameName.toLowerCase().includes(q));
+        }
+
+        return list.filter((g) => {
+            if (playerCountRange === "ALL") return true;
+
+            const min = g.minPlayers;
+            const max = g.maxPlayers ?? g.minPlayers;
+
+            if (playerCountRange === "1-2") return max >= 1 && min <= 2;
+            if (playerCountRange === "3-4") return max >= 3 && min <= 4;
+            if (playerCountRange === "5+") return min >= 5;
+
+            return true;
+        });
+    }, [completedGames, searchQuery, playerCountRange]);
+
     if (!playerId) return null;
+
+    const hasAnyCompleted = completedGames.length > 0;
 
     return (
         <GameListModal
@@ -36,10 +64,40 @@ export default function CompletedGamesModal({
             subtitle={`총 ${completedGames.length}개 완료`}
             onClose={onClose}
             isLoading={isLoading}
-            isEmpty={completedGames.length === 0}
-            emptyMessage="완료한 게임이 없습니다."
+            isEmpty={filteredGames.length === 0}
+            emptyMessage={
+                hasAnyCompleted ? "조건에 맞는 완료 게임이 없습니다." : "완료한 게임이 없습니다."
+            }
+            searchProps={{
+                value: searchQuery,
+                onChange: setSearchQuery,
+                placeholder: "게임 이름으로 검색",
+            }}
         >
-            {completedGames.map((game) => (
+            <div className="mb-4 flex flex-wrap gap-2">
+                {[
+                    { key: "ALL", label: "전체" },
+                    { key: "1-2", label: "1~2인" },
+                    { key: "3-4", label: "3~4인" },
+                    { key: "5+", label: "5인 이상" },
+                ].map((option) => (
+                    <button
+                        key={option.key}
+                        type="button"
+                        onClick={() =>
+                            setPlayerCountRange(option.key as "ALL" | "1-2" | "3-4" | "5+")
+                        }
+                        className={`px-3 py-1 text-sm font-semibold border border-head-border ${
+                            playerCountRange === option.key
+                                ? "bg-head-brown text-white"
+                                : "bg-head-white text-head-text"
+                        }`}
+                    >
+                        {option.label}
+                    </button>
+                ))}
+            </div>
+            {filteredGames.map((game) => (
                 <GameListItem
                     key={game.gameId}
                     orderNumber={game.orderNumber}

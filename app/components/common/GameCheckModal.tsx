@@ -16,6 +16,7 @@ interface GameCheckModalProps {
 
 export default function GameCheckModal({ playerId, playerName, onClose }: GameCheckModalProps) {
     const [searchQuery, setSearchQuery] = useState("");
+    const [playerCountRange, setPlayerCountRange] = useState<"ALL" | "1-2" | "3-4" | "5+">("ALL");
     const [updatingGameIds, setUpdatingGameIds] = useState<Set<string>>(new Set());
 
     const { data: gamesData, isLoading: isLoadingGames } = useSWR<{ games: Game[] }>(
@@ -38,15 +39,31 @@ export default function GameCheckModal({ playerId, playerName, onClose }: GameCh
     );
 
     const filteredGames = useMemo(() => {
-        if (!searchQuery.trim()) return games;
-        const query = searchQuery.toLowerCase();
-        return games.filter(
-            (game) =>
-                game.name.toLowerCase().includes(query) ||
-                game.company?.toLowerCase().includes(query) ||
-                game.series?.toLowerCase().includes(query),
-        );
-    }, [games, searchQuery]);
+        let list = games;
+
+        if (searchQuery.trim()) {
+            const query = searchQuery.toLowerCase();
+            list = list.filter(
+                (game) =>
+                    game.name.toLowerCase().includes(query) ||
+                    game.company?.toLowerCase().includes(query) ||
+                    game.series?.toLowerCase().includes(query),
+            );
+        }
+
+        return list.filter((game) => {
+            if (playerCountRange === "ALL") return true;
+
+            const min = game.minPlayers;
+            const max = game.maxPlayers ?? game.minPlayers;
+
+            if (playerCountRange === "1-2") return max >= 1 && min <= 2;
+            if (playerCountRange === "3-4") return max >= 3 && min <= 4;
+            if (playerCountRange === "5+") return min >= 5;
+
+            return true;
+        });
+    }, [games, searchQuery, playerCountRange]);
 
     const updateStatus = async (gameId: string, isCompleted: boolean) => {
         if (!playerId) return;
@@ -92,6 +109,29 @@ export default function GameCheckModal({ playerId, playerName, onClose }: GameCh
             isEmpty={filteredGames.length === 0}
             emptyMessage={searchQuery ? "검색 결과가 없습니다." : "게임이 없습니다."}
         >
+            <div className="mb-4 flex flex-wrap gap-2">
+                {[
+                    { key: "ALL", label: "전체" },
+                    { key: "1-2", label: "1~2인" },
+                    { key: "3-4", label: "3~4인" },
+                    { key: "5+", label: "5인 이상" },
+                ].map((option) => (
+                    <button
+                        key={option.key}
+                        type="button"
+                        onClick={() =>
+                            setPlayerCountRange(option.key as "ALL" | "1-2" | "3-4" | "5+")
+                        }
+                        className={`px-3 py-1 text-sm font-semibold border border-head-border ${
+                            playerCountRange === option.key
+                                ? "bg-head-brown text-white"
+                                : "bg-head-white text-head-text"
+                        }`}
+                    >
+                        {option.label}
+                    </button>
+                ))}
+            </div>
             {filteredGames.map((game) => {
                 const isCompleted = completedGameIds.has(game._id);
                 const isUpdating = updatingGameIds.has(game._id);
