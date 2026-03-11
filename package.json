@@ -6,9 +6,7 @@
         "dev": "next dev",
         "build": "next build",
         "start": "next start",
-        "lint": "next lint",
-        "migrate": "tsx scripts/migrate-from-csv.ts",
-        "create-indexes": "tsx scripts/create-indexes.ts"
+        "lint": "next lint"
     },
     "dependencies": {
         "@fontsource/pretendard": "^5.2.5",

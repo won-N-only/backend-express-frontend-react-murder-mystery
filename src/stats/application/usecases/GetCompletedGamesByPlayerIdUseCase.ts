@@ -7,6 +7,8 @@ export interface CompletedGame {
     gameName: string;
     orderNumber: number;
     completedAt: Date | null;
+    minPlayers: number;
+    maxPlayers: number | null;
 }
 
 export class GetCompletedGamesByPlayerIdUseCase {
@@ -45,6 +47,8 @@ export class GetCompletedGamesByPlayerIdUseCase {
                     gameName: game.name,
                     orderNumber: game.orderNumber,
                     completedAt: c.completedAt,
+                    minPlayers: game.minPlayers,
+                    maxPlayers: game.maxPlayers,
                 };
             })
             .filter((g): g is CompletedGame => g !== null)

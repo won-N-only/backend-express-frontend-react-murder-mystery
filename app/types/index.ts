@@ -77,6 +77,8 @@ export interface CompletedGame {
     gameName: string;
     orderNumber: number;
     completedAt: Date | null;
+    minPlayers: number;
+    maxPlayers: number | null;
 }
 
 /** 게임 댓글 (parentId 있으면 대댓글) */

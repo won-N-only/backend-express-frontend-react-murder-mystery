@@ -25,7 +25,10 @@ export default function HistoryPage() {
     );
     const playerStats = useMemo(() => statsData?.stats?.players ?? [], [statsData?.stats?.players]);
     const players: Player[] = useMemo(
-        () => playerStats.map((p) => ({ _id: p.playerId, name: p.playerName })),
+        () =>
+            [...playerStats]
+                .map((p) => ({ _id: p.playerId, name: p.playerName }))
+                .sort((a, b) => a.name.localeCompare(b.name, "ko-KR")),
         [playerStats],
     );
 
@@ -46,13 +49,12 @@ export default function HistoryPage() {
     const completedGames = completedData?.completedGames ?? [];
     const recentPlays = completedGames.slice(0, 5);
 
-    const topPercent = useMemo(() => {
+    const rankInfo = useMemo(() => {
         if (!selectedStat || playerStats.length === 0) return null;
         const sorted = [...playerStats].sort((a, b) => b.completionRate - a.completionRate);
         const rank = sorted.findIndex((s) => s.playerId === selectedStat.playerId) + 1;
         if (rank <= 0) return null;
-        const percent = (rank / playerStats.length) * 100;
-        return Math.max(1, Math.round(percent * 10) / 10);
+        return { rank, total: playerStats.length };
     }, [selectedStat, playerStats]);
 
     return (
@@ -76,9 +78,10 @@ export default function HistoryPage() {
                                 <h2 className="text-head-text font-bold text-xl md:text-2xl">
                                     {selectedPlayer.name}님의 졸업률
                                 </h2>
-                                {topPercent != null && (
+                                {rankInfo && (
                                     <p className="text-head-brown font-semibold text-base md:text-lg mt-2">
-                                        상위 {topPercent}%
+                                        {selectedPlayer.name}님의 졸업률 {rankInfo.rank}위 / 전체{" "}
+                                        {rankInfo.total}명
                                     </p>
                                 )}
                                 <p className="text-head-text text-xs md:text-sm mt-1">
