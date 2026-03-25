@@ -8,6 +8,7 @@ export interface GameDto {
     maxPlayers: number | null;
     company: string | null;
     series: string | null;
+    category: string | null;
     ownerNote: string[] | null;
     thumbnail?: string | null;
     description?: string | null;
@@ -24,6 +25,7 @@ export function toGameDto(game: Game): GameDto {
         maxPlayers: game.maxPlayers,
         company: game.company,
         series: game.series,
+        category: game.category,
         ownerNote: game.ownerNote,
         thumbnail: game.thumbnail,
         description: game.description,

@@ -21,9 +21,64 @@ export interface UpdateGameBody {
     maxPlayers?: number | null;
     company?: string | null;
     series?: string | null;
+    /**
+     * 게임 카테고리 코드 (0~4)
+     * 0: 선택 안함, 1:정발, 2:미정발, 3:온라인, 4:크라임씬
+     */
+    category?: number | string | null;
     ownerNote?: string[] | string | null;
     thumbnail?: string | null;
     description?: string | null;
+}
+
+const GameCategoryCode = {
+    NONE: 0,
+    RELEASED: 1, // 정발
+    UNRELEASED: 2, // 미정발
+    ONLINE: 3,
+    CRIME_SCENE: 4, // 크라임씬
+} as const;
+
+type GameCategoryCodeValue = (typeof GameCategoryCode)[keyof typeof GameCategoryCode];
+
+const CODE_TO_LABEL: Record<GameCategoryCodeValue, string | null> = {
+    [GameCategoryCode.NONE]: null,
+    [GameCategoryCode.RELEASED]: "정발",
+    [GameCategoryCode.UNRELEASED]: "미정발",
+    [GameCategoryCode.ONLINE]: "온라인",
+    [GameCategoryCode.CRIME_SCENE]: "크라임씬",
+};
+
+function normalizeGameCategory(input: unknown): string | null {
+    if (input === null || input === undefined) return null;
+
+    if (typeof input === "number") {
+        if (input === GameCategoryCode.NONE) return null;
+        const label = CODE_TO_LABEL[input as GameCategoryCodeValue];
+        if (!label) {
+            throw new Error("category는 0~4 중 하나여야 합니다.");
+        }
+        return label;
+    }
+
+    const raw = String(input).trim();
+    if (!raw) return null;
+
+    if (/^\d+$/.test(raw)) {
+        const code = Number(raw) as GameCategoryCodeValue;
+        if (code === GameCategoryCode.NONE) return null;
+        const label = CODE_TO_LABEL[code];
+        if (!label) throw new Error("category는 0~4 중 하나여야 합니다.");
+        return label;
+    }
+
+    const sanitizedLabel = sanitizeText(raw);
+    if (!sanitizedLabel) return null;
+    const normalizedLabel = sanitizedLabel === "크씬" ? "크라임씬" : sanitizedLabel;
+    if (!Object.values(CODE_TO_LABEL).includes(normalizedLabel)) {
+        throw new Error("category 값이 올바르지 않습니다.");
+    }
+    return normalizedLabel;
 }
 
 function normalizeOwnerNote(ownerNote: unknown): string[] | null {
@@ -57,6 +112,9 @@ export async function updateGame(gameId: string, body: UpdateGameBody) {
                 case "description":
                 case "thumbnail":
                     updateData[key] = sanitizeText(value as string | null);
+                    break;
+                case "category":
+                    updateData[key] = normalizeGameCategory(value);
                     break;
                 case "ownerNote":
                     updateData[key] = normalizeOwnerNote(value);

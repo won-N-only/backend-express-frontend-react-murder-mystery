@@ -8,6 +8,7 @@ export async function GET(req: NextRequest) {
         const result = await getGamesList({
             minPlayers: searchParams.get("minPlayers"),
             maxPlayers: searchParams.get("maxPlayers"),
+            category: searchParams.get("category"),
         });
         return NextResponse.json(result);
     } catch (error) {
@@ -18,7 +19,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        const { name, minPlayers, maxPlayers, company, series, thumbnail, description, ownerNote } = body;
+        const { name, minPlayers, maxPlayers, company, series, category, thumbnail, description, ownerNote } = body;
 
         if (!name || minPlayers == null) {
             return NextResponse.json(
@@ -33,6 +34,7 @@ export async function POST(req: NextRequest) {
             maxPlayers,
             company,
             series,
+            category,
             thumbnail,
             description,
             ownerNote,
