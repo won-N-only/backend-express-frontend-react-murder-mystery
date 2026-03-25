@@ -22,6 +22,7 @@ export interface Game {
     maxPlayers?: number | null;
     company?: string | null;
     series?: string | null;
+    category?: string | null;
     ownerNote?: string[] | null;
     thumbnail?: string | null;
     description?: string | null;

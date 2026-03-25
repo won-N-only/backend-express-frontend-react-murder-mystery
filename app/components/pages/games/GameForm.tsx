@@ -11,9 +11,29 @@ export interface GameFormData {
     maxPlayers: string;
     company: string;
     series: string;
+    /**
+     * 게임 카테고리 코드 (0~4)
+     * 0: 선택 안함, 1:정발, 2:미정발, 3:온라인, 4:크라임씬
+     */
+    category: string;
     ownerNote: string;
     thumbnail: string;
     description: string;
+}
+
+function gameCategoryLabelToCode(category: string | null | undefined): string {
+    switch (category) {
+        case "정발":
+            return "1";
+        case "미정발":
+            return "2";
+        case "온라인":
+            return "3";
+        case "크라임씬":
+            return "4";
+        default:
+            return "0";
+    }
 }
 
 function gameToFormData(game: Game | null): GameFormData {
@@ -25,6 +45,7 @@ function gameToFormData(game: Game | null): GameFormData {
             maxPlayers: "",
             company: "",
             series: "",
+            category: "0",
             ownerNote: "",
             thumbnail: "",
             description: "",
@@ -37,6 +58,7 @@ function gameToFormData(game: Game | null): GameFormData {
         maxPlayers: game.maxPlayers != null ? String(game.maxPlayers) : "",
         company: game.company ?? "",
         series: game.series ?? "",
+        category: gameCategoryLabelToCode(game.category),
         ownerNote: Array.isArray(game.ownerNote) ? game.ownerNote.join("\n") : "",
         thumbnail: game.thumbnail ?? "",
         description: game.description ?? "",
@@ -48,6 +70,10 @@ export function formDataToPayload(data: GameFormData) {
         .split(/[\n,]/)
         .map((s) => s.trim())
         .filter(Boolean);
+
+    const categoryCode = data.category.trim() ? Number(data.category.trim()) : 0;
+    const category = categoryCode === 0 || Number.isNaN(categoryCode) ? null : categoryCode;
+
     return {
         orderNumber: Number(data.orderNumber) || 1,
         name: data.name.trim(),
@@ -55,6 +81,7 @@ export function formDataToPayload(data: GameFormData) {
         maxPlayers: data.maxPlayers.trim() ? Number(data.maxPlayers) || null : null,
         company: data.company.trim() || null,
         series: data.series.trim() || null,
+        category,
         ownerNote: ownerNoteTrimmed.length > 0 ? ownerNoteTrimmed : null,
         thumbnail: data.thumbnail.trim() || null,
         description: data.description.trim() || null,
@@ -188,6 +215,24 @@ export default function GameForm({
                         className={`${inputClass} w-full md:w-[570px] px-4`}
                         placeholder="미스터리 파티 시리즈"
                     />
+                </div>
+                {/* 게임 종류 */}
+                <div className="flex flex-col md:flex-row md:items-center gap-[20px]">
+                    <label htmlFor="category" className={`${labelClass} font-bold md:w-[120px]`}>
+                        * 게임 종류
+                    </label>
+                    <select
+                        id="category"
+                        value={form.category}
+                        onChange={(e) => setForm((p) => ({ ...p, category: e.target.value }))}
+                        className={`${inputClass} w-full md:w-[570px] px-4 text-sm`}
+                    >
+                        <option value="0">선택 안함</option>
+                        <option value="1">정발</option>
+                        <option value="2">미정발</option>
+                        <option value="3">온라인</option>
+                        <option value="4">크라임씬</option>
+                    </select>
                 </div>
             </div>
             <div>

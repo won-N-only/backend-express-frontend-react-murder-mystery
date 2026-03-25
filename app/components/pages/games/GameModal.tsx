@@ -10,6 +10,23 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 
+function decodeHtmlEntities(text: string): string {
+    // 서버에서 sanitize-html 처리 후 `&gt;`, `&amp;` 같은 엔티티가 그대로 저장되는 경우를 대비
+    return text
+        // Named entities (decode & first so that `&amp;gt;` becomes `&gt;`)
+        .replace(/&amp;/g, "&")
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/&apos;/g, "'")
+        // Numeric entities
+        .replace(/&#(\d+);/g, (_, dec) => String.fromCodePoint(Number(dec)))
+        .replace(/&#x([0-9a-fA-F]+);/g, (_, hex) =>
+            String.fromCodePoint(parseInt(hex, 16)),
+        );
+}
+
 interface GameModalProps {
     gameId: string | null;
     onClose: () => void;
@@ -227,7 +244,7 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
                                 <hr className="border-head-gray-500 opacity-40 my-5" />
                                 {game.description && (
                                     <p className="whitespace-pre-wrap leading-relaxed text-head-text">
-                                        {game.description}
+                                        {decodeHtmlEntities(game.description)}
                                     </p>
                                 )}
                             </section>

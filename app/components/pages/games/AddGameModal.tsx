@@ -9,6 +9,11 @@ export interface AddGamePayload {
     maxPlayers: number | null;
     company: string | null;
     series: string | null;
+    /**
+     * 게임 카테고리 코드 (0~4)
+     * 0: 선택 안함, 1:정발, 2:미정발, 3:온라인, 4:크라임씬
+     */
+    category: number | null;
     thumbnail: string | null;
     description: string | null;
     ownerNote: string[] | null;
@@ -30,6 +35,7 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
     const [maxPlayers, setMaxPlayers] = useState("");
     const [company, setCompany] = useState("");
     const [series, setSeries] = useState("");
+    const [category, setCategory] = useState("0");
     const [thumbnail, setThumbnail] = useState("");
     const [description, setDescription] = useState("");
     const [ownerNote, setOwnerNote] = useState("");
@@ -42,6 +48,7 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
         setMaxPlayers("");
         setCompany("");
         setSeries("");
+        setCategory("0");
         setThumbnail("");
         setDescription("");
         setOwnerNote("");
@@ -58,12 +65,16 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
         setError(null);
         setSubmitting(true);
         try {
+            const categoryCode = category.trim() ? Number(category.trim()) : 0;
+            const categoryValue = categoryCode === 0 || Number.isNaN(categoryCode) ? null : categoryCode;
+
             const payload: AddGamePayload = {
                 name: name.trim(),
                 minPlayers: Number(minPlayers) || 2,
                 maxPlayers: maxPlayers.trim() ? Number(maxPlayers) || null : null,
                 company: company.trim() || null,
                 series: series.trim() || null,
+                category: categoryValue,
                 thumbnail: thumbnail.trim() || null,
                 description: description.trim() || null,
                 ownerNote: ownerNote.trim() !== "" ? ownerNote.trim().split("\n") : null,
@@ -208,6 +219,24 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
                                 className={`${inputClass} w-full md:w-[570px] px-4 text-sm`}
                                 placeholder="미스터리 파티 시리즈"
                             />
+                        </div>
+                        {/* 게임 종류 */}
+                        <div className="flex flex-col md:flex-row md:items-center gap-[20px]">
+                            <label htmlFor="add-category" className={`${labelClass} font-semibold md:w-[120px]`}>
+                                * 게임 종류
+                            </label>
+                            <select
+                                id="add-category"
+                                value={category}
+                                onChange={(e) => setCategory(e.target.value)}
+                                className={`${inputClass} w-full md:w-[570px] px-4 text-sm`}
+                            >
+                                <option value="0">선택 안함</option>
+                                <option value="1">정발</option>
+                                <option value="2">미정발</option>
+                                <option value="3">온라인</option>
+                                <option value="4">크라임씬</option>
+                            </select>
                         </div>
                     </div>
                     <div>

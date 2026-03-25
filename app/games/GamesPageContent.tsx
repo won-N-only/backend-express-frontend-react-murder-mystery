@@ -14,6 +14,8 @@ import useSWR from "swr";
 
 type PlayerFilterKey = "all" | "1-2" | "3-4" | "5-6" | "7+";
 
+type CategoryFilterKey = "all" | "정발" | "미정발" | "온라인" | "크라임씬";
+
 const PLAYER_FILTERS: { key: PlayerFilterKey; label: string }[] = [
     { key: "all", label: "전체 인원" },
     { key: "1-2", label: "1-2인" },
@@ -22,10 +24,19 @@ const PLAYER_FILTERS: { key: PlayerFilterKey; label: string }[] = [
     { key: "7+", label: "7인 이상" },
 ];
 
+const CATEGORY_FILTERS: { key: CategoryFilterKey; label: string }[] = [
+    { key: "all", label: "전체" },
+    { key: "정발", label: "정발" },
+    { key: "미정발", label: "미정발" },
+    { key: "온라인", label: "온라인" },
+    { key: "크라임씬", label: "크라임씬" },
+];
+
 export default function GamesPageContent() {
     const searchParams = useSearchParams();
 
     const [playerFilter, setPlayerFilter] = useState<PlayerFilterKey>("all");
+    const [categoryFilter, setCategoryFilter] = useState<CategoryFilterKey>("all");
 
     const apiPath = useMemo(() => {
         const params = new URLSearchParams();
@@ -49,9 +60,13 @@ export default function GamesPageContent() {
             default:
                 break;
         }
+
+        if (categoryFilter !== "all") {
+            params.set("category", categoryFilter);
+        }
         const qs = params.toString();
         return `/api/games${qs ? `?${qs}` : ""}`;
-    }, [playerFilter]);
+    }, [playerFilter, categoryFilter]);
 
     const { data, mutate } = useSWR(apiPath, fetcher);
     const games = useMemo(() => (data?.games ?? []) as Game[], [data?.games]);
@@ -126,6 +141,27 @@ export default function GamesPageContent() {
                                     isActive
                                         ? "bg-head-text text-white   shadow-sm"
                                         : "bg-head-white text-head-text   hover:bg-head-gray-100"
+                                }`}
+                            >
+                                {filter.label}
+                            </button>
+                        );
+                    })}
+                </div>
+
+                {/* 게임 카테고리 칩 필터 */}
+                <div className="mt-3 flex flex-wrap gap-2">
+                    {CATEGORY_FILTERS.map((filter) => {
+                        const isActive = filter.key === categoryFilter;
+                        return (
+                            <button
+                                key={filter.key}
+                                type="button"
+                                onClick={() => setCategoryFilter(filter.key)}
+                                className={`px-3 py-1.5 text-xs md:text-sm transition ${
+                                    isActive
+                                        ? "bg-head-text text-white shadow-sm"
+                                        : "bg-head-white text-head-text hover:bg-head-gray-100"
                                 }`}
                             >
                                 {filter.label}
