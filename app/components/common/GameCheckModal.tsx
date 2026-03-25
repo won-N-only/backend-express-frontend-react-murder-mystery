@@ -122,7 +122,7 @@ export default function GameCheckModal({ playerId, playerName, onClose }: GameCh
                         onClick={() =>
                             setPlayerCountRange(option.key as "ALL" | "1-2" | "3-4" | "5+")
                         }
-                        className={`px-3 py-1 text-sm font-semibold border border-head-border ${
+                        className={`px-3 py-1 text-sm font-semibold   ${
                             playerCountRange === option.key
                                 ? "bg-head-brown text-white"
                                 : "bg-head-white text-head-text"

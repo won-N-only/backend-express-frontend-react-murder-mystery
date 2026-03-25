@@ -122,10 +122,10 @@ export default function GamesPageContent() {
                                 key={filter.key}
                                 type="button"
                                 onClick={() => setPlayerFilter(filter.key)}
-                                className={`px-3 py-1.5 text-xs md:text-sm rounded-full border transition ${
+                                className={`px-3 py-1.5 text-xs md:text-sm   transition ${
                                     isActive
-                                        ? "bg-head-text text-white border-head-text shadow-sm"
-                                        : "bg-head-white text-head-text border-head-border hover:bg-head-gray-100"
+                                        ? "bg-head-text text-white   shadow-sm"
+                                        : "bg-head-white text-head-text   hover:bg-head-gray-100"
                                 }`}
                             >
                                 {filter.label}
