@@ -28,6 +28,7 @@ export default function MatchPage() {
     const [fetchPlayableGames, setFetchPlayableGames] = useState(false); // State to defer API call
 
     const { matches, combinations, loading, executeMatch } = useMatch();
+    const isCombinationReady = selectedPlayers.length >= 6;
 
     const togglePlayer = (id: string) => {
         setSelectedPlayers((prev) =>
@@ -64,6 +65,13 @@ export default function MatchPage() {
             <div className="pt-section">
                 <div className="text-head-text text-2xl font-bold mb-2">참가자 선택</div>
                 <span className="font-extrabold">선택된 참가자</span> {selectedPlayers.length}명
+                {!isCombinationReady && selectedPlayers.length > 0 && (
+                    <p className="mt-2 text-xs text-head-text/80 bg-head-white border border-head-border px-3 py-2">
+                        조합 추천은 6인 이상일 때만 동작해요 ㅠ.ㅠ 한 팀만 돌릴 때는 아래{" "}
+                        <span className="font-bold">&quot;플레이 가능한 게임 목록 보기&quot;</span>를
+                        사용해 주세요.
+                    </p>
+                )}
             </div>
             <MatchOptions
                 excludePartySeries={excludePartySeries}
@@ -87,10 +95,14 @@ export default function MatchPage() {
                 <button
                     type="button"
                     onClick={handleMatch}
-                    disabled={loading || !selectedPlayers.length}
+                    disabled={loading || !isCombinationReady}
                     className="mt-section block btn-primary btn-standard-padding"
                 >
-                    {loading ? "조합 만드는 중..." : "조합 만들기"}
+                    {loading
+                        ? "조합 만드는 중..."
+                        : !isCombinationReady
+                          ? "조합 만들기 (6인 이상)"
+                          : "조합 만들기"}
                 </button>
 
                 {/* 플레이 가능한 게임 목록 보기 버튼 */}
