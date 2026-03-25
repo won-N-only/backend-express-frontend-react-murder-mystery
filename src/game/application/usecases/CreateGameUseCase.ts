@@ -7,6 +7,7 @@ export interface CreateGameRequest {
     maxPlayers?: number | null;
     company?: string | null;
     series?: string | null;
+    category?: string | null;
     thumbnail?: string | null;
     description?: string | null;
     ownerNote?: string[] | null;
@@ -26,6 +27,7 @@ export class CreateGameUseCase {
             request.maxPlayers ?? null,
             request.company ?? null,
             request.series ?? null,
+            request.category ?? null,
             request.ownerNote ?? null,
             request.thumbnail ?? null,
             request.description ?? null,

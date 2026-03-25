@@ -9,6 +9,11 @@ export class Game {
         public readonly maxPlayers: number | null,
         public readonly company: string | null,
         public readonly series: string | null,
+        /**
+         * 게임 카테고리 (정발/미정발/온라인/크라임씬 등)
+         * 기존 데이터에는 없을 수 있으므로 null 허용
+         */
+        public readonly category: string | null,
         public readonly ownerNote: string[] | null,
         public readonly thumbnail: string | null,
         public readonly description: string | null,

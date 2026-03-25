@@ -6,10 +6,14 @@ export interface CompanyStat {
 }
 
 export interface IGameRepository {
-    findAll(): Promise<Game[]>;
+    findAll(category?: string | null): Promise<Game[]>;
     findById(id: string): Promise<Game | null>;
     findByIds(ids: string[]): Promise<Game[]>;
-    findByPlayerCount(minPlayers: number, maxPlayers?: number): Promise<Game[]>;
+    findByPlayerCount(
+        minPlayers: number,
+        maxPlayers?: number,
+        category?: string | null,
+    ): Promise<Game[]>;
     create(game: Game): Promise<Game>;
     update(id: string, game: Partial<Game>): Promise<Game | null>;
     delete(id: string): Promise<boolean>;

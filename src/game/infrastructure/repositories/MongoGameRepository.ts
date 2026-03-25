@@ -25,11 +25,15 @@ export class MongoGameRepository implements IGameRepository {
         return seq;
     }
 
-    async findAll(): Promise<Game[]> {
+    async findAll(category?: string | null): Promise<Game[]> {
         const db = await MongoDatabase.getDb();
+        const query: any = { deletedAt: null };
+        if (category) {
+            query.category = category;
+        }
         const games = await db
             .collection(MongoGameRepository.COLLECTION_NAME)
-            .find({ deletedAt: null })
+            .find(query)
             .sort({ orderNumber: 1 })
             .toArray();
         return games.map(this.toDomain);
@@ -57,12 +61,19 @@ export class MongoGameRepository implements IGameRepository {
         return ids.map((id) => gameMap.get(id)).filter((g): g is Game => g !== undefined);
     }
 
-    async findByPlayerCount(minPlayers: number, maxPlayers?: number): Promise<Game[]> {
+    async findByPlayerCount(
+        minPlayers: number,
+        maxPlayers?: number,
+        category?: string | null,
+    ): Promise<Game[]> {
         const db = await MongoDatabase.getDb();
         const query: any = {
             minPlayers: { $lte: minPlayers },
             deletedAt: null,
         };
+        if (category) {
+            query.category = category;
+        }
         if (maxPlayers) {
             query.$or = [{ maxPlayers: null }, { maxPlayers: { $gte: maxPlayers } }];
         } else {
@@ -87,6 +98,7 @@ export class MongoGameRepository implements IGameRepository {
             maxPlayers: game.maxPlayers,
             company: game.company,
             series: game.series,
+            category: game.category ?? null,
             ownerNote: game.ownerNote,
             thumbnail: game.thumbnail ?? null,
             description: game.description ?? null,
@@ -102,6 +114,7 @@ export class MongoGameRepository implements IGameRepository {
             document.maxPlayers,
             document.company,
             document.series,
+            document.category ?? null,
             document.ownerNote,
             document.thumbnail ?? null,
             document.description ?? null,
@@ -119,6 +132,7 @@ export class MongoGameRepository implements IGameRepository {
         if (game.maxPlayers !== undefined) updateData.maxPlayers = game.maxPlayers;
         if (game.company !== undefined) updateData.company = game.company;
         if (game.series !== undefined) updateData.series = game.series;
+        if (game.category !== undefined) updateData.category = game.category;
         if (game.ownerNote !== undefined) updateData.ownerNote = game.ownerNote;
         if (game.thumbnail !== undefined) updateData.thumbnail = game.thumbnail;
         if (game.description !== undefined) updateData.description = game.description;
@@ -180,6 +194,7 @@ export class MongoGameRepository implements IGameRepository {
             document.maxPlayers ?? null,
             document.company ?? null,
             document.series ?? null,
+            document.category ?? null,
             document.ownerNote ?? null,
             document.thumbnail ?? null,
             document.description ?? null,
