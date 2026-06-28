@@ -80,6 +80,7 @@ export interface CompletedGame {
     completedAt: Date | null;
     minPlayers: number;
     maxPlayers: number | null;
+    category: string | null;
 }
 
 /** 게임 댓글 (parentId 있으면 대댓글) */

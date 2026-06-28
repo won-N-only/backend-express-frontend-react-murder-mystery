@@ -22,13 +22,13 @@ export default function GameCard({ game, onClick }: GameCardProps) {
                 };
             case "온라인/미정발":
                 return {
-                    border: "border-violet-400",
-                    badge: "bg-violet-50 text-violet-800",
+                    border: "border-emerald-500",
+                    badge: "bg-emerald-50 text-emerald-800",
                 };
             case "우즈/리얼월드":
                 return {
-                    border: "border-emerald-500",
-                    badge: "bg-emerald-50 text-emerald-800",
+                    border: "border-violet-400",
+                    badge: "bg-violet-50 text-violet-800",
                 };
             default:
                 return {

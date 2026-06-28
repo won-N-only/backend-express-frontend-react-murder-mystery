@@ -9,6 +9,7 @@ export interface CompletedGame {
     completedAt: Date | null;
     minPlayers: number;
     maxPlayers: number | null;
+    category: string | null;
 }
 
 export class GetCompletedGamesByPlayerIdUseCase {
@@ -39,7 +40,7 @@ export class GetCompletedGamesByPlayerIdUseCase {
 
         // 완료된 게임 정보 매핑
         const completedGames: CompletedGame[] = completedCompletions
-            .map((c) => {
+            .map((c): CompletedGame | null => {
                 const game = gameMap.get(c.gameId.toString());
                 if (!game) return null;
                 return {
@@ -49,6 +50,7 @@ export class GetCompletedGamesByPlayerIdUseCase {
                     completedAt: c.completedAt,
                     minPlayers: game.minPlayers,
                     maxPlayers: game.maxPlayers,
+                    category: game.category ?? null,
                 };
             })
             .filter((g): g is CompletedGame => g !== null)
