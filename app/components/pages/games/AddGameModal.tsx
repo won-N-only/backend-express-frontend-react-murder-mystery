@@ -11,7 +11,7 @@ export interface AddGamePayload {
     series: string | null;
     /**
      * 게임 카테고리 코드 (0~4)
-     * 0: 선택 안함, 1:정발, 2:미정발, 3:온라인, 4:크라임씬
+     * 0: 선택 안함, 1:오프라인, 2:크라임씬, 3:온라인/미정발, 4:우즈/리얼월드
      */
     category: number | null;
     thumbnail: string | null;
@@ -232,10 +232,10 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
                                 className={`${inputClass} w-full md:w-[570px] px-4 text-sm`}
                             >
                                 <option value="0">선택 안함</option>
-                                <option value="1">정발</option>
-                                <option value="2">미정발</option>
-                                <option value="3">온라인</option>
-                                <option value="4">크라임씬</option>
+                                <option value="1">오프라인</option>
+                                <option value="2">크라임씬</option>
+                                <option value="3">온라인/미정발</option>
+                                <option value="4">우즈/리얼월드</option>
                             </select>
                         </div>
                     </div>

@@ -10,7 +10,7 @@ export class Game {
         public readonly company: string | null,
         public readonly series: string | null,
         /**
-         * 게임 카테고리 (정발/미정발/온라인/크라임씬 등)
+         * 게임 카테고리 (오프라인/크라임씬/온라인미정발/우즈리얼월드)
          * 기존 데이터에는 없을 수 있으므로 null 허용
          */
         public readonly category: string | null,

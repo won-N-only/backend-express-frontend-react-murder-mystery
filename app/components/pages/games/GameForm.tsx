@@ -13,7 +13,7 @@ export interface GameFormData {
     series: string;
     /**
      * 게임 카테고리 코드 (0~4)
-     * 0: 선택 안함, 1:정발, 2:미정발, 3:온라인, 4:크라임씬
+     * 0: 선택 안함, 1:오프라인, 2:크라임씬, 3:온라인/미정발, 4:우즈/리얼월드
      */
     category: string;
     ownerNote: string;
