@@ -129,11 +129,11 @@ export default function MatchPage() {
                         <div className="text-head-text text-2xl font-bold">추천 조합</div>
                         <div className="line mt-subtitle" aria-hidden />
                     </div>
-                    <CombinationResult combinations={combinations} players={players} />
+                    <CombinationResult combinations={combinations} players={players} onGameClick={setSelectedGameId} />
                 </div>
             )}
 
-            {matches.length > 0 && <SingleGameResult matches={matches} />}
+            {matches.length > 0 && <SingleGameResult matches={matches} onGameClick={setSelectedGameId} />}
 
             <GameModal gameId={selectedGameId} onClose={() => setSelectedGameId(null)} />
 

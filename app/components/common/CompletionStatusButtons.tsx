@@ -1,5 +1,5 @@
 import type { CompletionStatusValue } from "@app/types";
-import { CompletionStatus, CompletionStatusLabel } from "@app/types";
+import { CompletionStatus } from "@app/types";
 
 interface CompletionStatusButtonsProps {
     currentStatus: CompletionStatusValue;
@@ -12,25 +12,20 @@ export default function CompletionStatusButtons({
     onStatusChange,
     isEditable,
 }: CompletionStatusButtonsProps) {
-    const statuses: CompletionStatusValue[] = [CompletionStatus.DONE, CompletionStatus.NOT_DONE];
+    const isDone = currentStatus === CompletionStatus.DONE;
 
     return (
-        <div className="flex gap-1">
-            {statuses.map((s) => (
-                <button
-                    key={s}
-                    type="button"
-                    onClick={() => onStatusChange(s)}
-                    disabled={!isEditable}
-                    className={`text-xs font-bold transition-colors btn-standard-padding ${
-                        currentStatus === s
-                            ? "bg-head-brown text-white"
-                            : "bg-head-main text-head-text hover:bg-head-gray-200"
-                    }`}
-                >
-                    {CompletionStatusLabel[s]}
-                </button>
-            ))}
-        </div>
+        <button
+            type="button"
+            onClick={() => onStatusChange(isDone ? CompletionStatus.NOT_DONE : CompletionStatus.DONE)}
+            disabled={!isEditable}
+            className={`text-xs font-bold transition-colors btn-standard-padding ${
+                isDone
+                    ? "bg-head-brown text-white"
+                    : "bg-head-main text-head-text hover:bg-head-gray-200"
+            }`}
+        >
+            {isDone ? "완료" : "미완료"}
+        </button>
     );
 }

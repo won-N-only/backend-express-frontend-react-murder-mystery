@@ -4,9 +4,10 @@ import { Fragment } from "react";
 interface CombinationResultProps {
     combinations: Combination[];
     players: Player[];
+    onGameClick?: (gameId: string) => void;
 }
 
-export default function CombinationResult({ combinations, players }: CombinationResultProps) {
+export default function CombinationResult({ combinations, players, onGameClick }: CombinationResultProps) {
     return (
         <section className="mt-subtitle">
             {combinations.map((combo, idx) => (
@@ -18,7 +19,11 @@ export default function CombinationResult({ combinations, players }: Combination
                         </span>
                         <div className="grid md:grid-cols-2 gap-3">
                             {combo.groups.map((group, gIdx) => (
-                                <div key={gIdx} className="section-card">
+                                <div
+                                    key={gIdx}
+                                    className={`section-card ${onGameClick ? "cursor-pointer hover:shadow-md transition-shadow" : ""}`}
+                                    onClick={() => onGameClick?.(group.game._id)}
+                                >
                                     <div className="font-semibold text-xl">{group.game.name}</div>
                                     <div className="text-sm text-head-text mt-1">
                                         {group.game.minPlayers}

@@ -7,7 +7,7 @@ import type { Game } from "@app/types";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 
 export default function EditGamePage() {
     const params = useParams<{ id: string }>();
@@ -30,6 +30,8 @@ export default function EditGamePage() {
                 alert(err?.error ?? "수정에 실패했습니다.");
                 return;
             }
+            // 게임 목록 및 상세 캐시 무효화 → 돌아갔을 때 최신 데이터 표시
+            await mutate((key) => typeof key === "string" && key.startsWith("/api/games"));
             router.push(`/games/${id}`);
         } finally {
             setIsSubmitting(false);

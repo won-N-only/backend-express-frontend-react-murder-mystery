@@ -3,9 +3,10 @@ import type { MatchGame } from "@app/types";
 interface SingleGameResultProps {
     matches: MatchGame[];
     limit?: number;
+    onGameClick?: (gameId: string) => void;
 }
 
-export default function SingleGameResult({ matches, limit }: SingleGameResultProps) {
+export default function SingleGameResult({ matches, limit, onGameClick }: SingleGameResultProps) {
     const displayMatches = limit ? matches.slice(0, limit) : matches;
 
     return (
@@ -15,7 +16,8 @@ export default function SingleGameResult({ matches, limit }: SingleGameResultPro
                 {displayMatches.map((g) => (
                     <div
                         key={g._id}
-                        className="rounded-xl bg-head-white/80 shadow px-4 py-3 flex justify-between"
+                        onClick={() => onGameClick?.(g._id)}
+                        className={`rounded-xl bg-head-white/80 shadow px-4 py-3 flex justify-between ${onGameClick ? "cursor-pointer hover:shadow-md transition-shadow" : ""}`}
                     >
                         <div>
                             <div className="font-semibold">{g.name}</div>
