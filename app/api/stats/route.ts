@@ -9,7 +9,9 @@ export async function GET(req: Request) {
         const { searchParams } = new URL(req.url);
         const type = (searchParams.get("type") as "all" | "players" | "games" | "companies" | null) ?? "all";
         const result = await getStats(type);
-        return NextResponse.json(result);
+        return NextResponse.json(result, {
+            headers: { "Cache-Control": "s-maxage=300, stale-while-revalidate=60" },
+        });
     } catch (error) {
         return handleApiError(error, "GET /api/stats");
     }

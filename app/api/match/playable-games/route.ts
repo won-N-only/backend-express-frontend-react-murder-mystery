@@ -2,6 +2,8 @@ import { getPlayableGames } from "@app/api/_handlers";
 import { handleApiError } from "@app/api/_lib/errorHandler";
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
     try {
         const searchParams = req.nextUrl.searchParams;
