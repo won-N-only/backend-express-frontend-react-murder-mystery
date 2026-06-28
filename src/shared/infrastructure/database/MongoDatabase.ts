@@ -1,5 +1,6 @@
 import assert from "assert";
 import { Db, MongoClient } from "mongodb";
+import { ensureIndexes } from "./ensureIndexes";
 
 const uri = process.env.MONGODB_URI;
 const dbName = process.env.MONGODB_DB_NAME;
@@ -29,6 +30,7 @@ export class MongoDatabase {
         if (cachedDb) return cachedDb;
         const client = await MongoDatabase.getMongoClient();
         const db = client.db(dbName);
+        await ensureIndexes(db);
         cachedDb = db;
         return db;
     }
