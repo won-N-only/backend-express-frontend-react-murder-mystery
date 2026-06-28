@@ -2,11 +2,11 @@ import { toCommentDto } from "@app/api/_mappers";
 import { sanitizeText } from "@app/lib/sanitizer";
 import {
     getCreateCommentUseCase,
-    getGetCommentsByGameIdUseCase,
+    resolveCommentsByGameIdUseCase,
 } from "@shared/infrastructure/di/container";
 
 export async function getCommentsByGameId(gameId: string) {
-    const useCase = getGetCommentsByGameIdUseCase();
+    const useCase = resolveCommentsByGameIdUseCase();
     const comments = await useCase.execute(gameId);
     return { comments: comments.map(toCommentDto) };
 }

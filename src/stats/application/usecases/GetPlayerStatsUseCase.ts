@@ -1,7 +1,6 @@
-import type { IGameCompletionRepository } from "@completion/domain/repositories/IGameCompletionRepository";
-import { CompletionStatus } from "@completion/domain/valueObjects/CompletionStatus";
 import type { IGameRepository } from "@game/domain/repositories/IGameRepository";
 import type { IPlayerRepository } from "@player/domain/repositories/IPlayerRepository";
+import type { IStatSnapshotRepository } from "@stats/domain/repositories/IStatSnapshotRepository";
 
 export interface PlayerStats {
     playerId: string;
@@ -15,8 +14,8 @@ export class GetPlayerStatsUseCase {
     constructor(
         private playerRepository: IPlayerRepository,
         private gameRepository: IGameRepository,
-        private completionRepository: IGameCompletionRepository,
-    ) { }
+        private statSnapshotRepository: IStatSnapshotRepository,
+    ) {}
 
     async execute(): Promise<PlayerStats[]> {
         const [players, games] = await Promise.all([
@@ -24,33 +23,22 @@ export class GetPlayerStatsUseCase {
             this.gameRepository.findAll(),
         ]);
 
-        const totalGames = games.length || 0;
+        const totalGames = games.length;
         if (totalGames === 0 || players.length === 0) return [];
 
-        // DB 레벨에서 집계 (aggregation pipeline 사용으로 성능 최적화)
-        const gameIds = games.map((g) => g.id!.toString());
         const playerIds = players.map((p) => p.id!.toString());
-        const completionCounts = await this.completionRepository.countByPlayerIds(
-            gameIds,
-            playerIds,
-            CompletionStatus.DONE,
-        );
-
-        // 플레이어별 완료 개수 맵 생성
-        const completionMap = new Map<string, number>();
-        for (const count of completionCounts) {
-            completionMap.set(count.playerId, count.count);
-        }
+        const completionMap = await this.statSnapshotRepository.getPlayerCounts(playerIds);
 
         const stats: PlayerStats[] = players.map((player) => {
             const completedCount = completionMap.get(player.id!.toString()) ?? 0;
-            const completionRate = totalGames > 0 ? (completedCount / totalGames) * 100 : 0;
+            const completionRate =
+                totalGames > 0 ? Math.round((completedCount / totalGames) * 10000) / 100 : 0;
             return {
                 playerId: player.id!.toString(),
                 playerName: player.name,
                 completedCount,
                 totalGames,
-                completionRate: Math.round(completionRate * 100) / 100,
+                completionRate,
             };
         });
 

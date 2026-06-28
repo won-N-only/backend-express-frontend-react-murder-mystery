@@ -13,7 +13,9 @@ export interface CompletionCountByPlayer {
 
 export interface IGameCompletionRepository {
     upsert(gameId: string, playerId: string, status: CompletionStatus): Promise<GameCompletion>;
-    delete(gameId: string, playerId: string): Promise<boolean>;
+    /** soft delete 후 삭제된 레코드의 이전 status를 반환. 레코드 없으면 null */
+    delete(gameId: string, playerId: string): Promise<CompletionStatus | null>;
+    findByGameIdAndPlayerId(gameId: string, playerId: string): Promise<GameCompletion | null>;
     findByGameId(gameId: string): Promise<GameCompletion[]>;
     findByGameIdAndPlayerIds(gameId: string, playerIds: string[]): Promise<GameCompletion[]>;
     findByGameIdsAndPlayerIds(gameIds: string[], playerIds: string[], status?: CompletionStatus): Promise<GameCompletion[]>;

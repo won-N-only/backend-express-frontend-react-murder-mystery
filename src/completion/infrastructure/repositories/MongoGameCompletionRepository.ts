@@ -31,15 +31,25 @@ export class MongoGameCompletionRepository implements IGameCompletionRepository 
         return this.toDomain(result!);
     }
 
-    async delete(gameId: string, playerId: string): Promise<boolean> {
+    async delete(gameId: string, playerId: string): Promise<CompletionStatus | null> {
         const db = await MongoDatabase.getDb();
-        const result = await db
+        const doc = await db
             .collection(MongoGameCompletionRepository.COLLECTION_NAME)
-            .updateOne(
+            .findOneAndUpdate(
                 { gameId: new ObjectId(gameId), playerId: new ObjectId(playerId), deletedAt: null },
-                { $set: { deletedAt: new Date() } }
+                { $set: { deletedAt: new Date() } },
+                { returnDocument: "before" },
             );
-        return result.modifiedCount === 1;
+        if (!doc) return null;
+        return doc.status === CompletionStatus.DONE ? CompletionStatus.DONE : CompletionStatus.NOT_DONE;
+    }
+
+    async findByGameIdAndPlayerId(gameId: string, playerId: string): Promise<GameCompletion | null> {
+        const db = await MongoDatabase.getDb();
+        const doc = await db
+            .collection(MongoGameCompletionRepository.COLLECTION_NAME)
+            .findOne({ gameId: new ObjectId(gameId), playerId: new ObjectId(playerId), deletedAt: null });
+        return doc ? this.toDomain(doc) : null;
     }
 
     async findByGameId(gameId: string): Promise<GameCompletion[]> {

@@ -1,8 +1,8 @@
-import { getGetPlayableGamesByPlayersUseCase } from "@shared/infrastructure/di/container";
+import { resolvePlayableGamesByPlayersUseCase } from "@shared/infrastructure/di/container";
 import { toGameDto } from "@app/api/_mappers";
 
 export async function getPlayableGames(playerIds: string[]) {
-    const useCase = getGetPlayableGamesByPlayersUseCase();
+    const useCase = resolvePlayableGamesByPlayersUseCase();
     const games = await useCase.execute(playerIds);
     return { games: games.map(toGameDto) };
 }

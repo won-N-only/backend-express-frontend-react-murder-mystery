@@ -27,6 +27,10 @@ import { GetCompanyStatsUseCase } from "@stats/application/usecases/GetCompanySt
 import { GetCompletedGamesByPlayerIdUseCase } from "@stats/application/usecases/GetCompletedGamesByPlayerIdUseCase";
 import { GetGameCompletionStatsUseCase } from "@stats/application/usecases/GetGameCompletionStatsUseCase";
 import { GetPlayerStatsUseCase } from "@stats/application/usecases/GetPlayerStatsUseCase";
+import { RebuildStatSnapshotsUseCase } from "@stats/application/usecases/RebuildStatSnapshotsUseCase";
+import { SyncStatSnapshotUseCase } from "@stats/application/usecases/SyncStatSnapshotUseCase";
+import type { IStatSnapshotRepository } from "@stats/domain/repositories/IStatSnapshotRepository";
+import { MongoStatSnapshotRepository } from "@stats/infrastructure/repositories/MongoStatSnapshotRepository";
 
 // 싱글톤 인스턴스
 let gameRepository: IGameRepository | null = null;
@@ -34,7 +38,7 @@ let playerRepository: IPlayerRepository | null = null;
 let completionRepository: IGameCompletionRepository | null = null;
 let findMatchesUseCase: FindMatchesUseCase | null = null;
 let findCombinationMatchesUseCase: FindCombinationMatchesUseCase | null = null;
-let getPlayableGamesByPlayersUseCase: GetPlayableGamesByPlayersUseCase | null = null; // New instance
+let getPlayableGamesByPlayersUseCase: GetPlayableGamesByPlayersUseCase | null = null;
 let getPlayerStatsUseCase: GetPlayerStatsUseCase | null = null;
 let getGameCompletionStatsUseCase: GetGameCompletionStatsUseCase | null = null;
 let getCompanyStatsUseCase: GetCompanyStatsUseCase | null = null;
@@ -54,6 +58,9 @@ let commentRepository: ICommentRepository | null = null;
 let createCommentUseCase: CreateCommentUseCase | null = null;
 let getCommentsByGameIdUseCase: GetCommentsByGameIdUseCase | null = null;
 let deleteCommentUseCase: DeleteCommentUseCase | null = null;
+let statSnapshotRepository: IStatSnapshotRepository | null = null;
+let syncStatSnapshotUseCase: SyncStatSnapshotUseCase | null = null;
+let rebuildStatSnapshotsUseCase: RebuildStatSnapshotsUseCase | null = null;
 
 export function getGameRepository(): IGameRepository {
     if (!gameRepository) {
@@ -98,7 +105,7 @@ export function getFindCombinationMatchesUseCase(): FindCombinationMatchesUseCas
     return findCombinationMatchesUseCase;
 }
 
-export function getGetPlayableGamesByPlayersUseCase(): GetPlayableGamesByPlayersUseCase {
+export function resolvePlayableGamesByPlayersUseCase(): GetPlayableGamesByPlayersUseCase {
     if (!getPlayableGamesByPlayersUseCase) {
         getPlayableGamesByPlayersUseCase = new GetPlayableGamesByPlayersUseCase(
             getGameRepository(),
@@ -108,36 +115,62 @@ export function getGetPlayableGamesByPlayersUseCase(): GetPlayableGamesByPlayers
     return getPlayableGamesByPlayersUseCase;
 }
 
-export function getGetPlayerStatsUseCase(): GetPlayerStatsUseCase {
+export function getStatSnapshotRepository(): IStatSnapshotRepository {
+    if (!statSnapshotRepository) {
+        statSnapshotRepository = new MongoStatSnapshotRepository();
+    }
+    return statSnapshotRepository;
+}
+
+export function resolveSyncStatSnapshotUseCase(): SyncStatSnapshotUseCase {
+    if (!syncStatSnapshotUseCase) {
+        syncStatSnapshotUseCase = new SyncStatSnapshotUseCase(getStatSnapshotRepository());
+    }
+    return syncStatSnapshotUseCase;
+}
+
+export function resolveRebuildStatSnapshotsUseCase(): RebuildStatSnapshotsUseCase {
+    if (!rebuildStatSnapshotsUseCase) {
+        rebuildStatSnapshotsUseCase = new RebuildStatSnapshotsUseCase(
+            getGameRepository(),
+            getPlayerRepository(),
+            getCompletionRepository(),
+            getStatSnapshotRepository(),
+        );
+    }
+    return rebuildStatSnapshotsUseCase;
+}
+
+export function resolvePlayerStatsUseCase(): GetPlayerStatsUseCase {
     if (!getPlayerStatsUseCase) {
         getPlayerStatsUseCase = new GetPlayerStatsUseCase(
             getPlayerRepository(),
             getGameRepository(),
-            getCompletionRepository(),
+            getStatSnapshotRepository(),
         );
     }
     return getPlayerStatsUseCase;
 }
 
-export function getGetGameCompletionStatsUseCase(): GetGameCompletionStatsUseCase {
+export function resolveGameCompletionStatsUseCase(): GetGameCompletionStatsUseCase {
     if (!getGameCompletionStatsUseCase) {
         getGameCompletionStatsUseCase = new GetGameCompletionStatsUseCase(
             getPlayerRepository(),
             getGameRepository(),
-            getCompletionRepository(),
+            getStatSnapshotRepository(),
         );
     }
     return getGameCompletionStatsUseCase;
 }
 
-export function getGetCompanyStatsUseCase(): GetCompanyStatsUseCase {
+export function resolveCompanyStatsUseCase(): GetCompanyStatsUseCase {
     if (!getCompanyStatsUseCase) {
         getCompanyStatsUseCase = new GetCompanyStatsUseCase(getGameRepository());
     }
     return getCompanyStatsUseCase;
 }
 
-export function getGetCompletedGamesByPlayerIdUseCase(): GetCompletedGamesByPlayerIdUseCase {
+export function resolveCompletedGamesByPlayerIdUseCase(): GetCompletedGamesByPlayerIdUseCase {
     if (!getCompletedGamesByPlayerIdUseCase) {
         getCompletedGamesByPlayerIdUseCase = new GetCompletedGamesByPlayerIdUseCase(
             getGameRepository(),
@@ -148,14 +181,14 @@ export function getGetCompletedGamesByPlayerIdUseCase(): GetCompletedGamesByPlay
 }
 
 // Game UseCases
-export function getGetGamesUseCase(): GetGamesUseCase {
+export function resolveGamesUseCase(): GetGamesUseCase {
     if (!getGamesUseCase) {
         getGamesUseCase = new GetGamesUseCase(getGameRepository());
     }
     return getGamesUseCase;
 }
 
-export function getGetGameByIdUseCase(): GetGameByIdUseCase {
+export function resolveGameByIdUseCase(): GetGameByIdUseCase {
     if (!getGameByIdUseCase) {
         getGameByIdUseCase = new GetGameByIdUseCase(getGameRepository());
     }
@@ -183,7 +216,7 @@ export function getDeleteGameUseCase(): DeleteGameUseCase {
     return deleteGameUseCase;
 }
 
-export function getGetGamesByPlayerCountUseCase(): GetGamesByPlayerCountUseCase {
+export function resolveGamesByPlayerCountUseCase(): GetGamesByPlayerCountUseCase {
     if (!getGamesByPlayerCountUseCase) {
         getGamesByPlayerCountUseCase = new GetGamesByPlayerCountUseCase(getGameRepository());
     }
@@ -242,7 +275,7 @@ export function getCreateCommentUseCase(): CreateCommentUseCase {
     return createCommentUseCase;
 }
 
-export function getGetCommentsByGameIdUseCase(): GetCommentsByGameIdUseCase {
+export function resolveCommentsByGameIdUseCase(): GetCommentsByGameIdUseCase {
     if (!getCommentsByGameIdUseCase) {
         getCommentsByGameIdUseCase = new GetCommentsByGameIdUseCase(getCommentRepository());
     }
