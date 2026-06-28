@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 interface SelectedPlayerContextValue {
     selectedPlayerId: string | null;
@@ -10,10 +10,7 @@ interface SelectedPlayerContextValue {
 const SelectedPlayerContext = createContext<SelectedPlayerContextValue | null>(null);
 
 export function SelectedPlayerProvider({ children }: { children: React.ReactNode }) {
-    const [selectedPlayerId, setSelectedPlayerIdState] = useState<string | null>(null);
-    const setSelectedPlayerId = useCallback((id: string | null) => {
-        setSelectedPlayerIdState(id);
-    }, []);
+    const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
 
     return (
         <SelectedPlayerContext.Provider value={{ selectedPlayerId, setSelectedPlayerId }}>

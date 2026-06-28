@@ -9,7 +9,7 @@ interface MatchOptionsProps {
     onExcludePartySeriesChange: (value: boolean) => void;
     onExcludeSinglePlayerChange: (value: boolean) => void;
     onExcludeTwoPlayerChange: (value: boolean) => void;
-    onNumGroupsChange?: (value: number) => void;
+    onNumGroupsChange?: (value: number | undefined) => void;
 }
 
 export default function MatchOptions({
@@ -24,7 +24,7 @@ export default function MatchOptions({
     onNumGroupsChange,
 }: MatchOptionsProps) {
     return (
-        <div className="mt-subtitle">
+        <div>
             <div className="bg-head-white p-3 border border-head-border">
                 <div className="text-sm font-bold text-head-text">옵션 설정</div>
                 <div className="space-y-2.5 mt-2">
@@ -56,7 +56,7 @@ export default function MatchOptions({
                                 onChange={(e) => {
                                     const value = e.target.value;
                                     if (value === "") {
-                                        onNumGroupsChange(undefined as any);
+                                        onNumGroupsChange(undefined);
                                     } else {
                                         const num = parseInt(value, 10);
                                         if (!isNaN(num) && num >= 2 && num <= 5) {
