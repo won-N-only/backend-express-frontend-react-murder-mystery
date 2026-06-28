@@ -23,13 +23,13 @@ export interface GameFormData {
 
 function gameCategoryLabelToCode(category: string | null | undefined): string {
     switch (category) {
-        case "정발":
+        case "오프라인":
             return "1";
-        case "미정발":
-            return "2";
-        case "온라인":
-            return "3";
         case "크라임씬":
+            return "2";
+        case "온라인/미정발":
+            return "3";
+        case "우즈/리얼월드":
             return "4";
         default:
             return "0";
@@ -228,10 +228,10 @@ export default function GameForm({
                         className={`${inputClass} w-full md:w-[570px] px-4 text-sm`}
                     >
                         <option value="0">선택 안함</option>
-                        <option value="1">정발</option>
-                        <option value="2">미정발</option>
-                        <option value="3">온라인</option>
-                        <option value="4">크라임씬</option>
+                        <option value="1">오프라인</option>
+                        <option value="2">크라임씬</option>
+                        <option value="3">온라인/미정발</option>
+                        <option value="4">우즈/리얼월드</option>
                     </select>
                 </div>
             </div>

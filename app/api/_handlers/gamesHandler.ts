@@ -2,8 +2,8 @@ import { toGameDto } from "@app/api/_mappers";
 import { sanitizeText, sanitizeTextArray } from "@app/lib/sanitizer";
 import {
     getCreateGameUseCase,
-    getGetGamesByPlayerCountUseCase,
-    getGetGamesUseCase,
+    resolveGamesByPlayerCountUseCase,
+    resolveGamesUseCase,
 } from "@shared/infrastructure/di/container";
 
 export interface GetGamesQuery {
@@ -20,10 +20,10 @@ export async function getGamesList(query: GetGamesQuery) {
     if (minPlayersParam) {
         const min = parseInt(minPlayersParam, 10);
         const max = maxPlayersParam ? parseInt(maxPlayersParam, 10) : undefined;
-        const useCase = getGetGamesByPlayerCountUseCase();
+        const useCase = resolveGamesByPlayerCountUseCase();
         games = await useCase.execute(min, max, category);
     } else {
-        const useCase = getGetGamesUseCase();
+        const useCase = resolveGamesUseCase();
         games = await useCase.execute(category);
     }
     return { games: games.map(toGameDto) };
@@ -37,7 +37,7 @@ export interface CreateGameBody {
     series?: string | null;
     /**
      * 게임 카테고리 코드 (0~4)
-     * 0: 선택 안함, 1:정발, 2:미정발, 3:온라인, 4:크라임씬
+     * 0: 선택 안함, 1:오프라인, 2:크라임씬, 3:온라인/미정발, 4:우즈/리얼월드
      */
     category?: number | string | null;
     thumbnail?: string | null;
@@ -47,20 +47,20 @@ export interface CreateGameBody {
 
 const GameCategoryCode = {
     NONE: 0,
-    RELEASED: 1, // 정발
-    UNRELEASED: 2, // 미정발
-    ONLINE: 3,
-    CRIME_SCENE: 4, // 크라임씬
+    OFFLINE: 1,      // 오프라인
+    CRIME_SCENE: 2,  // 크라임씬
+    ONLINE: 3,       // 온라인/미정발
+    WOODS_REAL: 4,   // 우즈/리얼월드
 } as const;
 
 type GameCategoryCodeValue = (typeof GameCategoryCode)[keyof typeof GameCategoryCode];
 
 const CODE_TO_LABEL: Record<GameCategoryCodeValue, string | null> = {
     [GameCategoryCode.NONE]: null,
-    [GameCategoryCode.RELEASED]: "정발",
-    [GameCategoryCode.UNRELEASED]: "미정발",
-    [GameCategoryCode.ONLINE]: "온라인",
+    [GameCategoryCode.OFFLINE]: "오프라인",
     [GameCategoryCode.CRIME_SCENE]: "크라임씬",
+    [GameCategoryCode.ONLINE]: "온라인/미정발",
+    [GameCategoryCode.WOODS_REAL]: "우즈/리얼월드",
 };
 
 function normalizeGameCategory(input: unknown): string | null {
@@ -87,14 +87,13 @@ function normalizeGameCategory(input: unknown): string | null {
         return label;
     }
 
-    // fallback: label string (기존 데이터 호환)
+    // fallback: label string
     const sanitizedLabel = sanitizeText(raw);
     if (!sanitizedLabel) return null;
-    const normalizedLabel = sanitizedLabel === "크씬" ? "크라임씬" : sanitizedLabel;
-    if (!Object.values(CODE_TO_LABEL).includes(normalizedLabel)) {
+    if (!Object.values(CODE_TO_LABEL).includes(sanitizedLabel)) {
         throw new Error("category 값이 올바르지 않습니다.");
     }
-    return normalizedLabel;
+    return sanitizedLabel;
 }
 
 export async function createGame(body: CreateGameBody) {

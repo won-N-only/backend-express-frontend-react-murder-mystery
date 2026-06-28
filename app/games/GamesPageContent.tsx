@@ -14,7 +14,7 @@ import useSWR from "swr";
 
 type PlayerFilterKey = "all" | "1-2" | "3-4" | "5-6" | "7+";
 
-type CategoryFilterKey = "all" | "정발" | "미정발" | "온라인" | "크라임씬";
+type CategoryFilterKey = "all" | "오프라인" | "크라임씬" | "온라인/미정발" | "우즈/리얼월드";
 
 const PLAYER_FILTERS: { key: PlayerFilterKey; label: string }[] = [
     { key: "all", label: "전체 인원" },
@@ -26,10 +26,10 @@ const PLAYER_FILTERS: { key: PlayerFilterKey; label: string }[] = [
 
 const CATEGORY_FILTERS: { key: CategoryFilterKey; label: string }[] = [
     { key: "all", label: "전체" },
-    { key: "정발", label: "정발" },
-    { key: "미정발", label: "미정발" },
-    { key: "온라인", label: "온라인" },
+    { key: "오프라인", label: "오프라인" },
     { key: "크라임씬", label: "크라임씬" },
+    { key: "온라인/미정발", label: "온라인/미정발" },
+    { key: "우즈/리얼월드", label: "우즈/리얼월드" },
 ];
 
 export default function GamesPageContent() {

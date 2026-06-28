@@ -3,12 +3,12 @@ import { sanitizeText, sanitizeTextArray } from "@app/lib/sanitizer";
 import {
     getDeleteGameUseCase,
     getGetCompletionsByGameIdUseCase,
-    getGetGameByIdUseCase,
+    resolveGameByIdUseCase,
     getUpdateGameUseCase,
 } from "@shared/infrastructure/di/container";
 
 export async function getGameById(gameId: string) {
-    const getGameByIdUseCase = getGetGameByIdUseCase();
+    const getGameByIdUseCase = resolveGameByIdUseCase();
     const game = await getGameByIdUseCase.execute(gameId);
     return {
         game: toGameDto(game),
@@ -23,7 +23,7 @@ export interface UpdateGameBody {
     series?: string | null;
     /**
      * 게임 카테고리 코드 (0~4)
-     * 0: 선택 안함, 1:정발, 2:미정발, 3:온라인, 4:크라임씬
+     * 0: 선택 안함, 1:오프라인, 2:크라임씬, 3:온라인/미정발, 4:우즈/리얼월드
      */
     category?: number | string | null;
     ownerNote?: string[] | string | null;
@@ -33,20 +33,20 @@ export interface UpdateGameBody {
 
 const GameCategoryCode = {
     NONE: 0,
-    RELEASED: 1, // 정발
-    UNRELEASED: 2, // 미정발
-    ONLINE: 3,
-    CRIME_SCENE: 4, // 크라임씬
+    OFFLINE: 1,      // 오프라인
+    CRIME_SCENE: 2,  // 크라임씬
+    ONLINE: 3,       // 온라인/미정발
+    WOODS_REAL: 4,   // 우즈/리얼월드
 } as const;
 
 type GameCategoryCodeValue = (typeof GameCategoryCode)[keyof typeof GameCategoryCode];
 
 const CODE_TO_LABEL: Record<GameCategoryCodeValue, string | null> = {
     [GameCategoryCode.NONE]: null,
-    [GameCategoryCode.RELEASED]: "정발",
-    [GameCategoryCode.UNRELEASED]: "미정발",
-    [GameCategoryCode.ONLINE]: "온라인",
+    [GameCategoryCode.OFFLINE]: "오프라인",
     [GameCategoryCode.CRIME_SCENE]: "크라임씬",
+    [GameCategoryCode.ONLINE]: "온라인/미정발",
+    [GameCategoryCode.WOODS_REAL]: "우즈/리얼월드",
 };
 
 function normalizeGameCategory(input: unknown): string | null {
@@ -74,11 +74,10 @@ function normalizeGameCategory(input: unknown): string | null {
 
     const sanitizedLabel = sanitizeText(raw);
     if (!sanitizedLabel) return null;
-    const normalizedLabel = sanitizedLabel === "크씬" ? "크라임씬" : sanitizedLabel;
-    if (!Object.values(CODE_TO_LABEL).includes(normalizedLabel)) {
+    if (!Object.values(CODE_TO_LABEL).includes(sanitizedLabel)) {
         throw new Error("category 값이 올바르지 않습니다.");
     }
-    return normalizedLabel;
+    return sanitizedLabel;
 }
 
 function normalizeOwnerNote(ownerNote: unknown): string[] | null {
