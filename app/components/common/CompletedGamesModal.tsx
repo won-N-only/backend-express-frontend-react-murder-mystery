@@ -38,7 +38,10 @@ export default function CompletedGamesModal({
         playerId ? `/api/stats/players/${playerId}/completed-games` : null,
         fetcher,
     );
-    const completedGames = completedGamesData?.completedGames ?? [];
+    const completedGames = useMemo(
+        () => completedGamesData?.completedGames ?? [],
+        [completedGamesData],
+    );
 
     const [searchQuery, setSearchQuery] = useState("");
     const [playerCountRange, setPlayerCountRange] = useState<"ALL" | "1-2" | "3-4" | "5+">("ALL");
