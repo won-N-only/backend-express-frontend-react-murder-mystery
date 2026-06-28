@@ -39,10 +39,7 @@ export default function AvoidBaldGame() {
                             onTouchMove={handleTouchMove}
                             onTouchStart={handleTouchMove}
                             className="block cursor-none touch-none w-full h-auto bg-head-gray-100"
-                            style={{
-                                maxHeight: "75vh",
-                                objectFit: "contain",
-                            }}
+                            style={{ maxHeight: "75dvh" }}
                         />
                     </div>
 
@@ -52,9 +49,17 @@ export default function AvoidBaldGame() {
                             <h2 className="text-4xl lg:text-5xl font-extrabold mb-4 drop-shadow-md">
                                 대머리 피하기
                             </h2>
-                            <p className="mb-8 text-lg opacity-90">
+                            <p className="mb-4 text-lg opacity-90">
                                 쏟아지는 대머리 친구들을 피하세요!
                             </p>
+                            <div className="flex gap-3 mb-4 text-sm">
+                                <span className="hidden md:inline-flex items-center gap-1.5 bg-white/20 px-3 py-1.5 rounded-full">
+                                    <span className="font-bold">PC</span> 마우스로 조종
+                                </span>
+                                <span className="inline-flex md:hidden items-center gap-1.5 bg-white/20 px-3 py-1.5 rounded-full">
+                                    손가락으로 드래그해서 조종
+                                </span>
+                            </div>
                             <hr className="border-head-gray-500 opacity-40 my-2 text-4xl" />
                             <p className="text-head-whtie text-4xl font-bold">CLEAR: 200점</p>
                             <hr className="border-head-gray-500 opacity-40 my-2 text-4xl" />

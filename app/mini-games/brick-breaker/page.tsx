@@ -177,10 +177,7 @@ export default function BrickBreakerPage() {
                             width={CANVAS_WIDTH}
                             height={CANVAS_HEIGHT}
                             className="block cursor-none touch-none w-full h-auto bg-head-gray-100"
-                            style={{
-                                maxHeight: "75vh",
-                                objectFit: "contain",
-                            }}
+                            style={{ maxHeight: "75dvh" }}
                         />
 
                         {/* Start Overlay */}
@@ -189,9 +186,17 @@ export default function BrickBreakerPage() {
                                 <h2 className="text-4xl lg:text-5xl font-extrabold mb-4 drop-shadow-md">
                                     가발 깨기
                                 </h2>
-                                <p className="mb-8 text-lg opacity-90">
+                                <p className="mb-4 text-lg opacity-90">
                                     머리카락을 모두 모아 가발을 완성하세요!
                                 </p>
+                                <div className="flex gap-3 mb-8 text-sm">
+                                    <span className="hidden md:inline-flex items-center gap-1.5 bg-white/20 px-3 py-1.5 rounded-full">
+                                        <span className="font-bold">PC</span> 마우스로 조종
+                                    </span>
+                                    <span className="inline-flex md:hidden items-center gap-1.5 bg-white/20 px-3 py-1.5 rounded-full">
+                                        손가락으로 드래그해서 조종
+                                    </span>
+                                </div>
                                 <button
                                     onClick={() => initializeStage(0)}
                                     className="bg-head-brown text-white text-2xl font-bold hover:opacity-90 transition-transform active:scale-95 border-4 border-white rounded-none shadow-lg btn-standard-padding"
