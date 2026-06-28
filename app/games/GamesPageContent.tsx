@@ -12,6 +12,9 @@ import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
 
+const VALID_PLAYER_FILTERS = ["all", "1-2", "3-4", "5-6", "7+"] as const;
+const VALID_CATEGORY_FILTERS = ["all", "오프라인", "크라임씬", "온라인/미정발", "우즈/리얼월드"] as const;
+
 type PlayerFilterKey = "all" | "1-2" | "3-4" | "5-6" | "7+";
 
 type CategoryFilterKey = "all" | "오프라인" | "크라임씬" | "온라인/미정발" | "우즈/리얼월드";
@@ -35,8 +38,14 @@ const CATEGORY_FILTERS: { key: CategoryFilterKey; label: string }[] = [
 export default function GamesPageContent() {
     const searchParams = useSearchParams();
 
-    const [playerFilter, setPlayerFilter] = useState<PlayerFilterKey>("all");
-    const [categoryFilter, setCategoryFilter] = useState<CategoryFilterKey>("all");
+    const [playerFilter, setPlayerFilter] = useState<PlayerFilterKey>(() => {
+        const val = searchParams.get("players");
+        return (VALID_PLAYER_FILTERS as readonly string[]).includes(val ?? "") ? (val as PlayerFilterKey) : "all";
+    });
+    const [categoryFilter, setCategoryFilter] = useState<CategoryFilterKey>(() => {
+        const val = searchParams.get("category");
+        return (VALID_CATEGORY_FILTERS as readonly string[]).includes(val ?? "") ? (val as CategoryFilterKey) : "all";
+    });
 
     const apiPath = useMemo(() => {
         const params = new URLSearchParams();
@@ -70,9 +79,27 @@ export default function GamesPageContent() {
 
     const { data, mutate } = useSWR(apiPath, fetcher);
     const games = useMemo(() => (data?.games ?? []) as Game[], [data?.games]);
-    const [searchQuery, setSearchQuery] = useState("");
+    const [searchQuery, setSearchQuery] = useState(() => searchParams.get("q") ?? "");
     const [selectedGameId, setSelectedGameId] = useState<string | null>(null);
     const [showAddModal, setShowAddModal] = useState(false);
+
+    // URL에 검색/필터 상태 동기화 (페이지 이탈 후 복귀 시 복원)
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+        const params = new URLSearchParams(window.location.search);
+
+        if (searchQuery) params.set("q", searchQuery);
+        else params.delete("q");
+
+        if (playerFilter !== "all") params.set("players", playerFilter);
+        else params.delete("players");
+
+        if (categoryFilter !== "all") params.set("category", categoryFilter);
+        else params.delete("category");
+
+        const qs = params.toString();
+        window.history.replaceState(null, "", `/games${qs ? `?${qs}` : ""}`);
+    }, [searchQuery, playerFilter, categoryFilter]);
 
     useEffect(() => {
         const id =
@@ -89,7 +116,11 @@ export default function GamesPageContent() {
             typeof window !== "undefined" &&
             new URLSearchParams(window.location.search).get("gameId")
         ) {
-            window.history.replaceState(null, "", "/games");
+            // gameId만 제거하고 나머지 검색/필터 파라미터는 유지
+            const params = new URLSearchParams(window.location.search);
+            params.delete("gameId");
+            const qs = params.toString();
+            window.history.replaceState(null, "", `/games${qs ? `?${qs}` : ""}`);
         }
     }, []);
 
