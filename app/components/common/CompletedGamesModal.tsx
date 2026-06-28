@@ -1,5 +1,6 @@
 "use client";
 
+import { getCategoryStyle, type CategoryKey } from "@app/lib/categoryStyles";
 import { fetcher } from "@app/lib/fetcher";
 import type { CompletedGame } from "@app/types";
 import { useRouter } from "next/navigation";
@@ -16,29 +17,15 @@ interface CompletedGamesModalProps {
     onOpenGameDetail?: (gameId: string) => void;
 }
 
-type CategoryFilterKey = "ALL" | "오프라인" | "크라임씬" | "온라인/미정발" | "우즈/리얼월드";
+type CategoryFilterKey = "ALL" | CategoryKey;
 
-const CATEGORY_STYLES: Record<
-    Exclude<CategoryFilterKey, "ALL">,
-    { chip: string; badge: string }
-> = {
-    "오프라인": {
-        chip: "bg-amber-400 text-white",
-        badge: "bg-amber-50 text-amber-800",
-    },
-    "크라임씬": {
-        chip: "bg-rose-500 text-white",
-        badge: "bg-rose-50 text-rose-800",
-    },
-    "온라인/미정발": {
-        chip: "bg-violet-400 text-white",
-        badge: "bg-violet-50 text-violet-800",
-    },
-    "우즈/리얼월드": {
-        chip: "bg-emerald-500 text-white",
-        badge: "bg-emerald-50 text-emerald-800",
-    },
-};
+const CATEGORY_FILTER_OPTIONS: { key: CategoryFilterKey; label: string }[] = [
+    { key: "ALL",        label: "전체" },
+    { key: "오프라인",    label: "오프라인" },
+    { key: "크라임씬",    label: "크라임씬" },
+    { key: "온라인/미정발", label: "온라인/미정발" },
+    { key: "우즈/리얼월드", label: "우즈/리얼월드" },
+];
 
 export default function CompletedGamesModal({
     playerId,
@@ -71,14 +58,11 @@ export default function CompletedGamesModal({
 
         return list.filter((g) => {
             if (playerCountRange === "ALL") return true;
-
             const min = g.minPlayers;
             const max = g.maxPlayers ?? g.minPlayers;
-
             if (playerCountRange === "1-2") return max >= 1 && min <= 2;
             if (playerCountRange === "3-4") return max >= 3 && min <= 4;
             if (playerCountRange === "5+") return min >= 5;
-
             return true;
         });
     }, [completedGames, searchQuery, playerCountRange, categoryFilter]);
@@ -105,66 +89,48 @@ export default function CompletedGamesModal({
         >
             {/* 인원 수 필터 */}
             <div className="mb-3 flex flex-wrap gap-2">
-                {[
-                    { key: "ALL", label: "전체" },
-                    { key: "1-2", label: "1~2인" },
-                    { key: "3-4", label: "3~4인" },
-                    { key: "5+", label: "5인 이상" },
-                ].map((option) => (
+                {(["ALL", "1-2", "3-4", "5+"] as const).map((key) => (
                     <button
-                        key={option.key}
+                        key={key}
                         type="button"
-                        onClick={() =>
-                            setPlayerCountRange(option.key as "ALL" | "1-2" | "3-4" | "5+")
-                        }
-                        className={`px-3 py-1 text-sm font-semibold   ${
-                            playerCountRange === option.key
+                        onClick={() => setPlayerCountRange(key)}
+                        className={`px-3 py-1 text-sm font-semibold ${
+                            playerCountRange === key
                                 ? "bg-head-brown text-white"
                                 : "bg-head-white text-head-text"
                         }`}
                     >
-                        {option.label}
+                        {key === "ALL" ? "전체" : key === "5+" ? "5인 이상" : `${key}인`}
                     </button>
                 ))}
             </div>
 
             {/* 카테고리 필터 */}
             <div className="mb-4 flex flex-wrap gap-2">
-                <button
-                    type="button"
-                    onClick={() => setCategoryFilter("ALL")}
-                    className={`px-3 py-1 text-sm font-semibold   ${
-                        categoryFilter === "ALL"
-                            ? "bg-head-brown text-white"
-                            : "bg-head-white text-head-text"
-                    }`}
-                >
-                    전체
-                </button>
-                {(Object.keys(CATEGORY_STYLES) as Exclude<CategoryFilterKey, "ALL">[]).map(
-                    (cat) => (
+                {CATEGORY_FILTER_OPTIONS.map(({ key, label }) => {
+                    const isActive = categoryFilter === key;
+                    const style = key !== "ALL" ? getCategoryStyle(key) : null;
+                    return (
                         <button
-                            key={cat}
+                            key={key}
                             type="button"
-                            onClick={() => setCategoryFilter(cat)}
-                            className={`px-3 py-1 text-sm font-semibold   ${
-                                categoryFilter === cat
-                                    ? CATEGORY_STYLES[cat].chip
+                            onClick={() => setCategoryFilter(key)}
+                            className={`px-3 py-1 text-sm font-semibold ${
+                                isActive
+                                    ? key === "ALL"
+                                        ? "bg-head-brown text-white"
+                                        : style!.badge
                                     : "bg-head-white text-head-text"
                             }`}
                         >
-                            {cat}
+                            {label}
                         </button>
-                    ),
-                )}
+                    );
+                })}
             </div>
 
             {filteredGames.map((game) => {
-                const catStyle =
-                    game.category && game.category in CATEGORY_STYLES
-                        ? CATEGORY_STYLES[game.category as Exclude<CategoryFilterKey, "ALL">]
-                        : null;
-
+                const { badge } = getCategoryStyle(game.category);
                 return (
                     <GameListItem
                         key={game.gameId}
@@ -172,9 +138,9 @@ export default function CompletedGamesModal({
                         title={game.gameName}
                         subtitle={
                             <span className="flex items-center gap-2 flex-wrap">
-                                {catStyle && (
+                                {game.category && (
                                     <span
-                                        className={`inline-flex items-center px-2 py-0.5 text-[10px] font-bold rounded-none ${catStyle.badge}`}
+                                        className={`inline-flex items-center px-2 py-0.5 text-[10px] font-bold rounded-none ${badge}`}
                                     >
                                         {game.category}
                                     </span>

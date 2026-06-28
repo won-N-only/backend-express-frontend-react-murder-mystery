@@ -1,5 +1,6 @@
 "use client";
 
+import { getCategoryStyle } from "@app/lib/categoryStyles";
 import type { CompletedGame } from "@app/types";
 import { useRouter } from "next/navigation";
 import { Fragment } from "react";
@@ -70,13 +71,22 @@ export default function RecentPlaysList({
                                         >
                                             {game.gameName}
                                         </button>
-                                        {game.completedAt && (
-                                            <p className="text-head-text text-sm">
-                                                {new Date(game.completedAt).toLocaleDateString(
-                                                    "ko-KR",
-                                                )}
-                                            </p>
-                                        )}
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                            {game.category && (
+                                                <span
+                                                    className={`inline-flex items-center px-2 py-0.5 text-[10px] font-bold rounded-none ${getCategoryStyle(game.category).badge}`}
+                                                >
+                                                    {game.category}
+                                                </span>
+                                            )}
+                                            {game.completedAt && (
+                                                <p className="text-head-text text-sm">
+                                                    {new Date(game.completedAt).toLocaleDateString(
+                                                        "ko-KR",
+                                                    )}
+                                                </p>
+                                            )}
+                                        </div>
                                         <button
                                             type="button"
                                             onClick={() => openGameDetail(game.gameId)}

@@ -1,3 +1,4 @@
+import { getCategoryStyle } from "@app/lib/categoryStyles";
 import type { Game } from "@app/types";
 
 interface GameCardProps {
@@ -7,36 +8,7 @@ interface GameCardProps {
 
 export default function GameCard({ game, onClick }: GameCardProps) {
     const category = game.category ?? null;
-
-    const categoryStyle = (() => {
-        switch (category) {
-            case "오프라인":
-                return {
-                    border: "border-amber-400",
-                    badge: "bg-amber-50 text-amber-800",
-                };
-            case "크라임씬":
-                return {
-                    border: "border-rose-500",
-                    badge: "bg-rose-50 text-rose-800",
-                };
-            case "온라인/미정발":
-                return {
-                    border: "border-emerald-500",
-                    badge: "bg-emerald-50 text-emerald-800",
-                };
-            case "우즈/리얼월드":
-                return {
-                    border: "border-violet-400",
-                    badge: "bg-violet-50 text-violet-800",
-                };
-            default:
-                return {
-                    border: "border-transparent",
-                    badge: "bg-head-white/70 text-head-text",
-                };
-        }
-    })();
+    const categoryStyle = getCategoryStyle(category);
 
     return (
         <button
