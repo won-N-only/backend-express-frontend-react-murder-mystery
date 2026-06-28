@@ -1,4 +1,5 @@
 import { Game } from "@game/domain/entities/Game";
+import { GameCategory } from "@game/domain/enums/GameCategory";
 import type { CompanyStat, IGameRepository } from "@game/domain/repositories/IGameRepository";
 import { MongoDatabase } from "@shared/infrastructure/database/MongoDatabase";
 import { Document, ObjectId } from "mongodb";
@@ -25,7 +26,7 @@ export class MongoGameRepository implements IGameRepository {
         return seq;
     }
 
-    async findAll(category?: string | null): Promise<Game[]> {
+    async findAll(category?: GameCategory | null): Promise<Game[]> {
         const db = await MongoDatabase.getDb();
         const query: any = { deletedAt: null };
         if (category) {
@@ -64,7 +65,7 @@ export class MongoGameRepository implements IGameRepository {
     async findByPlayerCount(
         minPlayers: number,
         maxPlayers?: number,
-        category?: string | null,
+        category?: GameCategory | null,
     ): Promise<Game[]> {
         const db = await MongoDatabase.getDb();
         const query: any = {
@@ -186,6 +187,10 @@ export class MongoGameRepository implements IGameRepository {
     }
 
     private toDomain(document: any): Game {
+        const rawCategory = document.category;
+        const category = Object.values(GameCategory).includes(rawCategory)
+            ? (rawCategory as GameCategory)
+            : null;
         return new Game(
             document._id,
             document.orderNumber,
@@ -194,7 +199,7 @@ export class MongoGameRepository implements IGameRepository {
             document.maxPlayers ?? null,
             document.company ?? null,
             document.series ?? null,
-            document.category ?? null,
+            category,
             document.ownerNote ?? null,
             document.thumbnail ?? null,
             document.description ?? null,

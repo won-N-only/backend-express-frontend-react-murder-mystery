@@ -1,4 +1,5 @@
 import { Game } from "@game/domain/entities/Game";
+import type { GameCategory } from "@game/domain/enums/GameCategory";
 import type { IGameRepository } from "@game/domain/repositories/IGameRepository";
 
 export interface CreateGameRequest {
@@ -7,7 +8,7 @@ export interface CreateGameRequest {
     maxPlayers?: number | null;
     company?: string | null;
     series?: string | null;
-    category?: string | null;
+    category?: GameCategory | null;
     thumbnail?: string | null;
     description?: string | null;
     ownerNote?: string[] | null;

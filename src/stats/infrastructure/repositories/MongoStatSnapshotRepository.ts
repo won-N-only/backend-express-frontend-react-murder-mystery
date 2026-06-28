@@ -1,3 +1,4 @@
+import { StatSnapshotType } from "@stats/domain/enums/StatSnapshotType";
 import type { IStatSnapshotRepository } from "@stats/domain/repositories/IStatSnapshotRepository";
 import { MongoDatabase } from "@shared/infrastructure/database/MongoDatabase";
 import { ObjectId } from "mongodb";
@@ -8,7 +9,7 @@ export class MongoStatSnapshotRepository implements IStatSnapshotRepository {
     async incrementPlayerCount(playerId: string, delta: number): Promise<void> {
         const db = await MongoDatabase.getDb();
         await db.collection(COLLECTION).updateOne(
-            { type: "player", entityId: new ObjectId(playerId) },
+            { type: StatSnapshotType.Player, entityId: new ObjectId(playerId) },
             { $inc: { completedCount: delta } },
             { upsert: true },
         );
@@ -17,7 +18,7 @@ export class MongoStatSnapshotRepository implements IStatSnapshotRepository {
     async incrementGameCount(gameId: string, delta: number): Promise<void> {
         const db = await MongoDatabase.getDb();
         await db.collection(COLLECTION).updateOne(
-            { type: "game", entityId: new ObjectId(gameId) },
+            { type: StatSnapshotType.Game, entityId: new ObjectId(gameId) },
             { $inc: { completedCount: delta } },
             { upsert: true },
         );
@@ -28,7 +29,7 @@ export class MongoStatSnapshotRepository implements IStatSnapshotRepository {
         const db = await MongoDatabase.getDb();
         const docs = await db
             .collection(COLLECTION)
-            .find({ type: "player", entityId: { $in: playerIds.map((id) => new ObjectId(id)) } })
+            .find({ type: StatSnapshotType.Player, entityId: { $in: playerIds.map((id) => new ObjectId(id)) } })
             .toArray();
         return new Map(
             docs.map((d) => [d.entityId.toString(), Math.max(0, d.completedCount ?? 0)]),
@@ -40,7 +41,7 @@ export class MongoStatSnapshotRepository implements IStatSnapshotRepository {
         const db = await MongoDatabase.getDb();
         const docs = await db
             .collection(COLLECTION)
-            .find({ type: "game", entityId: { $in: gameIds.map((id) => new ObjectId(id)) } })
+            .find({ type: StatSnapshotType.Game, entityId: { $in: gameIds.map((id) => new ObjectId(id)) } })
             .toArray();
         return new Map(
             docs.map((d) => [d.entityId.toString(), Math.max(0, d.completedCount ?? 0)]),
@@ -57,14 +58,14 @@ export class MongoStatSnapshotRepository implements IStatSnapshotRepository {
         const ops = [
             ...playerCounts.map((p) => ({
                 updateOne: {
-                    filter: { type: "player", entityId: new ObjectId(p.playerId) },
+                    filter: { type: StatSnapshotType.Player, entityId: new ObjectId(p.playerId) },
                     update: { $set: { completedCount: p.count } },
                     upsert: true,
                 },
             })),
             ...gameCounts.map((g) => ({
                 updateOne: {
-                    filter: { type: "game", entityId: new ObjectId(g.gameId) },
+                    filter: { type: StatSnapshotType.Game, entityId: new ObjectId(g.gameId) },
                     update: { $set: { completedCount: g.count } },
                     upsert: true,
                 },

@@ -1,4 +1,5 @@
 import type { Game } from "@game/domain/entities/Game";
+import type { GameCategory } from "@game/domain/enums/GameCategory";
 
 export interface CompanyStat {
     company: string;
@@ -6,13 +7,13 @@ export interface CompanyStat {
 }
 
 export interface IGameRepository {
-    findAll(category?: string | null): Promise<Game[]>;
+    findAll(category?: GameCategory | null): Promise<Game[]>;
     findById(id: string): Promise<Game | null>;
     findByIds(ids: string[]): Promise<Game[]>;
     findByPlayerCount(
         minPlayers: number,
         maxPlayers?: number,
-        category?: string | null,
+        category?: GameCategory | null,
     ): Promise<Game[]>;
     create(game: Game): Promise<Game>;
     update(id: string, game: Partial<Game>): Promise<Game | null>;

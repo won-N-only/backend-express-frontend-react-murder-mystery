@@ -1,5 +1,6 @@
 import { toGameDto } from "@app/api/_mappers";
 import { sanitizeText, sanitizeTextArray } from "@app/lib/sanitizer";
+import { GameCategory } from "@game/domain/enums/GameCategory";
 import {
     getCreateGameUseCase,
     resolveGamesByPlayerCountUseCase,
@@ -12,10 +13,17 @@ export interface GetGamesQuery {
     category?: string | null;
 }
 
+function parseCategory(raw: string | null | undefined): GameCategory | null {
+    if (!raw) return null;
+    const trimmed = raw.trim();
+    return Object.values(GameCategory).includes(trimmed as GameCategory)
+        ? (trimmed as GameCategory)
+        : null;
+}
+
 export async function getGamesList(query: GetGamesQuery) {
     const { minPlayers: minPlayersParam, maxPlayers: maxPlayersParam, category: categoryParam } = query;
-    const normalizedCategory = categoryParam ? String(categoryParam).trim() : "";
-    const category = normalizedCategory ? normalizedCategory : null;
+    const category = parseCategory(categoryParam);
     let games;
     if (minPlayersParam) {
         const min = parseInt(minPlayersParam, 10);
@@ -55,15 +63,15 @@ const GameCategoryCode = {
 
 type GameCategoryCodeValue = (typeof GameCategoryCode)[keyof typeof GameCategoryCode];
 
-const CODE_TO_LABEL: Record<GameCategoryCodeValue, string | null> = {
+const CODE_TO_LABEL: Record<GameCategoryCodeValue, GameCategory | null> = {
     [GameCategoryCode.NONE]: null,
-    [GameCategoryCode.OFFLINE]: "오프라인",
-    [GameCategoryCode.CRIME_SCENE]: "크라임씬",
-    [GameCategoryCode.ONLINE]: "온라인/미정발",
-    [GameCategoryCode.WOODS_REAL]: "우즈/리얼월드",
+    [GameCategoryCode.OFFLINE]: GameCategory.Offline,
+    [GameCategoryCode.CRIME_SCENE]: GameCategory.CrimeScene,
+    [GameCategoryCode.ONLINE]: GameCategory.Online,
+    [GameCategoryCode.WOODS_REAL]: GameCategory.WoodsReal,
 };
 
-function normalizeGameCategory(input: unknown): string | null {
+function normalizeGameCategory(input: unknown): GameCategory | null {
     if (input === null || input === undefined) return null;
 
     if (typeof input === "number") {
@@ -90,10 +98,10 @@ function normalizeGameCategory(input: unknown): string | null {
     // fallback: label string
     const sanitizedLabel = sanitizeText(raw);
     if (!sanitizedLabel) return null;
-    if (!Object.values(CODE_TO_LABEL).includes(sanitizedLabel)) {
+    if (!Object.values(GameCategory).includes(sanitizedLabel as GameCategory)) {
         throw new Error("category 값이 올바르지 않습니다.");
     }
-    return sanitizedLabel;
+    return sanitizedLabel as GameCategory;
 }
 
 export async function createGame(body: CreateGameBody) {

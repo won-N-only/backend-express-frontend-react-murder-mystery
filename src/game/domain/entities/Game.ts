@@ -1,4 +1,7 @@
 import type { ObjectId } from "mongodb";
+import { GameCategory } from "@game/domain/enums/GameCategory";
+
+export { GameCategory };
 
 export class Game {
     constructor(
@@ -9,11 +12,7 @@ export class Game {
         public readonly maxPlayers: number | null,
         public readonly company: string | null,
         public readonly series: string | null,
-        /**
-         * 게임 카테고리 (오프라인/크라임씬/온라인미정발/우즈리얼월드)
-         * 기존 데이터에는 없을 수 있으므로 null 허용
-         */
-        public readonly category: string | null,
+        public readonly category: GameCategory | null,
         public readonly ownerNote: string[] | null,
         public readonly thumbnail: string | null,
         public readonly description: string | null,
