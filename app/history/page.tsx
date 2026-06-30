@@ -115,7 +115,7 @@ export default function HistoryPage() {
             />
 
             <CompletedGamesModal
-                playerId={showCompletedGamesModal ? selectedPlayer?._id ?? null : null}
+                playerId={showCompletedGamesModal ? (selectedPlayer?._id ?? null) : null}
                 playerName={selectedPlayer?.name ?? null}
                 onClose={() => setShowCompletedGamesModal(false)}
                 onOpenGameDetail={(gameId) => {
@@ -125,7 +125,7 @@ export default function HistoryPage() {
             />
 
             <GameCheckModal
-                playerId={showGameCheckModal ? selectedPlayer?._id ?? null : null}
+                playerId={showGameCheckModal ? (selectedPlayer?._id ?? null) : null}
                 playerName={selectedPlayer?.name ?? null}
                 onClose={() => setShowGameCheckModal(false)}
             />
