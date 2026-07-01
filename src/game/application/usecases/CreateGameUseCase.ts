@@ -11,7 +11,7 @@ export interface CreateGameRequest {
     category?: GameCategory | null;
     thumbnail?: string | null;
     description?: string | null;
-    ownerNote?: string[] | null;
+    owners?: string[] | null;
 }
 
 export class CreateGameUseCase {
@@ -29,7 +29,7 @@ export class CreateGameUseCase {
             request.company ?? null,
             request.series ?? null,
             request.category ?? null,
-            request.ownerNote ?? null,
+            request.owners ?? null,
             request.thumbnail ?? null,
             request.description ?? null,
             now,

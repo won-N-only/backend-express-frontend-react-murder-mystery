@@ -9,7 +9,7 @@ export interface GameDto {
     company: string | null;
     series: string | null;
     category: string | null;
-    ownerNote: string[] | null;
+    owners: string[] | null;
     thumbnail?: string | null;
     description?: string | null;
     createdAt: Date;
@@ -26,7 +26,7 @@ export function toGameDto(game: Game): GameDto {
         company: game.company,
         series: game.series,
         category: game.category,
-        ownerNote: game.ownerNote,
+        owners: game.owners,
         thumbnail: game.thumbnail,
         description: game.description,
         createdAt: game.createdAt,

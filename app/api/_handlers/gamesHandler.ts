@@ -50,7 +50,7 @@ export interface CreateGameBody {
     category?: number | string | null;
     thumbnail?: string | null;
     description?: string | null;
-    ownerNote?: string[] | string | null;
+    owners?: string[] | null;
 }
 
 const GameCategoryCode = {
@@ -107,11 +107,6 @@ function normalizeGameCategory(input: unknown): GameCategory | null {
 export async function createGame(body: CreateGameBody) {
     const useCase = getCreateGameUseCase();
 
-    const ownerNoteArray =
-        body.ownerNote && typeof body.ownerNote === "string"
-            ? body.ownerNote.split("\n")
-            : body.ownerNote;
-
     const sanitizedName = sanitizeText(body.name);
     if (!sanitizedName) {
         throw new Error("name이 유효하지 않습니다.");
@@ -128,7 +123,7 @@ export async function createGame(body: CreateGameBody) {
         category: normalizedCategory,
         thumbnail: sanitizeText(body.thumbnail),
         description: sanitizeText(body.description),
-        ownerNote: sanitizeTextArray(ownerNoteArray as string[]),
+        owners: sanitizeTextArray(body.owners as string[]),
     });
     return { game: toGameDto(created) };
 }

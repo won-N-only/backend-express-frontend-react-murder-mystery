@@ -13,7 +13,7 @@ export interface MatchResultDto {
     maxPlayers: number | null;
     company: string | null;
     series: string | null;
-    ownerNote: string[] | null;
+    owners: string[] | null;
     createdAt: Date;
     updatedAt: Date;
     incompletePlayers: string[];

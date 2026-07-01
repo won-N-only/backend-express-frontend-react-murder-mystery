@@ -6,7 +6,8 @@
         "dev": "next dev",
         "build": "next build",
         "start": "next start",
-        "lint": "next lint"
+        "lint": "next lint",
+        "migrate": "tsx scripts/migrate.ts --execute"
     },
     "dependencies": {
         "@fontsource/pretendard": "^5.2.5",

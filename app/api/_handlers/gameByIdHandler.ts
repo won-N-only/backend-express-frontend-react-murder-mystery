@@ -27,7 +27,7 @@ export interface UpdateGameBody {
      * 0: 선택 안함, 1:오프라인, 2:크라임씬, 3:온라인/미정발, 4:우즈/리얼월드
      */
     category?: number | string | null;
-    ownerNote?: string[] | string | null;
+    owners?: string[] | string | null;
     thumbnail?: string | null;
     description?: string | null;
 }
@@ -81,14 +81,14 @@ function normalizeGameCategory(input: unknown): GameCategory | null {
     return sanitizedLabel as GameCategory;
 }
 
-function normalizeOwnerNote(ownerNote: unknown): string[] | null {
-    if (ownerNote === undefined) return undefined as unknown as string[] | null;
-    if (ownerNote === null) return null;
+function normalizeOwners(owners: unknown): string[] | null {
+    if (owners === undefined) return undefined as unknown as string[] | null;
+    if (owners === null) return null;
     let arr: string[] = [];
-    if (Array.isArray(ownerNote)) {
-        arr = ownerNote.filter((s) => typeof s === "string" && s.trim().length > 0);
-    } else if (typeof ownerNote === "string" && ownerNote.trim().length > 0) {
-        arr = ownerNote.split(",").map((s) => s.trim());
+    if (Array.isArray(owners)) {
+        arr = owners.filter((s) => typeof s === "string" && s.trim().length > 0);
+    } else if (typeof owners === "string" && owners.trim().length > 0) {
+        arr = owners.split(",").map((s) => s.trim());
     }
     const sanitizedArr = sanitizeTextArray(arr);
     return sanitizedArr && sanitizedArr.length > 0 ? sanitizedArr : null;
@@ -116,8 +116,8 @@ export async function updateGame(gameId: string, body: UpdateGameBody) {
                 case "category":
                     updateData[key] = normalizeGameCategory(value);
                     break;
-                case "ownerNote":
-                    updateData[key] = normalizeOwnerNote(value);
+                case "owners":
+                    updateData[key] = normalizeOwners(value);
                     break;
                 default:
                     updateData[key] = value;
