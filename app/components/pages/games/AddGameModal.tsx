@@ -16,7 +16,7 @@ export interface AddGamePayload {
     category: number | null;
     thumbnail: string | null;
     description: string | null;
-    ownerNote: string[] | null;
+    owners: string[] | null;
 }
 
 const inputClass =
@@ -38,7 +38,7 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
     const [category, setCategory] = useState("0");
     const [thumbnail, setThumbnail] = useState("");
     const [description, setDescription] = useState("");
-    const [ownerNote, setOwnerNote] = useState("");
+    const [owners, setOwners] = useState("");
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -51,7 +51,7 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
         setCategory("0");
         setThumbnail("");
         setDescription("");
-        setOwnerNote("");
+        setOwners("");
         setError(null);
     };
 
@@ -77,7 +77,9 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
                 category: categoryValue,
                 thumbnail: thumbnail.trim() || null,
                 description: description.trim() || null,
-                ownerNote: ownerNote.trim() !== "" ? ownerNote.trim().split("\n") : null,
+                owners: categoryCode === 1 && owners.trim() !== ""
+                    ? owners.trim().split(/[\n,]/).map((s) => s.trim()).filter(Boolean)
+                    : null,
             };
             const res = await fetch("/api/games", {
                 method: "POST",
@@ -251,18 +253,20 @@ export default function AddGameModal({ open, onClose, onSuccess }: AddGameModalP
                             placeholder="게임 소개 또는 시놉시스"
                         />
                     </div>
-                    <div>
-                        <label htmlFor="add-ownerNote" className={labelClass}>
-                            소유자
-                        </label>
-                        <textarea
-                            id="add-ownerNote"
-                            value={ownerNote}
-                            onChange={(e) => setOwnerNote(e.target.value)}
-                            className={`h-[100px] w-full  mt-2 border border-head-border text-head-text focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent`}
-                            placeholder="소유자, 엔터로 구분"
-                        />
-                    </div>
+                    {category === "1" && (
+                        <div>
+                            <label htmlFor="add-owners" className={labelClass}>
+                                소장자
+                            </label>
+                            <textarea
+                                id="add-owners"
+                                value={owners}
+                                onChange={(e) => setOwners(e.target.value)}
+                                className={`h-[80px] w-full mt-2 border border-head-border text-head-text focus:outline-none focus:ring-2 focus:ring-head-brown focus:border-transparent`}
+                                placeholder="감독, 귤젤리, 콩난"
+                            />
+                        </div>
+                    )}
                     <div className="flex flex-col md:flex-row gap-[10px] md:gap-3">
                         <button type="submit" disabled={submitting} className="btn-primary">
                             {submitting ? "추가 중..." : "추가하기"}

@@ -16,7 +16,7 @@ export interface GameFormData {
      * 0: 선택 안함, 1:오프라인, 2:크라임씬, 3:온라인/미정발, 4:우즈/리얼월드
      */
     category: string;
-    ownerNote: string;
+    owners: string;
     thumbnail: string;
     description: string;
 }
@@ -46,7 +46,7 @@ function gameToFormData(game: Game | null): GameFormData {
             company: "",
             series: "",
             category: "0",
-            ownerNote: "",
+            owners: "",
             thumbnail: "",
             description: "",
         };
@@ -59,20 +59,19 @@ function gameToFormData(game: Game | null): GameFormData {
         company: game.company ?? "",
         series: game.series ?? "",
         category: gameCategoryLabelToCode(game.category),
-        ownerNote: Array.isArray(game.ownerNote) ? game.ownerNote.join("\n") : "",
+        owners: Array.isArray(game.owners) ? game.owners.join(", ") : "",
         thumbnail: game.thumbnail ?? "",
         description: game.description ?? "",
     };
 }
 
 export function formDataToPayload(data: GameFormData) {
-    const ownerNoteTrimmed = data.ownerNote
-        .split(/[\n,]/)
-        .map((s) => s.trim())
-        .filter(Boolean);
-
     const categoryCode = data.category.trim() ? Number(data.category.trim()) : 0;
     const category = categoryCode === 0 || Number.isNaN(categoryCode) ? null : categoryCode;
+
+    const ownersTrimmed = categoryCode === 1
+        ? data.owners.split(/[\n,]/).map((s) => s.trim()).filter(Boolean)
+        : [];
 
     return {
         orderNumber: Number(data.orderNumber) || 1,
@@ -82,7 +81,7 @@ export function formDataToPayload(data: GameFormData) {
         company: data.company.trim() || null,
         series: data.series.trim() || null,
         category,
-        ownerNote: ownerNoteTrimmed.length > 0 ? ownerNoteTrimmed : null,
+        owners: ownersTrimmed.length > 0 ? ownersTrimmed : null,
         thumbnail: data.thumbnail.trim() || null,
         description: data.description.trim() || null,
     };
@@ -247,18 +246,20 @@ export default function GameForm({
                     placeholder="게임 소개 또는 시놉시스"
                 />{" "}
             </div>
-            <div>
-                <label htmlFor="ownerNote" className={labelClass}>
-                    소유자 (엔터로 구분)
-                </label>
-                <textarea
-                    id="ownerNote"
-                    value={form.ownerNote}
-                    onChange={(e) => setForm((p) => ({ ...p, ownerNote: e.target.value }))}
-                    className={`${textareaClass} w-full mt-2`}
-                    placeholder="소유자, 엔터로 구분"
-                />
-            </div>
+            {form.category === "1" && (
+                <div>
+                    <label htmlFor="owners" className={labelClass}>
+                        소장자
+                    </label>
+                    <textarea
+                        id="owners"
+                        value={form.owners}
+                        onChange={(e) => setForm((p) => ({ ...p, owners: e.target.value }))}
+                        className={`${textareaClass} w-full mt-2`}
+                        placeholder="감독, 귤젤리, 콩난"
+                    />
+                </div>
+            )}
             <div className="flex flex-col md:flex-row gap-[10px] md:gap-3">
                 <button type="submit" disabled={isSubmitting} className="btn-primary">
                     {isSubmitting ? "저장 중..." : submitLabel}

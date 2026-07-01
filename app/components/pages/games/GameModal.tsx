@@ -182,14 +182,16 @@ export default function GameModal({ gameId, onClose }: GameModalProps) {
                                                                                     <div className="text-sm font-bold text-head-text opacity-70">
                                                                                         #{game.orderNumber}
                                                                                     </div>
-                                                                                    <div className="flex items-center gap-2">
-                                                                                        <span className="text-sm font-extrabold text-head-text">
-                                                                                            소유자{" "}
-                                                                                        </span>
-                                                                                        <span className="text-sm font-thin text-head-text">
-                                                                                            {game.ownerNote && game.ownerNote.join(" ｜ ")}
-                                                                                        </span>
-                                                                                    </div>
+                                                                                    {game.category === "오프라인" && game.owners && game.owners.length > 0 && (
+                                                                                        <div className="flex items-center gap-2">
+                                                                                            <span className="text-sm font-extrabold text-head-text">
+                                                                                                소장자{" "}
+                                                                                            </span>
+                                                                                            <span className="text-sm font-thin text-head-text">
+                                                                                                {game.owners.join(" ｜ ")}
+                                                                                            </span>
+                                                                                        </div>
+                                                                                    )}
                                                                                     <div className="text-sm font-semibold text-head-text opacity-90">
                                                                                         <span>
                                                                                             {game.minPlayers}

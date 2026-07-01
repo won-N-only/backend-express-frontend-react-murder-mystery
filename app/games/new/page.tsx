@@ -12,7 +12,7 @@ export default function NewGamePage() {
     const handleSubmit = async (payload: ReturnType<typeof formDataToPayload>) => {
         setIsSubmitting(true);
         try {
-            const { orderNumber: _o, ownerNote: _n, ...addPayload } = payload;
+            const { orderNumber: _o, ...addPayload } = payload;
             const res = await fetch("/api/games", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
