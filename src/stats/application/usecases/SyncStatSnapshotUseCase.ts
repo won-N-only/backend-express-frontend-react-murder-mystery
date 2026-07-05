@@ -1,4 +1,4 @@
-import type { IStatSnapshotRepository } from "@stats/domain/repositories/IStatSnapshotRepository";
+import type { IStatSnapshotRepository } from "@stats/application/ports/IStatSnapshotRepository";
 
 export class SyncStatSnapshotUseCase {
     constructor(private statSnapshotRepository: IStatSnapshotRepository) {}

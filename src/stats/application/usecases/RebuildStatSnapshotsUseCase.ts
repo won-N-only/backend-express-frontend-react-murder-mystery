@@ -2,7 +2,7 @@ import type { IGameCompletionRepository } from "@completion/domain/repositories/
 import { CompletionStatus } from "@completion/domain/valueObjects/CompletionStatus";
 import type { IGameRepository } from "@game/domain/repositories/IGameRepository";
 import type { IPlayerRepository } from "@player/domain/repositories/IPlayerRepository";
-import type { IStatSnapshotRepository } from "@stats/domain/repositories/IStatSnapshotRepository";
+import type { IStatSnapshotRepository } from "@stats/application/ports/IStatSnapshotRepository";
 
 /**
  * 기존 completion 데이터로부터 statSnapshots 컬렉션을 전체 재구축합니다.

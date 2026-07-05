@@ -29,7 +29,7 @@ import { GetGameCompletionStatsUseCase } from "@stats/application/usecases/GetGa
 import { GetPlayerStatsUseCase } from "@stats/application/usecases/GetPlayerStatsUseCase";
 import { RebuildStatSnapshotsUseCase } from "@stats/application/usecases/RebuildStatSnapshotsUseCase";
 import { SyncStatSnapshotUseCase } from "@stats/application/usecases/SyncStatSnapshotUseCase";
-import type { IStatSnapshotRepository } from "@stats/domain/repositories/IStatSnapshotRepository";
+import type { IStatSnapshotRepository } from "@stats/application/ports/IStatSnapshotRepository";
 import { MongoStatSnapshotRepository } from "@stats/infrastructure/repositories/MongoStatSnapshotRepository";
 
 // 싱글톤 인스턴스
