@@ -19,6 +19,9 @@ export class MongoGameCompletionRepository implements IGameCompletionRepository 
             $set: {
                 status,
                 completedAt: status === CompletionStatus.DONE ? now : null,
+                // unique 인덱스(gameId+playerId) 때문에 soft delete된 doc이 그대로 갱신되므로
+                // deletedAt을 되돌리지 않으면 조회에 안 잡히는 좀비 레코드가 된다.
+                deletedAt: null,
             },
             $setOnInsert: {
                 createdAt: now,

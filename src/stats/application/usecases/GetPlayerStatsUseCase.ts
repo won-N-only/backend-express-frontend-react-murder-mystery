@@ -1,6 +1,6 @@
 import type { IGameRepository } from "@game/domain/repositories/IGameRepository";
 import type { IPlayerRepository } from "@player/domain/repositories/IPlayerRepository";
-import type { IStatSnapshotRepository } from "@stats/domain/repositories/IStatSnapshotRepository";
+import type { IStatSnapshotRepository } from "@stats/application/ports/IStatSnapshotRepository";
 
 export interface PlayerStats {
     playerId: string;

@@ -28,11 +28,14 @@ import { GetCompletedGamesByPlayerIdUseCase } from "@stats/application/usecases/
 import { GetGameCompletionStatsUseCase } from "@stats/application/usecases/GetGameCompletionStatsUseCase";
 import { GetPlayerStatsUseCase } from "@stats/application/usecases/GetPlayerStatsUseCase";
 import { RebuildStatSnapshotsUseCase } from "@stats/application/usecases/RebuildStatSnapshotsUseCase";
-import { SyncStatSnapshotUseCase } from "@stats/application/usecases/SyncStatSnapshotUseCase";
-import type { IStatSnapshotRepository } from "@stats/domain/repositories/IStatSnapshotRepository";
+import type { IStatSnapshotRepository } from "@stats/application/ports/IStatSnapshotRepository";
 import { MongoStatSnapshotRepository } from "@stats/infrastructure/repositories/MongoStatSnapshotRepository";
+import { StatSnapshotUpdateHandler } from "@stats/application/eventHandlers/StatSnapshotUpdateHandler";
+import type { IEventBus } from "@shared/domain/events/IEventBus";
+import { InProcessEventBus } from "@shared/infrastructure/events/InProcessEventBus";
 
 // 싱글톤 인스턴스
+let eventBus: IEventBus | null = null;
 let gameRepository: IGameRepository | null = null;
 let playerRepository: IPlayerRepository | null = null;
 let completionRepository: IGameCompletionRepository | null = null;
@@ -59,8 +62,15 @@ let createCommentUseCase: CreateCommentUseCase | null = null;
 let getCommentsByGameIdUseCase: GetCommentsByGameIdUseCase | null = null;
 let deleteCommentUseCase: DeleteCommentUseCase | null = null;
 let statSnapshotRepository: IStatSnapshotRepository | null = null;
-let syncStatSnapshotUseCase: SyncStatSnapshotUseCase | null = null;
 let rebuildStatSnapshotsUseCase: RebuildStatSnapshotsUseCase | null = null;
+
+export function getEventBus(): IEventBus {
+    if (!eventBus) {
+        eventBus = new InProcessEventBus();
+        new StatSnapshotUpdateHandler(getStatSnapshotRepository()).subscribeTo(eventBus);
+    }
+    return eventBus;
+}
 
 export function getGameRepository(): IGameRepository {
     if (!gameRepository) {
@@ -120,13 +130,6 @@ export function getStatSnapshotRepository(): IStatSnapshotRepository {
         statSnapshotRepository = new MongoStatSnapshotRepository();
     }
     return statSnapshotRepository;
-}
-
-export function resolveSyncStatSnapshotUseCase(): SyncStatSnapshotUseCase {
-    if (!syncStatSnapshotUseCase) {
-        syncStatSnapshotUseCase = new SyncStatSnapshotUseCase(getStatSnapshotRepository());
-    }
-    return syncStatSnapshotUseCase;
 }
 
 export function resolveRebuildStatSnapshotsUseCase(): RebuildStatSnapshotsUseCase {
@@ -241,14 +244,14 @@ export function getUpsertPlayerUseCase(): UpsertPlayerUseCase {
 // Completion UseCases
 export function getUpsertCompletionUseCase(): UpsertCompletionUseCase {
     if (!upsertCompletionUseCase) {
-        upsertCompletionUseCase = new UpsertCompletionUseCase(getCompletionRepository());
+        upsertCompletionUseCase = new UpsertCompletionUseCase(getCompletionRepository(), getEventBus());
     }
     return upsertCompletionUseCase;
 }
 
 export function getDeleteCompletionUseCase(): DeleteCompletionUseCase {
     if (!deleteCompletionUseCase) {
-        deleteCompletionUseCase = new DeleteCompletionUseCase(getCompletionRepository());
+        deleteCompletionUseCase = new DeleteCompletionUseCase(getCompletionRepository(), getEventBus());
     }
     return deleteCompletionUseCase;
 }

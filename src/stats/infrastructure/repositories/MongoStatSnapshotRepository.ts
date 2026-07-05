@@ -1,5 +1,5 @@
-import { StatSnapshotType } from "@stats/domain/enums/StatSnapshotType";
-import type { IStatSnapshotRepository } from "@stats/domain/repositories/IStatSnapshotRepository";
+import { StatSnapshotType } from "./StatSnapshotType";
+import type { IStatSnapshotRepository } from "@stats/application/ports/IStatSnapshotRepository";
 import { MongoDatabase } from "@shared/infrastructure/database/MongoDatabase";
 import { ObjectId } from "mongodb";
 
