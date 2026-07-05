@@ -6,8 +6,6 @@ import type { IEventBus } from "@shared/domain/events/IEventBus";
 
 export interface UpsertCompletionResult {
     completion: GameCompletion;
-    /** stat 변화량: +1(미완료→완료), -1(완료→미완료), 0(변화 없음) */
-    delta: number;
 }
 
 export class UpsertCompletionUseCase {
@@ -30,13 +28,6 @@ export class UpsertCompletionUseCase {
             new CompletionUpsertedEvent(gameId, playerId, previousStatus, newStatus),
         );
 
-        const delta =
-            previousStatus === newStatus
-                ? 0
-                : newStatus === CompletionStatus.DONE
-                  ? 1
-                  : -1;
-
-        return { completion, delta };
+        return { completion };
     }
 }

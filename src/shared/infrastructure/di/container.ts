@@ -28,9 +28,9 @@ import { GetCompletedGamesByPlayerIdUseCase } from "@stats/application/usecases/
 import { GetGameCompletionStatsUseCase } from "@stats/application/usecases/GetGameCompletionStatsUseCase";
 import { GetPlayerStatsUseCase } from "@stats/application/usecases/GetPlayerStatsUseCase";
 import { RebuildStatSnapshotsUseCase } from "@stats/application/usecases/RebuildStatSnapshotsUseCase";
-import { SyncStatSnapshotUseCase } from "@stats/application/usecases/SyncStatSnapshotUseCase";
 import type { IStatSnapshotRepository } from "@stats/application/ports/IStatSnapshotRepository";
 import { MongoStatSnapshotRepository } from "@stats/infrastructure/repositories/MongoStatSnapshotRepository";
+import { StatSnapshotUpdateHandler } from "@stats/application/eventHandlers/StatSnapshotUpdateHandler";
 import type { IEventBus } from "@shared/domain/events/IEventBus";
 import { InProcessEventBus } from "@shared/infrastructure/events/InProcessEventBus";
 
@@ -62,12 +62,12 @@ let createCommentUseCase: CreateCommentUseCase | null = null;
 let getCommentsByGameIdUseCase: GetCommentsByGameIdUseCase | null = null;
 let deleteCommentUseCase: DeleteCommentUseCase | null = null;
 let statSnapshotRepository: IStatSnapshotRepository | null = null;
-let syncStatSnapshotUseCase: SyncStatSnapshotUseCase | null = null;
 let rebuildStatSnapshotsUseCase: RebuildStatSnapshotsUseCase | null = null;
 
 export function getEventBus(): IEventBus {
     if (!eventBus) {
         eventBus = new InProcessEventBus();
+        new StatSnapshotUpdateHandler(getStatSnapshotRepository()).subscribeTo(eventBus);
     }
     return eventBus;
 }
@@ -130,13 +130,6 @@ export function getStatSnapshotRepository(): IStatSnapshotRepository {
         statSnapshotRepository = new MongoStatSnapshotRepository();
     }
     return statSnapshotRepository;
-}
-
-export function resolveSyncStatSnapshotUseCase(): SyncStatSnapshotUseCase {
-    if (!syncStatSnapshotUseCase) {
-        syncStatSnapshotUseCase = new SyncStatSnapshotUseCase(getStatSnapshotRepository());
-    }
-    return syncStatSnapshotUseCase;
 }
 
 export function resolveRebuildStatSnapshotsUseCase(): RebuildStatSnapshotsUseCase {

@@ -5,8 +5,6 @@ import type { IEventBus } from "@shared/domain/events/IEventBus";
 
 export interface DeleteCompletionResult {
     deleted: boolean;
-    /** 삭제된 레코드가 DONE이었으면 -1, 아니면 0 */
-    delta: number;
 }
 
 export class DeleteCompletionUseCase {
@@ -24,7 +22,6 @@ export class DeleteCompletionUseCase {
             );
         }
 
-        const delta = previousStatus === CompletionStatus.DONE ? -1 : 0;
-        return { deleted: previousStatus !== null, delta };
+        return { deleted: previousStatus !== null };
     }
 }
