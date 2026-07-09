@@ -20,7 +20,12 @@ async function ensureIndex(
     } catch (error) {
         const code = (error as { code?: number }).code;
         if (code === INDEX_OPTIONS_CONFLICT || code === INDEX_KEY_SPECS_CONFLICT) {
-            await collection.dropIndex(options.name);
+            // 이름이 아닌 키 스펙으로 drop (이름이 다른 기존 인덱스가 같은 키를 가진 경우 대비)
+            try {
+                await collection.dropIndex(options.name);
+            } catch {
+                await collection.dropIndex(keys as any);
+            }
             await collection.createIndex(keys, options);
             return;
         }
