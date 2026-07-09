@@ -20,12 +20,7 @@ async function ensureIndex(
     } catch (error) {
         const code = (error as { code?: number }).code;
         if (code === INDEX_OPTIONS_CONFLICT || code === INDEX_KEY_SPECS_CONFLICT) {
-            // 이름이 아닌 키 스펙으로 drop (이름이 다른 기존 인덱스가 같은 키를 가진 경우 대비)
-            try {
-                await collection.dropIndex(options.name);
-            } catch {
-                await collection.dropIndex(keys as any);
-            }
+            await collection.dropIndex(options.name);
             await collection.createIndex(keys, options);
             return;
         }
@@ -37,37 +32,51 @@ export async function ensureIndexes(db: Db): Promise<void> {
     await Promise.all([
         // gameCompletions: upsert 조회 (gameId + playerId)
         // 두 필드 모두 항상 존재하므로 sparse는 무의미해서 제거됨
-        ensureIndex(db, "gameCompletions",
+        ensureIndex(
+            db,
+            "gameCompletions",
             { gameId: 1, playerId: 1 },
             { unique: true, name: "idx_completions_gameId_playerId" },
         ),
         // gameCompletions: 플레이어별 완료 게임 조회
-        ensureIndex(db, "gameCompletions",
+        ensureIndex(
+            db,
+            "gameCompletions",
             { playerId: 1, status: 1, deletedAt: 1 },
             { name: "idx_completions_playerId_status" },
         ),
         // gameCompletions: stats aggregation (status ESA 인덱스)
-        ensureIndex(db, "gameCompletions",
+        ensureIndex(
+            db,
+            "gameCompletions",
             { status: 1, gameId: 1, playerId: 1, deletedAt: 1 },
             { name: "idx_completions_status_gameId_playerId" },
         ),
         // statSnapshots: type + entityId 조합 unique
-        ensureIndex(db, "statSnapshots",
+        ensureIndex(
+            db,
+            "statSnapshots",
             { type: 1, entityId: 1 },
             { unique: true, name: "idx_snapshots_type_entityId" },
         ),
         // comments: 게임별 댓글 조회 + createdAt 정렬
-        ensureIndex(db, "comments",
+        ensureIndex(
+            db,
+            "comments",
             { gameId: 1, deletedAt: 1, createdAt: 1 },
             { name: "idx_comments_gameId_deletedAt_createdAt" },
         ),
         // games: 목록 조회 (deletedAt/category 필터 + orderNumber 정렬)
-        ensureIndex(db, "games",
+        ensureIndex(
+            db,
+            "games",
             { deletedAt: 1, category: 1, orderNumber: 1 },
             { name: "idx_games_deletedAt_category_orderNumber" },
         ),
         // players: 이름 기반 upsert 경합 시 중복 생성 방지
-        ensureIndex(db, "players",
+        ensureIndex(
+            db,
+            "players",
             { name: 1 },
             { unique: true, name: "idx_players_name_unique" },
         ).catch((error) => {
